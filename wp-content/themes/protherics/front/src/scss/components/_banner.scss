@@ -1,0 +1,110 @@
+.c-banner {
+  position: relative;
+  margin: 5rem 1.7rem 4rem;
+
+  text-align: center;
+
+  @include media(mobile) {
+    margin: 6rem 9rem 4rem;
+  }
+}
+
+.c-banner--quote {
+  @include media(mobile) {
+    margin-top: 0rem;
+  }
+}
+
+.c-banner__heading {
+  margin-bottom: 1.8rem;
+
+  @include media(mobile) {
+    margin-bottom: 5.6rem;
+  }
+}
+
+.c-banner--alt {
+  margin: 0 0 2rem;
+}
+
+.c-banner__desc {
+  max-width: 58rem;
+  margin: 0 auto;
+}
+
+.c-banner:not(.c-banner--alt) .c-cms-content * {
+  color: color(white-1);
+}
+
+.c-banner__heading--alt {
+  margin-bottom: 2rem;
+
+  @include media(mobile) {
+    margin-bottom: 2.4rem;
+  }
+}
+
+.c-banner__select {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5rem;
+}
+
+.c-banner__heading--alt * {
+  color: color(purple-1);
+}
+
+.c-banner__desc--alt * {
+  color: color(black-1);
+}
+
+.c-banner__quote {
+  max-width: 78rem;
+  margin: 0 auto;
+}
+
+.c-banner__desc:not(:last-child),
+.c-banner__quote-author:not(:last-child) {
+  margin-bottom: 5rem;
+}
+
+.c-banner__small-heading {
+  margin-bottom: 2.3rem;
+
+  @include media(mobile) {
+    margin-top: 4rem;
+  }
+}
+
+.c-banner__quote {
+  margin-bottom: 2.2rem;
+
+  @include media(mobile) {
+    margin-top: 6.8rem;
+  }
+}
+
+.c-banner__quote-author {
+  padding-bottom: 2.2rem;
+}
+
+.c-banner__small-heading + .c-banner__quote {
+  @include media(mobile) {
+    margin-top: 0;
+  }
+}
+
+.c-banner__decor {
+  position: absolute;
+  inset: 0;
+
+  z-index: -1;
+}
+
+.c-banner__decor-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  position: relative;
+}

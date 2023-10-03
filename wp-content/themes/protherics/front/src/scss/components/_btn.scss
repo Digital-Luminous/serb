@@ -1,0 +1,70 @@
+.c-btn {
+    @include button;
+}
+
+.c-btn--wide {
+    justify-content: space-between;
+
+    width: 100%;
+    max-width: 38rem;
+}
+
+.c-btn--small {
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
+}
+
+.c-btn--primary {
+    color: color(white-1);
+    background-color: color(purple-1);
+}
+
+.c-btn--secondary,
+.c-btn--tertiary {
+    color: color(purple-1);
+}
+
+.c-btn--secondary {
+    background-color: color(white-1);
+}
+
+.c-btn--arrowed {
+    position: relative;
+
+    &:after {
+        @include transition();
+
+        height: 1.6rem;
+        margin-left: 1.25rem;
+
+        line-height: 1;
+
+        content: url('../images/icon-arrow-right-colored.svg');
+        transition-property: transform;
+    }
+}
+
+.c-btn--primary.c-btn--arrowed::after {
+    content: url('../images/icon-arrow-right-white.svg');
+}
+
+.c-btn--arrowed:hover::after,
+.c-btn--arrowed:focus::after {
+    transform: translateX(1rem);
+}
+
+.c-btn--tertiary,
+.c-btn--secondary:hover,
+.c-btn--secondary:focus {
+    background-color: color(grey-1-50);
+}
+
+.c-btn--tertiary:hover,
+.c-btn--tertiary:focus {
+    background-color: color(grey-1);
+}
+
+.c-btn--primary:hover,
+.c-btn--primary:focus {
+    background-color: color(dark-purple-1);
+}

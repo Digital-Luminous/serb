@@ -1,0 +1,98 @@
+$breakpoints: (
+    mobile-xs: 380px,
+    mobile: 768px,
+    tablet: 1024px,
+    desktop-small: 1200px,
+    desktop: 1400px,
+    desktop-medium: 1900px,
+    desktop-large: 2150px,
+);
+
+$orientations: (
+    portrait: portrait,
+    landscape: landscape,
+);
+
+$colors: (
+    black-1: #000,
+    black-2: #282828,
+    white-1: #FFF,
+    white-1-80: rgba(#FFFFFF, .8),
+    purple-1: #54178E,
+    dark-purple-1: #3C1976,
+    mauve-1: #BB46FF,
+    dark-mauve-1: #9C0DD3,
+    light-grey-1: #6E6E73,
+    light-grey-2: #f4f2EE,
+    grey-1: #EAE5DF,
+    grey-2: #F4F2EF,
+    dark-grey-1: #D6D1CA,
+    dark-grey-2: #282828,
+    grey-1-50: rgba(#EAE5DF, .5),
+    pink-1: #E83D70,
+    dark-pink-1: #D63070,
+    orange-1: #EA6621,
+    dark-orange-1: #D94821,
+    yellow-1: #F9AC04,
+    dark-yellow: #F98704,
+    red-1: #CF1223,
+    green-1: #006B21,
+    blue-1: #3239FF,
+);
+
+$font-sizes: (
+    main: 10px,
+    size-12: 1.2rem,
+    size-14: 1.4rem,
+    size-16: 1.6rem,
+    size-18: 1.8rem,
+    size-20: 2rem,
+    size-22: 2.2rem,
+    size-24: 2.4rem,
+    size-28: 2.8rem,
+    size-32: 3.2rem,
+    size-36: 3.6rem,
+    size-40: 4rem,
+    size-44: 4.4rem,
+    size-52: 5.2rem,
+    size-72: 7.2rem,
+);
+
+$font-weights: (
+    normal: 400,
+    semibold: 600,
+    bold: 700,
+);
+
+$fonts: (
+    main: #{'Montserrat', sans-serif},
+);
+
+$defaults: (
+    lineHeight: 1.5,
+);
+
+$z-indexes: (
+    hidden: -1,
+    base: 1,
+    popup: 9,
+    header: 10,
+    overlay: 98,
+    modal: 99,
+);
+
+$border-radius: (
+    radius-40: 4rem,
+    input: .4rem
+);
+
+/* Standalone variables
+========================================================================== */
+$size-inner-padding: 0 1.7rem;
+$size-inner-width: 121.4rem;
+$size-text-box-width-sm: 78rem;
+$size-text-box-width-md: 88rem;
+$size-modal-width: 58rem;
+$size-archives-list-date-width: 18rem;
+
+$page-max-width: 123.75rem;

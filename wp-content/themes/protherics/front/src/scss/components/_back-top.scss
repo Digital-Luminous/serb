@@ -1,0 +1,10 @@
+.c-back-top {
+    @include transition;
+
+    transition-property: color;
+    text-transform: uppercase;
+}
+
+.c-back-top:hover {
+    color: color(dark-purple-1);
+}

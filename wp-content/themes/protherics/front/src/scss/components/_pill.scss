@@ -1,0 +1,23 @@
+.c-pill {
+    @include button-reset();
+    @include transition;
+
+    padding: 1rem;
+
+    font-size: 1.6rem;
+
+    cursor: pointer;
+    transition-property: background-color, color;
+
+    color: color(black-1);
+    background-color: color(grey-1-50);
+}
+
+.c-pill:hover {
+    background-color: color(grey-1);
+}
+
+.c-pill.is-active {
+    color: color(white-1);
+    background-color: color(purple-1);
+}

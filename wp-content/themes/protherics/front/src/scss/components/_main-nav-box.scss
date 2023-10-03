@@ -1,0 +1,7 @@
+.c-main-nav-box {
+    width: 100%;
+
+    @include media(0, tablet) {
+        padding: 0 1.7rem;
+    }
+}

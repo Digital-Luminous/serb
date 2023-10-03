@@ -1,0 +1,54 @@
+.c-slider-pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.c-slider-pagination__bullet {
+    @include transition();
+
+    display: block;
+    flex-shrink: 0;
+
+    width: 4rem;
+    height: 4rem;
+    margin: 0 .5rem;
+
+    cursor: pointer;
+    transition-property: background-color, border-color;
+
+    border: .1rem solid color(mauve-1);
+    border-radius: 50%;
+    background-color: transparent;
+}
+
+.c-slider-pagination__bullet--active {
+    border-color: color(purple-1);
+    background-color: color(purple-1);
+}
+
+.c-slider-pagination--alt {
+    position: absolute;
+    bottom: 0;
+}
+
+.c-slider-pagination--alt .c-slider-pagination__bullet {
+    width: 2rem;
+    height: 2rem;
+}
+
+.c-slider-pagination--alt .c-slider-pagination__bullet--active {
+    border-color: color(white-1);
+    background-color: color(white-1);
+}
+
+.c-banners-slider .c-slider-pagination--alt {
+    bottom: 2rem;
+    z-index: z-index(base);
+    @include media(0, mobile) {
+        position: relative;
+    }
+}
+
+.c-banners-slider--alt .c-slider-pagination__bullet {
+    border-color: color(white-1);
+}

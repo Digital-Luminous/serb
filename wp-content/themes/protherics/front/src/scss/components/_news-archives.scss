@@ -1,0 +1,23 @@
+.c-news-archives__list {
+    @include list-reset();
+}
+
+.c-news-archives__list-item {
+    border-top: .1rem solid color(purple-1);
+}
+
+.c-news-archives__list-item:last-child {
+    border-bottom: .1rem solid color(purple-1);
+}
+
+.c-news-archives__list-legend {
+    @include media(mobile) {
+        display: flex;
+
+        margin-bottom: 1.2rem;
+    }
+}
+
+.c-news-archives__legend-info--date {
+    width: $size-archives-list-date-width;
+}

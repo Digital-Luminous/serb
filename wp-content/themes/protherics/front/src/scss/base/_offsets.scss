@@ -1,0 +1,31 @@
+.s-regular-bottom:not(:last-child) {
+    margin-bottom: 5rem;
+
+    @include media(mobile) {
+        margin-bottom: 10rem;
+    }
+}
+
+.s-small-bottom:not(:last-child) {
+    margin-bottom: 2rem;
+
+    @include media(mobile) {
+        margin-bottom: 4rem;
+    }
+}
+
+.s-medium-bottom:not(:last-child) {
+    margin-bottom: 2.5rem;
+
+    @include media(mobile) {
+        margin-bottom: 5rem;
+    }
+}
+
+.s-regular-top {
+    margin-top: 5rem;
+
+    @include media(mobile) {
+        margin-top: 10rem;
+    }
+}

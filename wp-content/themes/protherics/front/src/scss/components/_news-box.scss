@@ -1,0 +1,101 @@
+.c-news-box {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+    padding: 2rem;
+}
+
+.c-news-box--tall {
+    min-height: 56rem;
+}
+
+.c-news-box--taller {
+    min-height: 64rem;
+}
+
+.c-news-box--is-twitter {
+    position: relative;
+    min-height: 50rem;
+}
+
+.c-news-box__user-data {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5rem;
+}
+
+.c-news-box__column:first-child {
+    margin-right: 2rem;
+}
+
+.c-news-box__icon {
+    width: 6rem;
+    height: 6rem;
+}
+
+.c-news-box__date:not(:last-child) {
+    margin-bottom: 2rem;
+}
+
+.c-news-box__title {
+    margin-bottom: 1rem;
+}
+
+.c-news-box__text {
+    @include line-clamp(6);
+
+    margin-bottom: 4.6rem;
+}
+
+.c-news-box__link {
+    @include transition;
+    transition-property: opacity;
+
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.c-news-box__actions {
+    display: flex;
+    align-items: flex-end;
+    flex: 1;
+}
+
+.c-news-box__figure {
+    @include aspect-ratio(34, 19);
+
+    max-width: 34rem;
+    margin-bottom: 1rem;
+}
+
+.c-news-box__image {
+    @include image-full();
+}
+
+.c-news-box__header {
+    position: relative;
+}
+
+.c-news-box__tags-wrapper {
+    position: absolute;
+    z-index: z-index(base);
+    top: 1rem;
+    left: 1rem;
+}
+
+.c-insights-listing .c-news-box {
+    animation: .3s ease-in-out fadeIn forwards;
+
+    opacity: 0;
+}
+
+
+.c-news-box__header + .c-news-box__title {
+    margin-top: 2rem;
+}
+
+.c-news-box--is-twitter .c-news-box__author {
+    margin-bottom: 1rem;
+}

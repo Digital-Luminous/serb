@@ -1,0 +1,61 @@
+.c-burger {
+    @include button-reset;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 3rem;
+    height: 2.4rem;
+
+    cursor: pointer;
+}
+
+.c-burger__lines {
+    @include transition;
+
+    position: relative;
+
+    width: 3rem;
+    height: .4rem;
+
+    color: color(purple-1);
+    background-color: currentColor;
+
+    &::before,
+    &::after {
+        position: absolute;
+        left: 0;
+
+        width: 3rem;
+        height: .4rem;
+
+        content: '';
+
+        background-color: currentColor;
+    }
+
+    &::before {
+        top: -1rem;
+    }
+
+    &::after {
+        top: 1rem;
+    }
+}
+
+.l-header.is-open .c-burger__lines {
+    transform: rotate(225deg);
+
+    color: color(white-1);
+
+    &::before {
+        content: none;
+    }
+
+    &::after {
+        top: 0;
+
+        transform: rotate(-90deg);
+    }
+}

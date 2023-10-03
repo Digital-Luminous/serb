@@ -1,0 +1,26 @@
+.l-cookies {
+    @include transition(880ms);
+
+    position: fixed;
+    z-index: z-index(modal);
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    visibility: hidden;
+
+    width: 100%;
+
+    transition-property: transform, opacity;
+    transform: translateY(150%);
+
+    opacity: 0;
+}
+
+.l-cookies.is-visible {
+    visibility: visible;
+
+    transform: translateY(0);
+
+    opacity: 1;
+}

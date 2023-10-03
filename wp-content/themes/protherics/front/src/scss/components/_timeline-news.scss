@@ -1,0 +1,7 @@
+.c-timeline-news__heading {
+    margin-bottom: 3.8rem;
+
+    @include media(mobile) {
+        margin-bottom: 2.2rem;
+    }
+}

@@ -1,0 +1,36 @@
+.c-banners-slider {
+    color: color(white-1);
+
+    @include media(mobile) {
+        margin: 0 1.7rem;
+    }
+    @include media(desktop) {
+        margin: 0 4rem;
+    }
+}
+
+.c-banners-slider__decor {
+    @include filler;
+}
+
+.c-banners-slider__image {
+    @include image-full();
+}
+
+.c-banners-slider__list {
+    @include list-reset;
+
+    @include media(mobile) {
+        min-height: 44rem;
+    }
+}
+
+.c-banners-slider__list-item {
+    height: auto;
+}
+
+.c-banners-slider--alt .c-banners-slider__list-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

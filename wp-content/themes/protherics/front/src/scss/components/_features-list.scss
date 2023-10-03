@@ -1,0 +1,27 @@
+.c-features-list {
+    @include list-reset;
+
+    display: grid;
+
+    @include media(0, mobile) {
+        grid-template-columns: 1fr;
+    }
+    @include media(mobile) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @include media(tablet) {
+        grid-auto-columns: 1fr;
+        grid-auto-flow: column;
+    }
+
+    gap: 2rem;
+    grid-gap: 2rem;
+}
+
+.c-features-list:not(:last-child) {
+    margin-bottom: 2rem;
+
+    @include media(mobile) {
+        margin-bottom: 5rem;
+    }
+}

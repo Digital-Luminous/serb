@@ -1,0 +1,54 @@
+.c-cookies {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 2rem 0;
+
+    @include media(mobile) {
+        flex-direction: row;
+
+        padding: 3.2rem 0 4rem;
+    }
+}
+
+.c-cookies__description {
+    margin-bottom: 2rem;
+
+    @include media(mobile) {
+        max-width: 79rem;
+        margin-bottom: 0;
+        padding-right: 1rem;
+    }
+}
+
+.c-cookies__description p {
+    @include typo-size-14;
+
+    @include media(mobile) {
+        @include typo-size-16;
+    }
+}
+
+.c-cookies__description a {
+    text-decoration: underline;
+}
+
+.c-cookies__buttons {
+    display: flex;
+    align-items: flex-start;
+}
+
+.c-cookies__buttons .c-btn {
+    white-space: nowrap;
+}
+
+.c-cookies__buttons .c-btn:not(:last-child) {
+    margin-right: 2rem;
+}
+
+.c-cookies__buttons .c-btn--primary {
+    padding: 1rem 2rem;
+
+    border: .1rem solid color(white-1);
+}

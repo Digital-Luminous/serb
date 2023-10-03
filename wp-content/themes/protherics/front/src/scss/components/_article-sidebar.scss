@@ -1,0 +1,12 @@
+.c-article-sidebar__box {
+    margin-bottom: 1rem;
+    padding: 2rem;
+
+    @include media(mobile) {
+        margin-bottom: 2rem;
+    }
+}
+
+.c-article-sidebar__box-heading {
+    margin-bottom: 2rem;
+}

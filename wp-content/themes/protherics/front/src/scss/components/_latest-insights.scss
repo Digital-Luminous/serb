@@ -1,0 +1,17 @@
+.c-latest-insights__header {
+    padding: 2.5rem 0;
+
+    border-top: .1rem solid color(purple-1);
+
+    @include media(mobile) {
+        padding: 5rem 0;
+    }
+}
+
+.c-latest-insights__actions {
+    padding-top: 2.5rem;
+
+    @include media(mobile) {
+        padding-top: 5rem;
+    }
+}

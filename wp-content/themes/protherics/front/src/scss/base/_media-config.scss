@@ -1,0 +1,38 @@
+@mixin media($minWidth, $maxWidth: null, $orientation: null) {
+    // if $minWidth is not a number, use breakpoint
+    @if type-of($minWidth) != number {
+        $minWidth: breakpoint($minWidth);
+    }
+
+    // if $minWidth still is not a number, return warn
+    @if type-of($minWidth) != number {
+        @warn "Unfortunately, no find breakpoint value." + " Please make sure it is defined in `$breakpoints` map.";
+    }
+
+    @if ($maxWidth != null) {
+        @if type-of($maxWidth) == string {
+            $maxWidth: breakpoint($maxWidth);
+        }
+        @if ($orientation != null) {
+            @if (orientation($orientation)) {
+                @media (min-width: $minWidth) and (max-width: $maxWidth - 1px) and (orientation: $orientation) {
+                    @content;
+                }
+            } @else {
+                @warn "Unfortunately, no find orientation '#{$orientation}'." + " Please use 'portrait' or 'landscape' value.";
+            }
+        } @else {
+            @media (min-width: $minWidth) and (max-width: $maxWidth - 1px) {
+                @content;
+            }
+        }
+    } @else {
+        @if ($minWidth != 0) {
+            @media (min-width: $minWidth) {
+                @content;
+            }
+        } @else {
+            @content;
+        }
+    }
+}

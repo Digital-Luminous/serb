@@ -1,0 +1,44 @@
+.l-page {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+    padding-top: 10.2rem;
+
+    @include media(tablet) {
+        padding-top: 15.5rem;
+    }
+}
+
+.l-body.is-privacy .l-page,
+.l-body.is-404 .l-page {
+    padding-top: 18rem;
+
+    @include media(mobile) {
+        padding-top: 24rem;
+    }
+}
+
+.l-body.home .l-page {
+    @include media(desktop-small) {
+        position: relative;
+
+        padding-top: 0;
+    }
+}
+
+.l-body.home .l-page::before {
+    @include media(desktop-small) {
+        position: absolute;
+        z-index: z-index(base);
+        top: 0;
+        right: 0;
+        left: 0;
+
+        height: 15.5rem;
+
+        content: '';
+
+        background-color: color(white-1);
+    }
+}

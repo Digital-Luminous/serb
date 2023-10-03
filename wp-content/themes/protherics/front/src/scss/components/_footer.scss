@@ -1,0 +1,31 @@
+.c-footer {
+    padding: 2.5rem 0 1rem;
+
+    @include media(mobile) {
+        padding: 5rem 0 1rem;
+    }
+}
+
+.c-footer__row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @include media(mobile) {
+        flex-direction: row;
+    }
+}
+
+.c-footer__row:not(:last-child) {
+    margin-bottom: 2rem;
+}
+
+.c-footer__logo {
+    width: 28rem;
+    margin-bottom: 4rem;
+
+    @include media(mobile) {
+        width: 22rem;
+        margin: 0;
+    }
+}

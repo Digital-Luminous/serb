@@ -1,0 +1,30 @@
+.c-video-box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    overflow: hidden;
+
+    background-size: cover;
+}
+
+.c-video-box__video {
+    min-width: 100%;
+    min-height: 100%;
+
+    background-size: cover;
+
+    @include media(0, desktop-small) {
+        max-width: 100%;
+        max-height: 100%;
+    }
+    @include media(desktop-small) {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+    }
+}

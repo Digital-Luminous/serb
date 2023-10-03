@@ -1,0 +1,7 @@
+.l-image-text.l-section--with-bg {
+    margin-bottom: 15rem;
+
+    @include media(tablet) {
+        margin-bottom: 20rem;
+    }
+}

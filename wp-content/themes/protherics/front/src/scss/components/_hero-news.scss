@@ -1,0 +1,36 @@
+.c-hero-news {
+    padding: 2.5rem 0;
+    @include media(mobile){
+        padding: 15rem 0 18rem;
+    }
+}
+
+.c-hero-news__heading {
+    margin-bottom: 2rem;
+
+    @include media(mobile){
+        margin-bottom: 2.4rem;
+    }
+}
+
+.c-hero-news__decor {
+    @include filler;
+    z-index: z-index(hidden);
+
+}
+
+.c-hero-news__image {
+    @include image-full;
+}
+
+.c-hero-news__desc {
+    margin-bottom: 1.3rem;
+
+    @include media(mobile){
+        margin-bottom: 1.8rem;
+    }
+}
+
+.c-hero-news__author {
+    display: inline-block;
+}

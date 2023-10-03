@@ -1,0 +1,52 @@
+.c-modal {
+    @include transition;
+
+    position: fixed;
+    z-index: z-index(modal);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    display: flex;
+    visibility: hidden;
+
+    transition-delay: .1s;
+    transition-property: opacity, visibility, transform;
+    transform: translateY(1rem);
+
+    opacity: 0;
+}
+
+.c-modal.is-visible {
+    visibility: visible;
+
+    transition-delay: 0;
+    transform: translateY(0);
+
+    opacity: 1;
+}
+
+.c-modal__content {
+    position: relative;
+
+    max-width: $size-modal-width;
+    margin: auto;
+}
+
+.c-modal__close {
+    @include button-reset();
+
+    position: absolute;
+    z-index: 1;
+    top: 2.7rem;
+    right: 2.5rem;
+
+    cursor: pointer;
+}
+
+.c-modal__inner {
+    overflow: auto;
+
+    max-height: 90vh;
+}

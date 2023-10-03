@@ -1,0 +1,20 @@
+.c-team-members-list {
+    @include list-reset();
+    @include media(mobile){
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2rem;
+    }
+    @include media(tablet){
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    }
+}
+
+.c-team-members-list__item {
+    height: 100%;
+}
+
+.c-team-members-list__item:not(:last-child) {
+    margin-bottom: 2.5rem;
+}

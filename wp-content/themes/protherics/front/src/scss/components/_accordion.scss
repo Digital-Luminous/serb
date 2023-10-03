@@ -1,0 +1,63 @@
+.c-accordion {
+    border-top: .1rem solid color(purple-1);
+}
+
+.c-accordion-list__item:last-child .c-accordion {
+    border-bottom: .1rem solid color(purple-1);
+}
+
+.c-accordion__header {
+    @include button-reset;
+
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    padding: 4.5rem 0;
+
+    cursor: pointer;
+    text-align: left;
+}
+
+.c-accordion__heading {
+    margin-right: 1.7rem;
+}
+
+.c-accordion__icon {
+    @include transition;
+
+    flex-shrink: 0;
+
+    margin-right: .5rem;
+
+    transition-property: transform;
+
+    @include media(mobile) {
+        margin-right: 1.7rem;
+    }
+
+    align-self: center;
+}
+
+.c-accordion__body {
+    @include transition(300ms);
+
+    overflow: hidden;
+
+    max-height: 0;
+
+    transition-property: max-height;
+}
+
+.c-accordion__content {
+    max-width: 88rem;
+    padding: 0 0 4rem;
+
+    @include media(mobile) {
+        padding-top: 3rem;
+    }
+}
+
+.c-accordion.is-active .c-accordion__icon {
+    transform: rotate(-180deg);
+}

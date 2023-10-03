@@ -1,0 +1,49 @@
+.c-cms-hero {
+    display: inline-block;
+
+    @include media(mobile) {
+        padding: 1rem 4.2rem;
+
+        border-radius: border-radius(radius-40);
+        background-color: color(purple-1);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span {
+        @include typo-size-40;
+
+        display: inline-block;
+
+        font-weight: font-weight(bold);
+
+        color: color(white-1);
+
+        @include media(0, mobile-xs) {
+            @include typo-size-32;
+        }
+        @include media(0, mobile) {
+            margin-bottom: .5rem !important;
+            padding: 1rem 3.1rem;
+
+            border-radius: border-radius(radius-40);
+            background-color: color(purple-1);
+        }
+        @include media(mobile) {
+            @include typo-size-52;
+
+            margin: 0 !important;
+        }
+    }
+}
+
+.c-cms-hero__mobile-break:nth-child(even) {
+    @include media(0, mobile) {
+        margin-left: 26.5%;
+    }
+}

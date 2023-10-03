@@ -1,0 +1,159 @@
+.c-main-nav-list {
+    @include list-reset;
+    @include transition;
+
+    display: flex;
+
+    @include media(0, tablet) {
+        flex-direction: column;
+    }
+    @include media(tablet) {
+        align-items: center;
+    }
+}
+
+.c-main-nav-list__item {
+    @include media(0, tablet) {
+        border-bottom: 1px solid color(white-1);
+    }
+}
+
+.c-main-nav-list__item:not(:last-child) {
+    @include media(tablet) {
+        margin-right: 2rem;
+    }
+}
+
+.c-main-nav-list__title:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
+.c-main-nav-list__button {
+    @include button-reset;
+}
+
+.c-main-nav-list__link {
+    position: relative;
+
+    display: inline-flex;
+
+    width: 100%;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    @include media(0, tablet) {
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 2.5rem 0;
+    }
+    @include media(tablet) {
+        color: color(purple-1);
+    }
+}
+
+.c-main-nav-list__link::after {
+    @include transition;
+
+    @include media(0, tablet) {
+        display: inline-block;
+
+        height: 2.5rem;
+        margin: .5rem;
+        padding-left: 1rem;
+
+        content: url('../images/icon-arrow-right-white.svg');
+        transform: translateX(-2.2rem);
+    }
+    @include media(tablet) {
+        position: absolute;
+        bottom: -1.6rem;
+        left: 0;
+
+        display: block;
+
+        width: 100%;
+        height: .6rem;
+
+        content: '';
+        transition-property: transform;
+        transform: scaleX(0);
+        transform-origin: 0;
+
+        background-color: color(purple-1);
+    }
+}
+
+.c-main-nav-list__item.is-active .c-main-nav-list__link::after,
+.c-main-nav-list__link:hover::after {
+    transform: translateX(0);
+
+    @include media(tablet) {
+        transform: scaleX(1);
+    }
+}
+
+.c-main-nav-list__item.is-open .c-main-nav-list__link::after {
+    transform: scaleX(1);
+}
+
+.c-main-nav-list__submenu {
+    @include transition;
+
+    overflow: hidden;
+
+    transition-property: all;
+    transform: scale(1, 0);
+    transform-origin: top left;
+
+    opacity: 0;
+
+    @include media(0, tablet) {
+        max-height: 0;
+    }
+    @include media(tablet) {
+        position: fixed;
+        top: 15.5rem;
+        right: 0;
+        left: 0;
+
+        padding: 7.1rem 0 8.7rem;
+
+        background-color: color(purple-1);
+        background: bottom left url('../images/decor-submenu.png') no-repeat, color(purple-1);
+        background-size: auto 100%;
+
+        background-blend-mode: multiply;
+    }
+}
+
+.c-main-nav-list__submenu .l-inner:not(:last-child) {
+    @include media(tablet) {
+        margin-bottom: 3rem;
+    }
+}
+
+.c-main-nav-list__submenu .c-close-button {
+    display: none;
+
+    @include media(tablet) {
+        display: flex;
+    }
+}
+
+.c-main-nav-list__submenu .l-inner {
+    @include media(0, tablet) {
+        padding: 0;
+    }
+}
+
+.c-main-nav-list__item.is-open .c-main-nav-list__submenu {
+    transform: scale(1);
+
+    opacity: 1;
+
+    @include media(0, tablet) {
+        max-height: 100%;
+    }
+}

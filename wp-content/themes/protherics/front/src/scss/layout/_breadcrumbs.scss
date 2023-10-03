@@ -1,0 +1,11 @@
+.l-breadcrumbs {
+    padding-top: 2rem;
+}
+
+.single-insights .l-breadcrumbs {
+    margin-bottom: 4.7rem;
+
+    @include media(mobile){
+        margin-bottom: 3.9rem;
+    }
+}

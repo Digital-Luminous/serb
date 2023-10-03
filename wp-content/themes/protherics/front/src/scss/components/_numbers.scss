@@ -1,0 +1,17 @@
+.c-numbers {
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.c-numbers .c-numbers__column {
+    width: 50%;
+
+    @include media(mobile) {
+        margin-bottom: 7rem;
+    }
+}
+
+.c-numbers__column:nth-child(even) {
+    padding-left: 2rem;
+}

@@ -1,0 +1,85 @@
+.c-filters {
+    margin-bottom: 5rem;
+}
+
+.c-filters__heading:not(:last-child) {
+    margin-bottom: 2rem;
+
+    @include media(mobile) {
+        margin-bottom: 3rem;
+    }
+}
+
+.c-filters__controls {
+    @include media(tablet) {
+        display: flex;
+    }
+}
+
+.c-filters__selects {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    width: 100%;
+
+    @include media(mobile) {
+        flex-direction: row;
+    }
+}
+
+.c-filters__control--input .c-search-bar__field {
+    padding-right: 5.5rem;
+}
+
+.c-filters__selects .c-select:not(:last-child) {
+    margin-bottom: 1rem;
+
+    @include media(mobile) {
+        margin: 0 2rem 0 0;
+    }
+}
+
+.c-filters__controls:not(:last-child) {
+    margin-bottom: 2rem;
+}
+
+.c-filters__control--input {
+    margin-bottom: 2.1rem;
+
+    @include media(mobile) {
+        width: 44.8rem;
+    }
+    @include media(tablet) {
+        margin-right: 4rem;
+        margin-bottom: 0;
+    }
+}
+
+.c-filters__control--select {
+    display: flex;
+    flex: 1;
+
+    @include media(mobile) {
+        align-items: center;
+    }
+}
+
+.c-filters__control-label {
+    flex-shrink: 0;
+
+    margin-right: 2.2rem;
+    padding-top: 1.5rem;
+
+    @include media(mobile) {
+        padding-top: 0;
+    }
+}
+
+.c-filters__description p {
+    @include typo-size-14;
+
+    @include media(mobile) {
+        @include typo-size-16;
+    }
+}

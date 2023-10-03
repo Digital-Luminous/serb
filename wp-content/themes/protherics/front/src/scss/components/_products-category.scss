@@ -1,0 +1,20 @@
+.c-products-category {
+    padding: 2rem;
+    margin: 0 -1.7rem;
+}
+
+.c-products-category__header {
+    padding: .7rem 0 2rem;
+
+    @include media(mobile) {
+        padding: 3rem 0 5rem;
+    }
+}
+
+.c-products-category__footer {
+    margin-top: 5rem;
+
+    @include media(mobile) {
+        margin-top: 10.6rem;
+    }
+}

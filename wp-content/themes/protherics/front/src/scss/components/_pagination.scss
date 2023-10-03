@@ -1,0 +1,59 @@
+.c-pagination {
+    display: flex;
+    justify-content: center;
+
+    padding-top: 4.5rem;
+}
+
+.c-pagination__list {
+    @include list-reset;
+
+    display: flex;
+}
+
+.c-pagination__link {
+    @include button-reset;
+
+    position: relative;
+
+    cursor: pointer;
+    letter-spacing: .1rem;
+    text-transform: uppercase;
+}
+
+.c-pagination__item--prev .c-pagination__link::before,
+.c-pagination__item--next .c-pagination__link::before {
+    @include transition;
+
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+    height: .1rem;
+
+    content: '';
+    transition-property: opacity;
+
+    opacity: 0;
+    background-color: color(purple-1);
+}
+
+.c-pagination__link.is-active .c-pagination__number {
+    font-weight: font-weight(semibold);
+}
+
+.c-pagination__link:hover::before {
+    opacity: 1;
+}
+
+.c-pagination__item--number:not(:last-child) {
+    margin-right: .5rem;
+}
+
+.c-pagination__item.c-pagination__item--prev {
+    margin-right: 2rem;
+}
+
+.c-pagination__item.c-pagination__item--next {
+    margin-left: 2rem;
+}

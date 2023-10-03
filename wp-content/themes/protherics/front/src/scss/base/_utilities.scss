@@ -1,0 +1,37 @@
+.u-hide {
+    display: none;
+
+    &-mobile {
+        @include media(0, mobile) {
+            display: none;
+        }
+    }
+
+    &-from-mobile {
+        @include media(mobile) {
+            display: none;
+        }
+    }
+
+    &-tablet {
+        @include media(mobile, tablet) {
+            display: none;
+        }
+    }
+
+    &-desktop-small {
+        @include media(tablet, desktop-small) {
+            display: none;
+        }
+    }
+
+    &-desktop {
+        @include media(desktop-small) {
+            display: none;
+        }
+    }
+}
+
+.u-full-width {
+    width: 100%;
+}

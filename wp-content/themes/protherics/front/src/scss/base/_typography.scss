@@ -1,0 +1,202 @@
+:root {
+    font-size: font-size(main);
+}
+
+html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+
+    @include font-smoothing(on);
+}
+
+body {
+    min-height: 100%;
+
+    font-family: font(main);
+
+    font-size: font-size(size-20);
+
+    line-height: default(lineHeight);
+}
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+
+    color: currentColor;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+img {
+    max-width: 100%;
+}
+
+figure {
+    position: relative;
+
+    margin: 0;
+
+    img {
+        display: block;
+    }
+}
+
+dd,
+dt,
+dl {
+    margin: 0;
+}
+
+svg {
+    fill: currentColor;
+}
+
+// Mobile typo
+// FS/LH: 12px/16px
+.t-size-12 {
+    @include typo-size-12;
+}
+
+// FS/LH: 14px/18px
+.t-size-14 {
+    @include typo-size-14;
+}
+
+// FS/LH: 16px/20px
+.t-size-16{
+    @include typo-size-16;
+}
+
+// FS/LH: 18px/26px
+.t-size-18 {
+    @include typo-size-18;
+}
+
+// FS/LH: 20px/30px
+.t-size-20 {
+    @include typo-size-20;
+}
+
+// FS/LH: 22px/28px
+.t-size-22 {
+    @include typo-size-22;
+}
+
+// FS/LH: 24px/30px
+.t-size-24 {
+    @include typo-size-24;
+}
+
+// FS/LH: 28px/36px
+.t-size-28 {
+    @include typo-size-28;
+}
+
+// FS/LH: 36px/40px
+.t-size-36 {
+    @include typo-size-36;
+}
+
+// FS/LH: 40px/44px
+.t-size-40 {
+    @include typo-size-40;
+}
+
+// FS/LH: 44px/48px
+.t-size-44 {
+    @include typo-size-44;
+}
+
+// Desktop typo
+// FS/LH: 16px/20px
+.t-size-16--desktop {
+    @include media(mobile) {
+        @include typo-size-16;
+    }
+}
+
+// FS/LH: 20px/30px
+.t-size-20--desktop {
+    @include media(mobile) {
+        @include typo-size-20;
+    }
+}
+
+// FS/LH: 24px/30px
+.t-size-24--desktop {
+    @include media(mobile) {
+        @include typo-size-24;
+    }
+}
+
+// FS/LH: 32px/44px
+.t-size-32--desktop {
+    @include media(mobile) {
+        @include typo-size-32;
+    }
+}
+
+// FS/LH: 44px/48px
+.t-size-44--desktop {
+    @include media(mobile) {
+        @include typo-size-44;
+    }
+}
+
+// FS/LH: 52px/60px
+.t-size-52--desktop {
+    @include media(mobile) {
+        @include typo-size-52;
+    }
+}
+
+// FS/LH: 72px/80px
+.t-size-72--desktop {
+    @include media(mobile) {
+        @include typo-size-72;
+    }
+}
+
+// Typography helpers
+.t-center {
+    text-align: center;
+}
+
+.t-left {
+    text-align: left;
+}
+
+.t-right {
+    text-align: right;
+}
+
+.t-lower {
+    text-transform: lowercase;
+}
+
+.t-upper {
+    text-transform: uppercase;
+}

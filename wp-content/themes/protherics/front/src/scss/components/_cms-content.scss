@@ -1,0 +1,172 @@
+.c-cms-content {
+    * {
+        color: color(black-1);
+        word-break: break-word;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: font-weight(semibold);
+    }
+
+    h1 {
+        @include typo-size-44;
+
+        @include media(mobile) {
+            @include typo-size-72;
+        }
+    }
+
+    h2 {
+        @include typo-size-40;
+
+        @include media(mobile) {
+            @include typo-size-52;
+        }
+    }
+
+    h3 {
+        @include typo-size-36;
+
+        @include media(mobile) {
+            @include typo-size-44;
+        }
+    }
+
+    h4 {
+        @include typo-size-28;
+
+        @include media(mobile) {
+            @include typo-size-32;
+        }
+    }
+
+    h5 {
+        @include typo-size-22;
+
+        @include media(mobile) {
+            @include typo-size-24;
+        }
+    }
+
+    h6 {
+        @include typo-size-18;
+
+        @include media(mobile) {
+            @include typo-size-20;
+        }
+    }
+
+    h1,
+    h2,
+    h3 {
+        &:not(:last-child) {
+            margin-bottom: 1.8rem;
+        }
+    }
+
+    h4,
+    h5 {
+        &:not(:last-child) {
+            margin-bottom: .6rem;
+        }
+    }
+
+    h6,
+    p {
+        &:not(:last-child) {
+            margin-bottom: 3rem;
+        }
+    }
+
+    * + ul {
+        margin-top: .25rem;
+    }
+
+    p {
+        @include typo-size-18;
+
+        @include media(mobile) {
+            @include typo-size-20;
+        }
+    }
+
+    ul {
+        @include list-reset;
+    }
+
+    ul li {
+        position: relative;
+
+        margin-bottom: .75rem;
+        padding-left: 2.25rem;
+    }
+
+    ul li::before {
+        position: absolute;
+        left: .75rem;
+
+        content: '\2022';
+    }
+
+    li {
+        @include typo-size-18;
+
+        @include media(mobile) {
+            @include typo-size-20;
+        }
+    }
+
+    strong {
+        font-weight: font-weight(semibold);
+    }
+
+    figcaption {
+        margin: .5rem 0 0 1.5rem;
+
+        @include media(mobile) {
+            margin-left: 0;
+        }
+    }
+
+    img {
+        height: 14.875rem;
+
+        object-fit: cover;
+
+        @include media(mobile) {
+            height: 19.75rem;
+        }
+    }
+
+    a {
+        cursor: pointer;
+        text-decoration: underline;
+
+        color: color(purple-1);
+
+        &:hover {
+            color: color(dark-purple-1);
+        }
+    }
+
+    figure + * {
+        margin-top: 0;
+    }
+
+    figure {
+        margin-bottom: 1.75rem;
+
+        @include media(mobile) {
+            margin-bottom: 2.5rem;
+        }
+    }
+
+    .wp-block-embed {
+        margin-bottom: 0;
+    }
+}

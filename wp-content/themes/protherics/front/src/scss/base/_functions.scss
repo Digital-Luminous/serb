@@ -1,0 +1,51 @@
+@function get-map-value($map, $keys...) {
+    @each $key in $keys {
+        $isValidKey: map-has-key($map, $key);
+
+        @if ($isValidKey == false) {
+            @warn "There is no element with key: '#{$key}'.";
+
+            @return null;
+        }
+
+        $map: map-get($map, $key);
+    }
+
+    @return $map;
+}
+
+@function breakpoint($key) {
+    @return get-map-value($breakpoints, $key);
+}
+
+@function orientation($key) {
+    @return get-map-value($orientations, $key);
+}
+
+@function color($key) {
+    @return get-map-value($colors, $key);
+}
+
+@function font-size($key) {
+    @return get-map-value($font-sizes, $key);
+}
+
+@function font-weight($key) {
+    @return get-map-value($font-weights, $key);
+}
+
+@function font($key) {
+    @return get-map-value($fonts, $key);
+}
+
+@function default($key) {
+    @return get-map-value($defaults, $key);
+}
+
+@function z-index($key) {
+    @return get-map-value($z-indexes, $key);
+}
+
+@function border-radius($key) {
+    @return get-map-value($border-radius, $key);
+}

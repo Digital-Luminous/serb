@@ -1,0 +1,11 @@
+.c-search-results-list {
+    @include list-reset;
+}
+
+.c-search-results-list__item {
+    border-top: .1rem solid color(purple-1);
+}
+
+.c-search-results-list__item:last-child {
+    border-bottom: .1rem solid color(purple-1);
+}

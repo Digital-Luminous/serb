@@ -1,0 +1,17 @@
+.c-related-list {
+    @include list-reset();
+}
+
+.c-related-list__item:not(:last-child) {
+    margin-bottom: 1em;
+}
+
+.c-related-list__link {
+    color: color(purple-1);
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: underline;
+        color: color(dark-purple-1);
+    }
+}

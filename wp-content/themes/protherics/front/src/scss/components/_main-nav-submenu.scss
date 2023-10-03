@@ -1,0 +1,39 @@
+.c-main-nav-submenu {
+    display: flex;
+    flex-direction: column;
+
+    @include media(0, tablet) {
+        margin-bottom: 2.5rem;
+    }
+}
+
+.c-main-nav-submenu__header {
+    display: none;
+
+    @include media(tablet) {
+        display: block;
+        margin-bottom: 1.5rem;
+    }
+}
+
+.c-main-nav-submenu__container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.c-main-nav-submenu__description {
+    display: none;
+
+    @include media(tablet) {
+        display: block;
+
+        max-width: 48rem;
+    }
+}
+
+.c-main-nav-submenu__container,
+.c-main-nav-submenu__sublist {
+    @include media(0, tablet) {
+        width: 100%;
+    }
+}

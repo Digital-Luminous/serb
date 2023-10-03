@@ -1,0 +1,23 @@
+.c-locations-list {
+    @include list-reset();
+
+    @include media(mobile) {
+        display: grid;
+        gap: 2rem;
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @include media(tablet) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.c-locations-list__item {
+    display: flex;
+}
+
+.c-locations-list__item:not(:last-child) {
+    @include media(0, mobile){
+        margin-bottom: 1rem;
+    }
+}

@@ -1,0 +1,22 @@
+.c-news-list {
+    @include list-reset;
+
+    display: flex;
+}
+
+.c-news-list__item {
+    height: initial;
+    min-height: 50rem;
+
+    background: bottom right url('../images/decor-box.png') no-repeat, rgba(color(grey-1), .5);
+
+    @include media(mobile) {
+        flex: 1;
+    }
+}
+
+.c-news-list__item:not(:last-child) {
+    @include media(mobile) {
+        margin-right: 2rem;
+    }
+}

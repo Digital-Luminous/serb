@@ -1,0 +1,7 @@
+.c-insights-listing__search {
+    margin-bottom: 2.5rem;
+
+    @include media(mobile) {
+        margin-bottom: 5rem;
+    }
+}

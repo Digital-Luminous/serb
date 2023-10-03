@@ -1,0 +1,44 @@
+.c-cta-text {
+    display: flex;
+    flex-direction: column;
+
+    padding-top: 5rem;
+
+    border-top: 1px solid color(purple-1);
+
+    @include media(tablet) {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.c-cta-text__content {
+    @include media(0, tablet) {
+        margin-bottom: 2.4rem;
+    }
+    @include media(tablet) {
+        margin-right: 12rem;
+    }
+}
+
+.c-cta-text__heading {
+    margin-bottom: 2.1rem;
+
+    @include media(tablet) {
+        margin-bottom: 2.4rem;
+    }
+}
+
+.c-cta-text__desc {
+    max-width: 58rem;
+}
+
+.c-cta-text__action {
+    flex-shrink: 0;
+
+    @include media(tablet) {
+        margin-bottom: 3rem;
+
+        align-self: flex-end;
+    }
+}

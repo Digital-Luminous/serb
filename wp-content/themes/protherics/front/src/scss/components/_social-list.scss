@@ -1,0 +1,18 @@
+.c-socials-list {
+    @include list-reset;
+
+    display: flex;
+}
+
+.c-socials-list__item:not(:last-child) {
+    margin-right: 2rem;
+}
+
+.c-socials-list__link {
+    @include transition;
+}
+
+.c-socials-list__icon {
+    width: 4rem;
+    height: 4rem;
+}

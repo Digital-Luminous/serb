@@ -1,0 +1,22 @@
+.c-insights-list {
+    @include list-reset;
+
+    @include media(mobile){
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0 , 1fr));
+        gap: 2rem;
+    }
+    @include media(tablet){
+        grid-template-columns: repeat(3, minmax(0 , 1fr));
+    }
+}
+
+.c-insights-list__item:not(:last-child) {
+    @include media(0, mobile){
+        margin-bottom: 1rem;
+    }
+}
+
+.c-insights-list__not-found {
+    grid-column: 1 / -1;
+}

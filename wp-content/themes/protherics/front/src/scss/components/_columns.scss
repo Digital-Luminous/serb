@@ -1,0 +1,155 @@
+.c-columns {
+    display: flex;
+    flex-direction: column;
+
+    @include media(mobile) {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.c-columns:not(:last-child) {
+    @include media(mobile) {
+        margin-bottom: 5rem;
+    }
+}
+
+.c-columns__column:not(.c-numbers__column) {
+    width: 100%;
+}
+
+.c-columns__column:first-child {
+    @include media(mobile) {
+        width: calc(40% + .8rem);
+    }
+}
+
+.c-columns__column:nth-child(2) {
+    @include media(mobile) {
+        width: calc(50% - 1rem);
+    }
+}
+
+.c-columns__column:not(:last-child, :nth-child(3)) {
+    @include media(0, mobile) {
+        margin-bottom: 5rem;
+    }
+}
+
+.c-columns__title {
+    margin-bottom: 1.6rem;
+
+    @include media(mobile) {
+        margin-bottom: 2rem;
+    }
+}
+
+.c-columns__image {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+}
+
+.l-section--with-bg {
+    overflow: hidden;
+}
+
+.l-section--with-bg .c-columns__image {
+    transform: translateY(10rem);
+
+    @include media(0, tablet) {
+        margin-top: -10rem;
+    }
+}
+
+.home .c-columns__text p {
+    @include media(tablet) {
+        max-width: 49rem;
+    }
+}
+
+.c-columns__description:not(:last-child) {
+    margin-bottom: 2.6rem;
+
+    @include media(mobile) {
+        margin-bottom: 5rem;
+    }
+}
+
+.c-columns--text-image {
+    @include media(0, tablet) {
+        flex-direction: column-reverse;
+    }
+}
+
+.c-columns--text-image .c-columns__text {
+    margin: 0 2rem 2.4rem 0;
+
+    @include media(tablet) {
+        margin: 0 2rem 4rem 0;
+    }
+}
+
+.l-section--with-bg .c-columns--text-image .c-columns__text {
+    @include media(mobile) {
+        margin-top: 5rem;
+    }
+    @include media(tablet) {
+        margin-top: 10rem;
+    }
+}
+
+.c-columns--text-image .c-columns__column {
+    @include media(0, tablet) {
+        width: 100%;
+    }
+}
+
+.c-columns--text-image .c-columns__column:first-child {
+    margin-bottom: 0;
+}
+
+.c-columns--text-image .c-columns__actions {
+    margin: .6rem 0 3rem;
+
+    @include media(mobile) {
+        margin-top: 1rem;
+    }
+}
+
+.c-columns__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.c-columns__action:not(:last-child) {
+    margin-bottom: 2rem;
+}
+
+.c-columns__image-404 {
+    display: block;
+
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: .25rem;
+
+    @include media(mobile) {
+        margin-top: 0;
+    }
+}
+
+.c-columns--404 .c-btn {
+    margin-top: 3rem;
+
+    @include media(mobile) {
+        margin-top: 5rem;
+    }
+}
+
+.c-columns--reversed {
+    @include media(mobile) {
+        flex-direction: row-reverse;
+    }
+}

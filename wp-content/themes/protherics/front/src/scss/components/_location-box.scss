@@ -1,0 +1,40 @@
+.c-location-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    min-height: 30rem;
+    padding: 1.8rem 2.7rem 2rem;
+
+    background: url('../images/decor-box.png') center bottom / cover no-repeat;
+}
+
+.c-location-box__continent {
+    margin-bottom: 2rem;
+}
+
+.c-locatio-box__country {
+    margin-bottom: .5rem;
+}
+
+.c-location-box__info-list {
+    @include list-reset();
+}
+
+.c-location-box__info-list--address {
+    margin-bottom: 2rem;
+}
+
+.c-location-box__content {
+    margin-bottom: 5.2rem;
+}
+
+.c-location-box__info-label {
+    display: inline-block;
+
+    min-width: 5.2rem;
+}
+
+.c-location-box__action {
+    margin-top: auto;
+}

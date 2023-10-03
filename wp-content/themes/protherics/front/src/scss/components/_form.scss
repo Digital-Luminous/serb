@@ -1,0 +1,67 @@
+.c-form__heading {
+    margin-bottom: 2.4rem;
+}
+
+.c-form__label {
+    display: block;
+
+    margin-bottom: 2rem;
+}
+
+.c-form__step--1 {
+    margin-bottom: 5rem;
+}
+
+.c-form__fields-group--radio {
+    margin-bottom: 4rem;
+
+    @include media(mobile) {
+        margin-bottom: 3rem;
+    }
+}
+
+.c-form__fields-group--two-cols {
+    display: grid;
+    gap: 2rem;
+
+    margin-bottom: 2.4rem;
+
+    @include media(mobile) {
+        grid-template-columns: 1fr 1fr;
+
+        margin-bottom: 3rem;
+    }
+}
+
+.c-form__main-part,
+.c-form__fields-group--has-offset,
+.c-form__submit {
+    margin-bottom: 5rem;
+}
+
+.c-form__captcha {
+    margin-bottom: 2rem;
+}
+
+.c-form__policy {
+    max-width: 88rem;
+}
+
+.c-form__policy a {
+    text-decoration: underline;
+
+    color: color(purple-1);
+}
+
+.c-form__policy-heading {
+    margin-bottom: .6rem;
+}
+
+.c-form__sent-feedback,
+.c-form__hidden-select {
+    display: none;
+}
+
+.wpcf7cf-hidden + .c-form__sent-feedback {
+    display: block;
+}

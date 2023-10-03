@@ -1,0 +1,35 @@
+.c-link {
+    @include typo-size-14();
+
+    display: inline-flex;
+
+    letter-spacing: .1rem;
+    text-transform: uppercase;
+}
+
+.c-link--primary {
+    color: color(purple-1);
+}
+
+.c-link--go-back {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    &:before {
+        @include transition;
+
+        height: 1.6rem;
+        margin-right: 2.2rem;
+
+        line-height: 1;
+
+        content: url('../images/icon-arrow-left-colored.svg');
+        transition-property: transform;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

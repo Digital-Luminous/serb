@@ -1,0 +1,27 @@
+.l-header {
+    position: fixed;
+    z-index: z-index(header);
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 10.2rem;
+
+    @include media(tablet) {
+        height: 15.5rem;
+    }
+}
+
+.l-header .l-inner {
+    height: 100%;
+}
+
+.l-header.is-open {
+    background-color: color(purple-1);
+}
+
+body.is-modal-open .l-header {
+    @include media(mobile){
+        padding-right: 1.5rem;
+    }
+}

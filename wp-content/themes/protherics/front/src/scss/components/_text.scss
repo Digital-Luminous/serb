@@ -1,0 +1,20 @@
+.c-text__title:not(:last-child) {
+    margin-bottom: 2rem;
+
+    @include media(mobile) {
+        margin-bottom: 2.4rem;
+    }
+}
+
+.c-text__description,
+.c-text__content--narrow {
+    max-width: 88rem;
+}
+
+.c-text__description:not(:last-child) {
+    margin-bottom: 2rem;
+
+    @include media(mobile) {
+        margin-bottom: 3rem;
+    }
+}

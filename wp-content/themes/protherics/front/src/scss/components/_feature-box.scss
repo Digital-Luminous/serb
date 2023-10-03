@@ -1,0 +1,43 @@
+.c-feature-box {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.c-feature-box__figure {
+    flex-shrink: 0;
+
+    width: 9rem;
+    height: 9rem;
+    margin-right: 1rem;
+}
+
+.c-feature-box__image {
+    width: 100%;
+}
+
+.c-feature-box__title br {
+    @include media(0, mobile) {
+        display: none;
+    }
+}
+
+.c-feature-box__title:not(:last-child) {
+    margin-bottom: 1rem;
+
+    @include media(mobile) {
+        margin-bottom: 1.5rem;
+    }
+}
+
+.c-feature-box__content {
+    flex: 1;
+
+    padding-top: 2rem;
+
+    border-top: .1rem solid color(purple-1);
+}
+
+.c-feature-box__figure + .c-feature-box__content {
+    margin-top: 4.5rem;
+}

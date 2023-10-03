@@ -1,0 +1,25 @@
+.c-products-list {
+    @include list-reset;
+
+    display: grid;
+
+    @include media(mobile) {
+        gap: 2rem;
+        grid-gap: 2rem;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @include media(tablet) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    gap: 1rem;
+    grid-gap: 1rem;
+}
+
+.c-products-list__item {
+    padding: 2rem;
+
+    @include media(mobile) {
+        min-height: 70rem;
+    }
+}

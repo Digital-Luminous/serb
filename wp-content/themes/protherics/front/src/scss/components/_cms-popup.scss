@@ -1,0 +1,57 @@
+.c-cms-popup {
+    p,
+    ul,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @include typo-size-14;
+
+        @include media(mobile) {
+            @include typo-size-20;
+        }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: font-weight(semibold);
+
+        color: color(black-1);
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        &:not(:last-child) {
+            margin-bottom: 2rem;
+        }
+    }
+
+    ul {
+        @include list-reset;
+    }
+
+    ul:not(:last-child) {
+        margin-bottom: 5rem;
+    }
+
+    li:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+
+    a {
+        text-decoration: underline;
+
+        color: color(purple-1);
+    }
+}

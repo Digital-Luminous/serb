@@ -1,0 +1,12 @@
+.c-team-members__header {
+    @include media(mobile) {
+        max-width: $size-text-box-width-sm;
+    }
+}
+
+.c-team-members__heading {
+    margin-bottom: 2.5rem;
+    @include media(mobile) {
+        margin-bottom: 5rem;
+    }
+}

@@ -1,0 +1,18 @@
+.l-hero {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    @include media(0, desktop-small) {
+        width: 100vw;
+        height: 100vw;
+    }
+    @include media(desktop-small) {
+        height: 100vh;
+    }
+}

@@ -1,0 +1,243 @@
+.c-cms-article {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-bottom: 0;
+
+        font-weight: font-weight(semibold);
+
+        color: color(black-1);
+    }
+
+    h1 {
+        @include typo-size-32;
+
+        @include media(mobile) {
+            @include typo-size-36;
+        }
+    }
+
+    h1 {
+        @include typo-size-28;
+
+        @include media(mobile) {
+            @include typo-size-32;
+        }
+    }
+
+    h3 {
+        @include typo-size-22;
+
+        @include media(mobile) {
+            @include typo-size-24;
+        }
+    }
+
+    h4 {
+        @include typo-size-18;
+
+        @include media(mobile) {
+            @include typo-size-20;
+        }
+    }
+
+    h4 {
+        @include typo-size-16;
+
+        @include media(mobile) {
+            @include typo-size-18;
+        }
+    }
+
+    h5,
+    h6 {
+        @include typo-size-16;
+    }
+
+    p,
+    li {
+        color: color(black-1);
+    }
+
+    * + ul {
+        margin-top: .25rem;
+    }
+
+    p {
+        @include typo-size-18;
+
+        @include media(mobile) {
+            @include typo-size-20;
+        }
+        &:not(:last-child) {
+            margin-bottom: 2rem;
+        }
+    }
+
+    ul {
+        @include list-reset;
+    }
+
+    ul:not([class]) li {
+        position: relative;
+
+        margin-bottom: .75rem;
+        padding-left: 2.25rem;
+    }
+
+    ul:not([class]) li::before {
+        position: absolute;
+        left: .75rem;
+
+        content: '\2022';
+    }
+
+    li {
+        @include typo-size-18;
+
+        @include media(mobile) {
+            @include typo-size-20;
+        }
+    }
+
+    strong {
+        font-weight: font-weight(semibold);
+    }
+
+    .wp-block-gallery .blocks-gallery-item figcaption,
+    figcaption {
+        @include typo-size-14;
+
+        margin: 1rem 0 0;
+
+        @include media(mobile) {
+            @include typo-size-16;
+
+            margin-top: 2rem;
+        }
+    }
+
+    img {
+        object-fit: cover;
+    }
+
+    a {
+        cursor: pointer;
+        text-decoration: underline;
+
+        color: color(purple-1);
+
+        &:hover {
+            color: color(dark-purple-1);
+        }
+    }
+
+    .c-table:not(:last-child) {
+        margin: 6rem 0;
+    }
+
+    .c-table__title {
+        @include typo-size-28;
+
+        margin-bottom: 2rem;
+
+        @include media(mobile) {
+            @include typo-size-32;
+        }
+    }
+
+    * + .wp-block-image,
+    * + .wp-block-embed,
+    * + .wp-block-gallery {
+        margin-top: 6rem;
+    }
+
+    .wp-block-embed .wp-block-image,
+    .wp-block-gallery + * {
+        margin-top: 0;
+    }
+
+    .wp-block-embed,
+    .wp-block-image,
+    .wp-block-gallery {
+        margin-bottom: 5.5rem;
+
+        @include media(mobile) {
+            margin-bottom: 6rem;
+        }
+    }
+
+    .wp-block-quote {
+        @include typo-size-18;
+
+        max-width: 68rem;
+        margin: 4rem auto;
+
+        @include media(mobile) {
+            margin-top: 6rem;
+            margin-bottom: 6rem;
+        }
+    }
+
+    cite {
+        @include typo-size-16;
+
+        font-style: normal;
+    }
+
+    .wp-block-quote p {
+        font-weight: font-weight(semibold);
+    }
+
+    .wp-block-quote p,
+    .has-purple-1-color {
+        color: color(purple-1);
+    }
+
+    .blocks-gallery-grid {
+        @include list-reset;
+    }
+
+    .wp-block-gallery {
+        @include media(0, mobile) {
+            flex-direction: column;
+        }
+    }
+
+    .wp-block-gallery .blocks-gallery-caption,
+    .wp-block-gallery.has-nested-images figcaption {
+        margin-top: 0;
+
+        text-align: left;
+    }
+
+    .wp-block-gallery .wp-block-image > figcaption {
+        display: none;
+    }
+
+    .wp-block-gallery .blocks-gallery-item figure {
+        flex-direction: column;
+    }
+
+    .wp-block-gallery .blocks-gallery-item figcaption {
+        padding: 0;
+
+        position: relative;
+
+        text-align: left;
+
+        color: color(black-1);
+        background: none;
+    }
+
+    .wp-block-gallery .blocks-gallery-item,
+    .wp-block-gallery.has-nested-images figure.wp-block-image:not(#individual-image) {
+        @include media(0, mobile) {
+            width: 100%;
+            margin-right: 0;
+        }
+    }
+}

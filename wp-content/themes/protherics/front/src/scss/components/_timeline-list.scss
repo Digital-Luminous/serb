@@ -1,0 +1,64 @@
+.c-timeline-list {
+    @include list-reset;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.c-timeline-list__item::after {
+    width: 2rem;
+    height: 2rem;
+
+    transform: translate(-50%, -50%);
+
+    border: .2rem solid color(purple-1);
+    border-radius: 50%;
+    background-color: color(white-1);
+
+    @include media(mobile) {
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+.c-timeline-list__item::after {
+    left: 50%;
+}
+
+.c-timeline-list__item::after,
+.c-timeline-list__item::before {
+    position: absolute;
+    top: 0;
+
+    content: '';
+}
+
+.c-timeline-list__item {
+    position: relative;
+
+    display: flex;
+}
+
+.c-timeline-list__item::before {
+    right: 50%;
+    left: 0;
+
+    height: .2rem;
+
+    background-color: color(purple-1);
+}
+
+.c-timeline-list__item:nth-child(even) {
+    justify-content: flex-end;
+}
+
+.c-timeline-list__item:nth-child(even)::before {
+    right: 0;
+    left: 50%;
+}
+
+.c-timeline-list__item:last-child .c-timeline-box::before {
+    content: none;
+}

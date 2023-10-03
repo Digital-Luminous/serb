@@ -1,0 +1,18 @@
+.c-close-button {
+    @include button-reset;
+    @include transition;
+    transition-property: opacity;
+    display: flex;
+    align-items: center;
+    font-size: 4rem;
+    margin-left: auto;
+    cursor: pointer;
+
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.c-close-button__label {
+    margin-left: 1rem;
+}

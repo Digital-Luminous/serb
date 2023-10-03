@@ -1,0 +1,17 @@
+.c-tabs-nav-list {
+    @include list-reset();
+
+    display: flex;
+
+    @include media(0, mobile) {
+        padding: 0 1.5rem;
+    }
+}
+
+.c-tabs-nav-list__item {
+    margin-right: .5rem;
+}
+
+.c-tabs-nav-list__item:last-child {
+    padding-right: 1.5rem;
+}

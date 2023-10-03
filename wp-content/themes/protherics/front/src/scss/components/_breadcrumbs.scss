@@ -1,0 +1,21 @@
+.c-breadcrumbs {
+    @include list-reset;
+
+    display: flex;
+}
+
+.c-breadcrumbs__item:not(:last-child) {
+    margin-right: .5rem;
+}
+
+.c-breadcrumbs__link {
+    @include transition;
+
+    transition-property: color;
+}
+
+.c-breadcrumbs__link:hover {
+    @media (hover: hover) {
+        color: color(purple-1);
+    }
+}

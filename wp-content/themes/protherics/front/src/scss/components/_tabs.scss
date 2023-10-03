@@ -1,0 +1,23 @@
+.c-tabs__nav {
+    overflow-x: auto;
+
+    margin-bottom: .5rem;
+
+    @include media(0, mobile) {
+        margin-right: -1.5rem;
+        margin-left: -1.5rem;
+    }
+}
+
+.c-tabs__separator {
+    display: block;
+
+    height: .1rem;
+    margin-bottom: 4.3rem;
+
+    background-color: color(mauve-1);
+
+    @include media(mobile) {
+        margin-bottom: 5.5rem;
+    }
+}

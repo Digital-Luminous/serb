@@ -1,0 +1,23 @@
+.c-tags__list {
+    @include list-reset;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.c-tags__item {
+    margin-bottom: 1rem;
+    padding: .5rem 2rem;
+
+    opacity: .9;
+    border: .1rem solid color(grey-1);
+    border-radius: 1.5rem;
+}
+
+.c-tags__item:not(:last-child) {
+    margin-right: 1rem;
+}
+
+.c-article-sidebar .c-tags__item {
+    margin-bottom: 1rem;
+}

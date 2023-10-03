@@ -1,0 +1,13 @@
+.l-section--with-bg {
+    @include media(desktop) {
+        margin-right: 4rem;
+        margin-left: 4rem;
+    }
+}
+
+.l-section--fill-mobile {
+    @include media(0, mobile) {
+        margin-right: 0;
+        margin-left: 0;
+    }
+}

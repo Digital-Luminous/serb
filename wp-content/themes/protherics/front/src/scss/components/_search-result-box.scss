@@ -1,0 +1,35 @@
+.c-search-result-box {
+    display: flex;
+    flex-direction: column;
+
+    padding: 3rem 0;
+
+    @include media(mobile) {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+}
+
+.c-search-result-box__action {
+    white-space: nowrap;
+}
+
+.c-search-result-box__description {
+    flex: 1;
+
+    margin-bottom: 3rem;
+
+    @include media(mobile) {
+        margin: 0 8.5rem 0 0;
+    }
+}
+
+.c-search-result-box__description p {
+    @include line-clamp(2);
+    @include typo-size-18;
+
+    @include media(mobile) {
+        @include typo-size-20;
+    }
+}

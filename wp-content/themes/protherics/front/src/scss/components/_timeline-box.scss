@@ -1,0 +1,84 @@
+.c-timeline-box {
+    width: 100%;
+    max-width: 45%;
+
+    @include media(desktop-small) {
+        max-width: 48rem;
+    }
+}
+
+.c-timeline-box::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+
+    width: .1rem;
+
+    content: '';
+
+    background-color: color(purple-1);
+}
+
+.c-timeline-box__content {
+    position: relative;
+    z-index: z-index(base);
+
+    width: 100%;
+    padding: 2rem;
+}
+
+.c-timeline-box__content--beige {
+    background-color: color(grey-2);
+}
+
+.c-timeline-box__content--purple {
+    background-color: color(purple-1);
+}
+
+.c-timeline-box__action {
+    margin-top: 4rem;
+}
+
+.c-timeline-box .c-btn {
+    @include media(0, mobile) {
+        padding: 1.5rem;
+
+        font-size: 1rem;
+
+        white-space: nowrap;
+    }
+}
+
+.c-timeline-box .c-btn--arrowed::after {
+    @include media(0, mobile) {
+        content: none;
+    }
+}
+
+.c-timeline-box__content--purple .c-cms-content * {
+    color: color(white-1);
+}
+
+.c-timeline-box .c-cms-content p:not(:last-child) {
+    margin-bottom: 2rem;
+}
+
+.c-timeline-box .c-cms-content h5 {
+    @include media(0, mobile) {
+        font-size: 1.8rem;
+    }
+}
+
+.c-timeline-box .c-cms-content p {
+    @include media(0, mobile) {
+        font-size: 1.4rem;
+    }
+}
+
+.c-timeline-box .c-cms-content img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+}

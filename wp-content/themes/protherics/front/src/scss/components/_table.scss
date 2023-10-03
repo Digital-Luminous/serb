@@ -1,0 +1,32 @@
+.c-table__table-container {
+    overflow-y: auto;
+}
+
+.c-table__title {
+    margin-bottom: 3.6rem;
+}
+
+.c-table__description {
+    margin-bottom: 2.4rem;
+}
+
+.c-table__table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    text-align: left;
+}
+
+.c-table__row {
+    border-bottom: .1rem solid color(purple-1);
+}
+
+.c-table__column {
+    min-width: 28rem;
+    padding: 2rem 2rem 2rem 0;
+}
+
+.c-table__heading {
+    padding: 0 2rem 1rem 0;
+}
