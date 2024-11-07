@@ -2,7 +2,10 @@
 
 namespace WP_STATISTICS;
 
-class refer_page
+use WP_Statistics\Components\DateRange;
+use WP_Statistics\Components\Singleton;
+
+class refer_page extends Singleton
 {
 
     public function __construct()
@@ -19,7 +22,7 @@ class refer_page
             // Is Validate Date Request
             $DateRequest = Admin_Template::isValidDateRequest();
             if (!$DateRequest['status']) {
-                wp_die($DateRequest['message']);
+                wp_die(esc_html($DateRequest['message']));
             }
         }
     }
@@ -31,17 +34,17 @@ class refer_page
      */
     public static function view()
     {
-        global $wpdb;
 
         // Page title
-        $args['title'] = __('Top Referring Sites', 'wp-statistics');
+        $args['title'] = __('Top Referrers', 'wp-statistics');
 
         // Get Current Page Url
         $args['pageName'] = Menus::get_page_slug('referrers');
         $args['paged']    = Admin_Template::getCurrentPaged();
 
         // Get Date-Range
-        $args['DateRang'] = Admin_Template::DateRange();
+        $args['DateRang']    = DateRange::get();
+        $args['hasDateRang'] = true;
 
         // Get Total List
         if (!isset($_GET['referrer'])) {
@@ -68,7 +71,7 @@ class refer_page
                 // Push Domain Rate in List
                 $i = 1;
                 foreach ($list as $domain_list) {
-                    $args['list'][] = array_merge($domain_list, array('rate' => $i + (($args['paged'] - 1) * Admin_Template::$item_per_page)));
+                    $args['list'][] = $domain_list;
                     $i++;
                 }
             }
@@ -76,9 +79,9 @@ class refer_page
         } else {
             // Get Special domain Refer List
             $referrer           = sanitize_text_field($_GET['referrer']);
-            $args['domain']     = trim($referrer);
+            $args['domain']     = Helper::get_domain_name($referrer);
             $args['custom_get'] = array('referrer' => $referrer);
-            $args['title']      = sprintf(__('Referring site: %s', 'wp-statistics'), Referred::html_sanitize_referrer($args['domain']));
+            $args['title']      = sprintf(__('Referred by Site: %s', 'wp-statistics'), Referred::html_sanitize_referrer($args['domain']));
             $args['total']      = Referred::get_referer_from_domain($args['domain'], 'number', array($args['DateRang']['from'], $args['DateRang']['to']));
             $args['list']       = array();
 
@@ -98,9 +101,9 @@ class refer_page
             ));
         }
 
-        Admin_Template::get_template(array('layout/header', 'layout/title', 'layout/date.range', (isset($referrer) ? 'pages/refer.url' : 'pages/top.refer'), 'layout/footer'), $args);
+        Admin_Template::get_template(array('layout/header', 'layout/title', (isset($referrer) ? 'pages/refer.url' : 'pages/top.refer'), 'layout/footer'), $args);
     }
 
 }
 
-new refer_page;
+refer_page::instance();

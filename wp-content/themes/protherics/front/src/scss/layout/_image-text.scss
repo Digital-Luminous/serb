@@ -1,7 +1,9 @@
 .l-image-text.l-section--with-bg {
     margin-bottom: 15rem;
-
     @include media(tablet) {
         margin-bottom: 20rem;
+    }
+    @include media(0,mobile) {
+        padding-top: 30px;
     }
 }

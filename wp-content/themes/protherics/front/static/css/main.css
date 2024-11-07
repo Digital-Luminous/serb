@@ -859,6 +859,11 @@ svg {
     padding-top: 15.5rem;
   }
 }
+@media (min-width: 0) and (max-width: 1023px) {
+  .l-page {
+    padding-top: 14rem;
+  }
+}
 
 .l-body.is-privacy .l-page,
 .l-body.is-404 .l-page {
@@ -901,12 +906,7 @@ svg {
   top: 0;
   right: 0;
   left: 0;
-  height: 10.2rem;
-}
-@media (min-width: 1024px) {
-  .l-header {
-    height: 15.5rem;
-  }
+  height: 15.5rem;
 }
 
 .l-header .l-inner {
@@ -949,6 +949,11 @@ svg {
 @media (min-width: 1024px) {
   .l-image-text.l-section--with-bg {
     margin-bottom: 20rem;
+  }
+}
+@media (min-width: 0) and (max-width: 767px) {
+  .l-image-text.l-section--with-bg {
+    padding-top: 30px;
   }
 }
 
@@ -1478,6 +1483,7 @@ svg {
 
 .c-header__img {
   width: 100%;
+  min-height: 5.6rem;
 }
 
 .c-header__img--menu {
@@ -1517,13 +1523,17 @@ svg {
 .c-header__nav {
   display: flex;
 }
+.c-header__nav .l-footer {
+  margin-top: auto;
+  margin-bottom: 10rem;
+}
 @media (min-width: 0) and (max-width: 1023px) {
   .c-header__nav {
     position: fixed;
     right: 0;
     left: 0;
     top: 10.2rem;
-    height: calc(100vh - 10.2rem);
+    height: 100vh;
     flex-direction: column;
     overflow-y: auto;
     padding: 2.5rem 0 0;
@@ -1574,12 +1584,7 @@ svg {
 }
 
 .c-header__region {
-  margin-top: 1rem;
-}
-@media (min-width: 768px) {
-  .c-header__region {
-    margin-top: 0;
-  }
+  margin-top: -5px;
 }
 
 .l-header.is-open .c-header__current-region {
@@ -1619,6 +1624,22 @@ svg {
   .c-header__current-region:hover::after {
     transform: scaleX(1);
   }
+}
+
+.wpml-ls-current-language {
+  font-weight: 700;
+}
+
+.wpml-ls-first-item {
+  border-right: 2px solid #54178E;
+}
+
+.wpml-ls-item {
+  color: #54178E;
+}
+
+.wpcf7-radio .wpcf7-list-item-label {
+  text-transform: capitalize;
 }
 
 .c-main-nav-list {
@@ -2488,7 +2509,7 @@ svg {
 }
 @media (min-width: 768px) {
   .c-footer {
-    padding: 5rem 0 1rem;
+    padding: 5rem 0;
   }
 }
 
@@ -2497,11 +2518,6 @@ svg {
   flex-direction: column;
   justify-content: space-between;
 }
-@media (min-width: 768px) {
-  .c-footer__row {
-    flex-direction: row;
-  }
-}
 
 .c-footer__row:not(:last-child) {
   margin-bottom: 2rem;
@@ -2509,13 +2525,8 @@ svg {
 
 .c-footer__logo {
   width: 28rem;
+  min-height: 9.2rem;
   margin-bottom: 4rem;
-}
-@media (min-width: 768px) {
-  .c-footer__logo {
-    width: 22rem;
-    margin: 0;
-  }
 }
 
 .c-socials-list {
@@ -2707,6 +2718,12 @@ svg {
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .c-numbers__wrap {
+    width: 84%;
+  }
 }
 
 .c-numbers .c-numbers__column {
@@ -3147,6 +3164,7 @@ svg {
   padding: 0;
   list-style: none;
   display: flex;
+  width: 100%;
 }
 
 .c-news-list__item {
@@ -3156,7 +3174,8 @@ svg {
 }
 @media (min-width: 768px) {
   .c-news-list__item {
-    flex: 1;
+    flex: 1 1 33%;
+    max-width: 33%;
   }
 }
 
@@ -3171,6 +3190,7 @@ svg {
   flex-direction: column;
   height: 100%;
   padding: 2rem;
+  word-break: break-word;
 }
 
 .c-news-box--tall {

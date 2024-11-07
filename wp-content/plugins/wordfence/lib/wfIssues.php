@@ -42,6 +42,8 @@ class wfIssues {
 	const SEVERITY_HIGH = 75;
 	const SEVERITY_CRITICAL = 100;
 
+	const SCAN_STATUS_UPDATE_INTERVAL = 10; //Seconds
+
 	private $db = false;
 
 	//Properties that are serialized on sleep:
@@ -78,13 +80,14 @@ class wfIssues {
 		'wfPluginRemoved' => wfIssues::SEVERITY_CRITICAL,
 		'wfPluginUpgrade' => wfIssues::SEVERITY_MEDIUM,
 		'wfThemeUpgrade' => wfIssues::SEVERITY_MEDIUM,
+		'wfUpgradeError' => wfIssues::SEVERITY_MEDIUM,
 		'wfUpgrade' => wfIssues::SEVERITY_HIGH,
 		'wpscan_directoryList' => wfIssues::SEVERITY_HIGH,
 		'wpscan_fullPathDiscl' => wfIssues::SEVERITY_HIGH,
 	);
 
 	public static function validIssueTypes() {
-		return array('checkHowGetIPs', 'checkSpamIP', 'commentBadURL', 'configReadable', 'coreUnknown', 'database', 'diskSpace', 'wafStatus', 'easyPassword', 'file', 'geoipSupport', 'knownfile', 'optionBadURL', 'postBadTitle', 'postBadURL', 'publiclyAccessible', 'spamvertizeCheck', 'suspiciousAdminUsers', 'timelimit', 'wfPluginAbandoned', 'wfPluginRemoved', 'wfPluginUpgrade', 'wfPluginVulnerable', 'wfThemeUpgrade', 'wfUpgrade', 'wpscan_directoryList', 'wpscan_fullPathDiscl', 'skippedPaths');
+		return array('checkHowGetIPs', 'checkSpamIP', 'commentBadURL', 'configReadable', 'coreUnknown', 'database', 'diskSpace', 'wafStatus', 'easyPassword', 'file', 'geoipSupport', 'knownfile', 'optionBadURL', 'postBadTitle', 'postBadURL', 'publiclyAccessible', 'spamvertizeCheck', 'suspiciousAdminUsers', 'timelimit', 'wfPluginAbandoned', 'wfPluginRemoved', 'wfPluginUpgrade', 'wfPluginVulnerable', 'wfThemeUpgrade', 'wfUpgradeError', 'wfUpgrade', 'wpscan_directoryList', 'wpscan_fullPathDiscl', 'skippedPaths');
 	}
 	
 	public static function statusPrep(){
@@ -149,8 +152,14 @@ class wfIssues {
 	}
 	
 	public static function updateScanStillRunning($running = true) {
-		$timestamp = time();
-		if (!$running) {
+		static $lastUpdate = 0;
+		if ($running) {
+			$timestamp = time();
+			if ($timestamp - $lastUpdate < self::SCAN_STATUS_UPDATE_INTERVAL)
+				return;
+			$lastUpdate = $timestamp;
+		}
+		else {
 			$timestamp = 0;
 		}
 		wfConfig::set('wf_scanLastStatusTime', $timestamp);
@@ -459,7 +468,7 @@ class wfIssues {
 			}
 			$totals[$i['severity']]++;
 		}
-		wfConfig::set_ser('emailedIssuesList', $emailedIssues);
+		wfConfig::set_ser('emailedIssuesList', $emailedIssues, false, wfConfig::DONT_AUTOLOAD);
 		$needsToAlert = false;
 		foreach ($totals as $issueSeverity => $totalIssuesBySeverity) {
 			if ($issueSeverity >= $level && $totalIssuesBySeverity > 0) {
@@ -508,7 +517,7 @@ class wfIssues {
 			}
 		}
 		
-		wfConfig::set_ser('emailedIssuesList', $updated);
+		wfConfig::set_ser('emailedIssuesList', $updated, false, wfConfig::DONT_AUTOLOAD);
 	}
 	public function deleteIssue($id){ 
 		$this->clearEmailedStatus(array($this->getIssueByID($id)));
@@ -530,13 +539,13 @@ class wfIssues {
 	}
 
 	public function deleteAllUpdateIssues() {
-		$issues = $this->getDB()->querySelect("SELECT id, status, ignoreP, ignoreC FROM {$this->issuesTable} WHERE status = 'new' AND (type = 'wfUpgrade' OR type = 'wfPluginUpgrade' OR type = 'wfThemeUpgrade')");
+		$issues = $this->getDB()->querySelect("SELECT id, status, ignoreP, ignoreC FROM {$this->issuesTable} WHERE status = 'new' AND (type = 'wfUpgrade' OR type = 'wfUpgradeError' OR type = 'wfPluginUpgrade' OR type = 'wfThemeUpgrade')");
 		$this->clearEmailedStatus($issues);
 		
-		$this->getDB()->queryWrite("DELETE FROM {$this->issuesTable} WHERE status = 'new' AND (type = 'wfUpgrade' OR type = 'wfPluginUpgrade' OR type = 'wfThemeUpgrade')");
+		$this->getDB()->queryWrite("DELETE FROM {$this->issuesTable} WHERE status = 'new' AND (type = 'wfUpgrade' OR type = 'wfUpgradeError' OR type = 'wfPluginUpgrade' OR type = 'wfThemeUpgrade')");
 
 		if (wfCentral::isConnected()) {
-			wfCentral::deleteIssueTypes(array('wfUpgrade', 'wfPluginUpgrade', 'wfThemeUpgrade'));
+			wfCentral::deleteIssueTypes(array('wfUpgrade', 'wfUpgradeError', 'wfPluginUpgrade', 'wfThemeUpgrade'));
 		}
 	}
 

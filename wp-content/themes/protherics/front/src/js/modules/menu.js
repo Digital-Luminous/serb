@@ -56,10 +56,6 @@ const Menu = {
     Menu.searchBar = document.querySelector(selector.searchBar);
     Menu.closeSubmenuButtons = document.querySelectorAll(selector.closeSubmenuButton);
 
-    const shouldContinue = !!Menu.header && !!Menu.hamburger && !!Menu.itemsWithSubmenu.length && !!Menu.searchBar;
-
-    if (!shouldContinue) return;
-
     Menu.addEventListeners();
   }
 }

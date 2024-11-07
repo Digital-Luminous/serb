@@ -4,14 +4,16 @@
  *
  * @package    wp2fa
  * @subpackage utils
- * @copyright  2023 WP White Security
+ * @copyright  2024 Melapress
  * @license    https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link       https://wordpress.org/plugins/wp-2fa/
  */
 
+declare(strict_types=1);
+
 namespace WP2FA\Utils;
 
-use WP2FA\Utils\Settings_Utils as Settings_Utils;
+use WP2FA\Utils\Settings_Utils;
 
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
@@ -42,6 +44,7 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 	 * Note: order of the methods is not preserved - version numbers will be used for ordering
 	 *
 	 * @package WP2FA\Utils
+	 *
 	 * @since 1.6
 	 */
 	class Abstract_Migration {
@@ -50,6 +53,8 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 		 * Extracted version from the DB (WP option)
 		 *
 		 * @var string
+		 *
+		 * @since 1.6.0
 		 */
 		protected static $stored_version = '';
 
@@ -59,6 +64,8 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 		 * Note: only numbers will be processed
 		 *
 		 * @var string
+		 *
+		 * @since 1.6.0
 		 */
 		protected static $version_option_name = '';
 
@@ -87,6 +94,8 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 		 * And current version is stored as 2 (no suffix 0.0) that means that it will be normalized as 200.
 		 *
 		 * @var integer
+		 *
+		 * @since 1.6.0
 		 */
 		protected static $pad_length = 3;
 
@@ -94,6 +103,8 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 		 * Collects all the migration methods which needs to be executed in order and executes them
 		 *
 		 * @return void
+		 *
+		 * @since 1.6.0
 		 */
 		public static function migrate() {
 
@@ -105,7 +116,7 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 
 				$migrate_methods = array_filter(
 					$method_as_version_numbers,
-					function( $method, $key ) use ( &$stored_version_as_number, &$target_version_as_number ) {
+					function ( $method, $key ) use ( &$stored_version_as_number, &$target_version_as_number ) {
 						if ( $target_version_as_number > $stored_version_as_number ) {
 							return ( in_array( $key, range( $stored_version_as_number, $target_version_as_number ), true ) );
 						}
@@ -120,6 +131,11 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 					foreach ( $migrate_methods as $method ) {
 						static::{$method}();
 					}
+				}
+
+				// If we have a previous version, its an update so flag notice.
+				if ( ! empty( Settings_Utils::get_option( static::$version_option_name ) ) ) {
+					Settings_Utils::update_option( 'wp_2fa_update_redirection_needed', true );
 				}
 
 				self::store_updated_version();
@@ -142,11 +158,13 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 		 * Extracts currently stored version from the DB
 		 *
 		 * @return string
+		 *
+		 * @since 1.6.0
 		 */
 		private static function get_stored_version() {
 
-			if ( '' === trim( static::$stored_version ) ) {
-				static::$stored_version = Settings_Utils::get_option( static::$version_option_name, '0.0.0' );
+			if ( '' === trim( (string) static::$stored_version ) ) {
+				static::$stored_version = (string) Settings_Utils::get_option( static::$version_option_name, '0.0.0' );
 			}
 
 			return static::$stored_version;
@@ -156,6 +174,8 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 		 * Stores the version to which we migrated
 		 *
 		 * @return void
+		 *
+		 * @since 1.6.0
 		 */
 		private static function store_updated_version() {
 			Settings_Utils::update_option( static::$version_option_name, \constant( static::$const_name_of_plugin_version ) );
@@ -175,12 +195,14 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 		 * @param string $version - The version string we have to use.
 		 *
 		 * @return string
+		 *
+		 * @since 1.6.0
 		 */
 		private static function normalize_version( string $version ) {
 			$version_as_number = (int) filter_var( $version, FILTER_SANITIZE_NUMBER_INT );
 
-			if ( self::$pad_length > strlen( $version_as_number ) ) {
-				$version_as_number = str_pad( $version_as_number, static::$pad_length, '0', STR_PAD_RIGHT );
+			if ( self::$pad_length > strlen( (string) $version_as_number ) ) {
+				$version_as_number = str_pad( (string) $version_as_number, static::$pad_length, '0', STR_PAD_RIGHT );
 			}
 
 			return $version_as_number;
@@ -193,6 +215,8 @@ if ( ! class_exists( '\WP2FA\Utils\Abstract_Migration' ) ) {
 		 * value - name of the method
 		 *
 		 * @return array
+		 *
+		 * @since 1.6.0
 		 */
 		private static function get_all_migration_methods_as_numbers() {
 			$class_methods = \get_class_methods( get_called_class() );

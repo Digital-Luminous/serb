@@ -109,10 +109,10 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].request = (function(route, data) {
-            if (!$.isPlainObject(route) || !('module' in route) || !('action' in route)) {
+            if (!jQuery.isPlainObject(route) || !('module' in route) || !('action' in route)) {
                 throw new Error('Request route is not specified.');
             }
-            if (!$.isPlainObject(data)) {
+            if (!jQuery.isPlainObject(data)) {
                 data = {};
             }
             if ('action' in data) {
@@ -121,9 +121,9 @@ var g_stbServerSideProcessingIsActive = false;
             data.action = 'supsystic-tables';
 
             var url = window.ajaxurl ? window.ajaxurl : ajax_obj.ajaxurl,
-                deferred = $.Deferred();
+                deferred = jQuery.Deferred();
 
-            $.post(url, $.extend({}, {
+            jQuery.post(url, jQuery.extend({}, {
                     route: route
                 }, data))
                 .done(function(response, textStatus, jqXHR) {
@@ -147,7 +147,7 @@ var g_stbServerSideProcessingIsActive = false;
                 });
 
             function retryAjax(def, url, route, data, curIter, maxIter) {
-                $.post(url, $.extend({}, {
+                jQuery.post(url, jQuery.extend({}, {
                         route: route
                     }, data))
                     .done(function(response, textStatus, jqXHR) {
@@ -176,9 +176,9 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].setTableMobileWidth = (function(isMobile) {
-            $('div .supsystic-tables-wrap').each(function() {
+            jQuery('div .supsystic-tables-wrap').each(function() {
                 isMobile = (typeof(isMobile) == 'undefined' ? true : isMobile);
-                var ssDiv = $(this),
+                var ssDiv = jQuery(this),
                     widthAttr = ssDiv.data('table-width-' + (isMobile ? 'mobile' : 'fixed'));
                 if (typeof(widthAttr) != 'undefined') {
                     ssDiv.css('display', (widthAttr == 'auto' ? 'inline-block' : '')).css('width', widthAttr);
@@ -191,7 +191,7 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName]._initTablesOnPage = (function(id) {
-            var tables = $(typeof id != 'undefined' ? '#supsystic-table-' + id + ':not(.dataTable)' : '.supsystic-table');
+            var tables = jQuery(typeof id != 'undefined' ? '#supsystic-table-' + id + ':not(.dataTable)' : '.supsystic-table');
             if (tables.length == 0) return;
             if (typeof this._initTablesOnPageWoo === 'function') this._initTablesOnPageWoo(id);
 
@@ -202,7 +202,7 @@ var g_stbServerSideProcessingIsActive = false;
                 firstTableWrapper = '',
                 firstTableFirstRow = '';
 
-            if ($(window).width() <= 991) {
+            if (jQuery(window).width() <= 991) {
                 self.setTableMobileWidth();
             }
 
@@ -222,8 +222,8 @@ var g_stbServerSideProcessingIsActive = false;
                     }
                     // Align all tables on page by the columns width depending on the columns width of first table on page
                     if (table.data('align-by-first-table')) {
-                        firstTableId = firstTableId || $('.supsystic-table:first').data('id');
-                        firstTable = firstTable || $('#supsystic-table-' + firstTableId);
+                        firstTableId = firstTableId || jQuery('.supsystic-table:first').data('id');
+                        firstTable = firstTable || jQuery('#supsystic-table-' + firstTableId);
                         firstTableViewId = firstTable.data('view-id');
                         firstTableWrapper = firstTableWrapper || firstTable.parents('#supsystic-table-' + firstTableViewId);
                         firstTableFirstRow = firstTable.data('head') ? firstTable.find('thead tr:first-child th') : firstTable.find('tbody tr:first-child td');
@@ -238,12 +238,12 @@ var g_stbServerSideProcessingIsActive = false;
                                 width: firstTable.get(0).style.width
                             });
                             currentTableWrapper.find('.supsystic-table').each(function() {
-                                var curTable = $(this),
+                                var curTable = jQuery(this),
                                     curTableFirstRow = curTable.data('head') ? curTable.find('thead tr:first-child th') : curTable.find('tbody tr:first-child td');
 
-                                $.each(curTableFirstRow, function(index, element) {
+                                jQuery.each(curTableFirstRow, function(index, element) {
                                     if (firstTableFirstRow[index]) {
-                                        $(this).width($(firstTableFirstRow[index]).get(0).style.width);
+                                        jQuery(this).width(jQuery(firstTableFirstRow[index]).get(0).style.width);
                                     }
                                 });
                             });
@@ -252,7 +252,7 @@ var g_stbServerSideProcessingIsActive = false;
                     //if row has merged cells no need place header there
                     if (table.data('merged') && table.hasClass('ColWithMergeCellsAlign')) {
                         var mergedData = table.data('merged');
-                        $.each(mergedData, function(index, value) {
+                        jQuery.each(mergedData, function(index, value) {
                             var rowNumWithMergeCell = value.row;
                             var numForEq = Number(rowNumWithMergeCell) - 1;
                             table.find('tbody tr:eq(' + numForEq + ')').closest('tr').addClass('haveMergedCell');
@@ -268,7 +268,7 @@ var g_stbServerSideProcessingIsActive = false;
                     }
                     self.initShortcodesInTable(table);
                 });
-                //self.initShortcodesInTable($(this));
+                //self.initShortcodesInTable(jQuery(this));
             });
         });
 
@@ -278,11 +278,11 @@ var g_stbServerSideProcessingIsActive = false;
             if (typeof(gmpAllMapsInfo) !== 'undefined' && gmpAllMapsInfo && gmpAllMapsInfo.length) {
                 for (var i = 0; i < gmpAllMapsInfo.length; i++) {
                     var mapData = gmpAllMapsInfo[i],
-                        map = $('#' + mapData.view_html_id);
+                        map = jQuery('#' + mapData.view_html_id);
                     if (map.length && map.closest('#supsystic-table-' + tableViewId).length) {
                         var mapViewId = mapData.view_id;
                         setTimeout(function(mapData, mapViewId) {
-                            g_gmpAllMaps = $.grep(g_gmpAllMaps, function(value) {
+                            g_gmpAllMaps = jQuery.grep(g_gmpAllMaps, function(value) {
                                 if (value.getViewId() == mapViewId) {
                                     if (mapData.heatmap && mapData.heatmap.coords) {
                                         var coord = [],
@@ -294,7 +294,7 @@ var g_stbServerSideProcessingIsActive = false;
                                         mapData.heatmap.coords = coord;
                                     }
                                     if (value._mapParams.simple_slider_id) {
-                                        $('#' + value._mapParams.simple_slider_id).html(value._mapParams.original_slider_html);
+                                        jQuery('#' + value._mapParams.simple_slider_id).html(value._mapParams.original_slider_html);
                                     }
                                 }
                                 return value.getViewId() != mapViewId;
@@ -303,17 +303,17 @@ var g_stbServerSideProcessingIsActive = false;
                         }, 50, mapData, mapViewId);
                     }
                 }
-                $(document).trigger('gmpAmiVarInited');
+                jQuery(document).trigger('gmpAmiVarInited');
             }
             //ultimate-maps
             if (typeof(umsAllMapsInfo) !== 'undefined' && umsAllMapsInfo && umsAllMapsInfo.length) {
                 for (var i = 0; i < umsAllMapsInfo.length; i++) {
                     var mapData = umsAllMapsInfo[i],
-                        map = $('#' + mapData.view_html_id);
+                        map = jQuery('#' + mapData.view_html_id);
                     if (map.length && map.closest('#supsystic-table-' + tableViewId).length) {
                         var mapViewId = mapData.view_id;
                         setTimeout(function(mapData, mapViewId) {
-                            g_umsAllMaps = $.grep(g_umsAllMaps, function(value) {
+                            g_umsAllMaps = jQuery.grep(g_umsAllMaps, function(value) {
                                 if (value.getViewId() == mapViewId) {
                                     value._mapObj.remove();
                                 }
@@ -323,7 +323,7 @@ var g_stbServerSideProcessingIsActive = false;
                         }, 600, mapData, mapViewId);
                     }
                 }
-                $(document).trigger('umsAmiVarInited');
+                jQuery(document).trigger('umsAmiVarInited');
             }
         });
 
@@ -350,8 +350,8 @@ var g_stbServerSideProcessingIsActive = false;
                 $images = $table.find('img');
             if ($images.length > 0 && /firefox|trident|msie/i.test(navigator.userAgent)) {
                 $images.hide();
-                $.each($images, function(index, el) {
-                    var $img = $(this),
+                jQuery.each($images, function(index, el) {
+                    var $img = jQuery(this),
                         originalSizes = self._getOriginalImageSizes(this);
                     if ($img.closest('td, th').width() < originalSizes.width) {
                         $img.css('width', '100%');
@@ -373,7 +373,7 @@ var g_stbServerSideProcessingIsActive = false;
                     icon.attr('class', 'fa fa-spinner fa-spin');
                 }
             } else {
-                return $('<i/>', {
+                return jQuery('<i/>', {
                     class: 'fa fa-spinner fa-spin'
                 });
             }
@@ -389,11 +389,269 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].initializeTable = (function(table, callback, finalCallback, reinit, addInstance) {
+
+            if (typeof jQuery.fn.dataTable.moment == "undefined" && typeof moment !== "undefined") {
+                jQuery.fn.dataTable.moment = function ( format, locale, reverseEmpties ) {
+                    var types = jQuery.fn.dataTable.ext.type;
+                    // Add type detection
+                    types.detect.unshift( function ( d ) {
+                        if ( d ) {
+                            // Strip HTML tags and newline characters if possible
+                            if ( d.replace ) {
+                                d = d.replace(/(<.*?>)|(\r?\n|\r)/g, '');
+                            }
+                
+                            // Strip out surrounding white space
+                            d = jQuery.trim( d );
+                        }
+                        // Null and empty values are acceptable
+                        if ( d === '' || d === null ) {
+                            return 'moment-'+format;
+                        }
+                        return moment( d, format, locale, true ).isValid() ?
+                            'moment-'+format :
+                            null;
+                    } );
+                    // Add sorting method - use an integer for the sorting
+                    types.order[ 'moment-'+format+'-pre' ] = function ( d ) {
+                        if ( d ) {
+                            // Strip HTML tags and newline characters if possible
+                            if ( d.replace ) {
+                                d = d.replace(/(<.*?>)|(\r?\n|\r)/g, '');
+                            }
+                
+                            // Strip out surrounding white space
+                            d = jQuery.trim( d );
+                        }
+                
+                        return !moment(d, format, locale, true).isValid() ?
+                            (reverseEmpties ? -Infinity : Infinity) :
+                            parseInt( moment( d, format, locale, true ).format( 'x' ), 10 );
+                    };
+                };
+            }
+
+            if (typeof jQuery.fn.dataTable.ext.order.intl == "undefined" && typeof window.Intl !== "undefined") {
+                jQuery.fn.dataTable.ext.order.intl = function ( locales, options ) {
+                    if ( window.Intl ) {
+                        var collator = new Intl.Collator( locales, options );
+                        var types = jQuery.fn.dataTable.ext.type;
+                
+                        delete types.order['string-pre'];
+                        types.order['string-asc'] = collator.compare;
+                        types.order['string-desc'] = function ( a, b ) {
+                            return collator.compare( a, b ) * -1;
+                        };
+                    }
+                };
+            }
+
+            if (typeof naturalSort == "undefined") {
+                function naturalSort (a, b, html) {
+                    var re = /(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?%?$|^0x[0-9a-f]+$|[0-9]+)/gi,
+                        sre = /(^[ ]*|[ ]*$)/g,
+                        dre = /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/,
+                        hre = /^0x[0-9a-f]+$/i,
+                        ore = /^0/,
+                        htmre = /(<([^>]+)>)/ig,
+                    // convert all to strings and trim()
+                        x = a.toString().replace(sre, '') || '',
+                        y = b.toString().replace(sre, '') || '';
+                    // remove html from strings if desired
+                    if (!html) {
+                        x = x.replace(htmre, '');
+                        y = y.replace(htmre, '');
+                    }
+                    // chunk/tokenize
+                    var	xN = x.replace(re, '\0$1\0').replace(/\0$/,'').replace(/^\0/,'').split('\0'),
+                        yN = y.replace(re, '\0$1\0').replace(/\0$/,'').replace(/^\0/,'').split('\0'),
+                    // numeric, hex or date detection
+                        xD = parseInt(x.match(hre), 10) || (xN.length !== 1 && x.match(dre) && Date.parse(x)),
+                        yD = parseInt(y.match(hre), 10) || xD && y.match(dre) && Date.parse(y) || null;
+            
+                    // first try and sort Hex codes or Dates
+                    if (yD) {
+                        if ( xD < yD ) {
+                            return -1;
+                        }
+                        else if ( xD > yD )	{
+                            return 1;
+                        }
+                    }
+            
+                    // natural sorting through split numeric strings and default strings
+                    for(var cLoc=0, numS=Math.max(xN.length, yN.length); cLoc < numS; cLoc++) {
+                        // find floats not starting with '0', string or 0 if not defined (Clint Priest)
+            
+                        /*supsystic*/
+                        //var oFxNcL = !(xN[cLoc] || '').match(ore) && parseFloat(xN[cLoc], 10) || xN[cLoc] || 0;
+                        //var oFyNcL = !(yN[cLoc] || '').match(ore) && parseFloat(yN[cLoc], 10) || yN[cLoc] || 0;
+                        var oFxNcL = parseFloat(xN[cLoc], 10) || xN[cLoc] || undefined;
+                        var oFyNcL = parseFloat(yN[cLoc], 10) || yN[cLoc] || undefined;
+                        /*****/
+            
+                        // handle numeric vs string comparison - number < string - (Kyle Adams)
+                        if (isNaN(oFxNcL) !== isNaN(oFyNcL)) {
+                            return (isNaN(oFxNcL)) ? 1 : -1;
+                        }
+                        // rely on string comparison if different types - i.e. '02' < 2 != '02' < '2'
+                        else if (typeof oFxNcL !== typeof oFyNcL) {
+                            oFxNcL += '';
+                            oFyNcL += '';
+                        }
+                        if (oFxNcL < oFyNcL) {
+                            return -1;
+                        }
+                        if (oFxNcL > oFyNcL) {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                }
+            }
+        
+            if (typeof jQuery.fn.dataTableExt.oApi.fnFakeRowspan == "undefined") {
+                jQuery.fn.dataTableExt.oApi.fnFakeRowspan = function (oSettings) {
+                    if(oSettings) {
+                        var cells;
+                        jQuery.each(oSettings.aoData, function(index, rowData) {
+                            vendor[appName].setCellAttributes(rowData.anCells);
+                        });
+                        if (oSettings.aoHeader.length) {
+                            cells = [];
+                            jQuery.each(oSettings.aoHeader, function(index, rowData) {
+                                jQuery.each(rowData, function(index, cellData) {
+                                    cells.push(cellData.cell);
+                                });
+                            });
+                            vendor[appName].setCellAttributes(cells);
+                        }
+                        if (oSettings.aoFooter.length) {
+                            cells = [];
+                            jQuery.each(oSettings.aoFooter, function(index, rowData) {
+                                jQuery.each(rowData, function(index, cellData) {
+                                    cells.push(cellData.cell);
+                                });
+                            });
+                            vendor[appName].setCellAttributes(cells);
+                        }
+                    }
+                    return this;
+                };
+            }
+
+            if (typeof jQuery.fn.dataTableExt.oApi.fnResetFakeRowspan == "undefined") {
+                jQuery.fn.dataTableExt.oApi.fnResetFakeRowspan = function (oSettings) {
+                    if(oSettings) {
+                        var displayRows = oSettings.aiDisplay,
+                            mergedData = jQuery(oSettings.nTable).data('merged');
+                        if(!mergedData || mergedData.length == 0 || displayRows.length == 0) return this;
+            
+                        var rows = oSettings.aoData,
+                            table = jQuery(oSettings.nTable),
+                            autoHiding = table.attr('data-auto-hiding'),
+                            rowNums = {},
+                            first = table.attr('data-auto-index') == 'new' ? 1 : 0;
+                        autoHiding = (typeof(autoHiding) != 'undefined' && autoHiding.length > 0) ? autoHiding.split(',').map(Number) : [];
+            
+                        jQuery.each(displayRows, function(index, rowNum) {
+                            var cells = rows[rowNum].anCells;
+                            rowNums[cells[first].getAttribute('data-y')] = rowNum;
+                            for(var i = 0; i < cells.length; i++) {
+                                if(cells[i].getAttribute('data-hide') == "true" && (autoHiding.length <= i || autoHiding[i] == 1)) {
+                                    jQuery(cells[i]).css('display', '');
+                                }
+                                cells[i].setAttribute('rowspan', 1);
+                                cells[i].setAttribute('colspan', 1);
+                            }
+                        });
+                        jQuery.each(mergedData, function(index, value) {
+                            var firstRow = Number(value.row) + 1,
+                                lastRow = firstRow + Number(value.rowspan) - 1,
+                                colspan = Number(value.colspan),
+                                firstCol = Number(value.col) + first,
+                                lastCol = firstCol + colspan - 1,
+                                rowspan = 0;
+                            for(var r = firstRow; r <= lastRow; r++) {
+                                if(r in rowNums) {
+                                    if(rowspan == 0) {
+                                        firstRow = r;
+                                    }
+                                    for(var c = firstCol + (firstRow == r ? 1 : 0); c <= lastCol; c++) {
+                                        var cell = rows[rowNums[r]].anCells[c];
+                                        if (typeof cell !== "undefined" && typeof cell.style !== "undefined" && typeof cell.style.display !== "undefined") {
+                                            cell.style.display = 'none';
+                                        }
+                                        if(autoHiding[c] === 0) {
+                                            colspan--;
+                                        }
+                                    }
+                                    rowspan++;
+                                }
+                            }
+                            if(rowspan > 0) {
+                                var mergedCell = rows[rowNums[firstRow]].anCells[firstCol];
+                                if(rowspan > 1) {
+                                    mergedCell.setAttribute('rowspan', rowspan);
+                                }
+                                if(colspan > 1) {
+                                    mergedCell.setAttribute('colspan', colspan);
+                                }
+                            }
+                        });
+                    }
+                    return this;
+                };
+            }
+
+            if (typeof jQuery.fn.dataTableExt.oSort !== "undefined") {
+        
+                jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+                    "natural-asc": function ( a, b ) {
+                        return naturalSort(a,b,true);
+                    },
+                    "natural-desc": function ( a, b ) {
+                        return naturalSort(a,b,true) * -1;
+                    },
+                    "natural-nohtml-asc": function( a, b ) {
+                        return naturalSort(a,b,false);
+                    },
+                    "natural-nohtml-desc": function( a, b ) {
+                        return naturalSort(a,b,false) * -1;
+                    },
+                    "natural-ci-asc": function( a, b ) {
+                        a = a.toString().toLowerCase();
+                        b = b.toString().toLowerCase();
+            
+                        return naturalSort(a,b,true);
+                    },
+                    "natural-ci-desc": function( a, b ) {
+                        a = a.toString().toLowerCase();
+                        b = b.toString().toLowerCase();
+            
+                        return naturalSort(a,b,true) * -1;
+                    },
+                    "natural-nohtml-ci-asc": function( a, b ) {
+                        a = a.toString().toLowerCase();
+                        b = b.toString().toLowerCase();
+            
+                        return naturalSort(a,b,false);
+                    },
+                    "natural-nohtml-ci-desc": function( a, b ) {
+                        a = a.toString().toLowerCase();
+                        b = b.toString().toLowerCase();
+            
+                        return naturalSort(a,b,false) * -1;
+                    }
+                } );
+
+            }
+
             reinit = typeof reinit != 'undefined' ? reinit : {};
             addInstance = typeof addInstance != 'undefined' ? addInstance : true;
 
             var self = this,
-                $table = (table instanceof $ ? table : $(table)),
+                $table = (table instanceof $ ? table : jQuery(table)),
                 features = $table.data('features'),
                 config = {},
                 responsiveMode = $table.data('responsive-mode'),
@@ -413,12 +671,12 @@ var g_stbServerSideProcessingIsActive = false;
                     processing: true,
                     initComplete: callback,
                     headerCallback: function(thead, data, start, end, display) {
-                        $(thead).closest('thead').find('th').each(function() {
+                        jQuery(thead).closest('thead').find('th').each(function() {
                             self.setStylesToCell(this);
                         });
                     },
                     footerCallback: function(tfoot, data, start, end, display) {
-                        $(tfoot).closest('tfoot').find('th').each(function() {
+                        jQuery(tfoot).closest('tfoot').find('th').each(function() {
                             self.setStylesToCell(this);
                         });
                     },
@@ -434,7 +692,7 @@ var g_stbServerSideProcessingIsActive = false;
 
             // Fix for searching by merged cells
             $table.find('tbody td[data-colspan], tbody td[data-rowspan]').each(function(index, item) {
-                var cell = $(item),
+                var cell = jQuery(item),
                     cellData = cell.html();
 
                 // prevent of copy cell data if it contains tags with id attribute - it must be unique on page
@@ -469,7 +727,7 @@ var g_stbServerSideProcessingIsActive = false;
             });
 
             // Set features
-            $.each(features, function() {
+            jQuery.each(features, function() {
                 var featureName = this.replace(/[-_]([a-z])/g, function(g) {
                     return g[1].toUpperCase();
                 });
@@ -486,8 +744,8 @@ var g_stbServerSideProcessingIsActive = false;
                     searchingSettings.resultOnly ||
                     searchingSettings.strictMatching
                 ) {
-                    $.fn.dataTable.ext.search.push(function(settings, data) {
-                        var $searchInput = $(settings.nTableWrapper).find('.dataTables_filter input'),
+                    jQuery.fn.dataTable.ext.search.push(function(settings, data) {
+                        var $searchInput = jQuery(settings.nTableWrapper).find('.dataTables_filter input'),
                             searchValue = $searchInput.val();
 
                         if (searchingSettings.resultOnly && searchValue.length === 0) {
@@ -497,7 +755,7 @@ var g_stbServerSideProcessingIsActive = false;
                             return false;
                         }
                         if (searchingSettings.strictMatching) {
-                            searchValue = $.fn.dataTable.util.escapeRegex(searchValue);
+                            searchValue = jQuery.fn.dataTable.util.escapeRegex(searchValue);
                             var regExp = new RegExp('^' + searchValue, 'i');
 
                             for (var i = 0; i < data.length; i++) {
@@ -519,7 +777,7 @@ var g_stbServerSideProcessingIsActive = false;
                             return;
                         }
 
-                        var $tableWrapper = $(settings.nTableWrapper),
+                        var $tableWrapper = jQuery(settings.nTableWrapper),
                             $tableSearchInput = $tableWrapper.find('.dataTables_filter input'),
                             $customInput = $tableSearchInput.clone();
 
@@ -557,7 +815,7 @@ var g_stbServerSideProcessingIsActive = false;
                             var searchRow = '<tr class="stbColumnsSearchWrapper">',
                                 func = inputTop ? 'prepend' : 'append';
                             for (var i = 0; i < headerRow.length; i++) {
-                                var cellItem = $(headerRow[i]),
+                                var cellItem = jQuery(headerRow[i]),
                                     cellClass = '',
                                     cellStyle = '';
                                 if (!g_stbServerSideProcessing) {
@@ -570,13 +828,13 @@ var g_stbServerSideProcessingIsActive = false;
                             }
                             searchRow += '</tr>';
                             if ($table.find(tPosition).length == 0) {
-                                $table.append($('<' + tPosition + '>'));
+                                $table.append(jQuery('<' + tPosition + '>'));
                             }
                             $table.find(tPosition)[func](searchRow);
                         }
                     }
                     if ($table.data('auto-index') !== 'off') {
-                        $('.stbColumnsSearchWrapper th:first-child input').css({
+                        jQuery('.stbColumnsSearchWrapper th:first-child input').css({
                             'visibility': 'hidden'
                         });
                     }
@@ -649,12 +907,12 @@ var g_stbServerSideProcessingIsActive = false;
 
                 // Add header data to each response row
                 $table.find('thead th').each(function(index, el) {
-                    labelStyles += id + '.oneColumnWithLabels td:nth-of-type(' + (index + 1) + '):before { content: "' + $(this).text() + '"; }';
+                    labelStyles += id + '.oneColumnWithLabels td:nth-of-type(' + (index + 1) + '):before { content: "' + jQuery(this).text() + '"; }';
                 });
                 labelStyles += '</style>';
                 $table.append(labelStyles);
 
-                $(window).on('load resize orientationchange', $table, function(event) {
+                jQuery(window).on('load resize orientationchange', $table, function(event) {
                     event.preventDefault();
                     clearTimeout($table.data('resizeTimer'));
 
@@ -663,7 +921,7 @@ var g_stbServerSideProcessingIsActive = false;
                         $table.css('width', '100%');
                         var tableWidth = $table.width(),
                             wrapperWidth = $table.closest('.supsystic-tables-wrap').width();
-                        if (tableWidth > wrapperWidth || $(window).width() <= 475) {
+                        if (tableWidth > wrapperWidth || jQuery(window).width() <= 475) {
                             $table.addClass('oneColumn');
 
                             if ($table.data('head') == 'on') {
@@ -673,7 +931,7 @@ var g_stbServerSideProcessingIsActive = false;
                     }, 150));
                     if (g_stbServerSideProcessing) {
                         $table.find('td').each(function() {
-                            $(this).css({
+                            jQuery(this).css({
                                 'width': '',
                                 'min-width': ''
                             });
@@ -685,15 +943,15 @@ var g_stbServerSideProcessingIsActive = false;
                 config.responsive = {
                     details: {
                         renderer: function(api, rowIdx, columns) {
-                            var $table = $(api.table().node()),
-                                $subTable = $('<table/>');
+                            var $table = jQuery(api.table().node()),
+                                $subTable = jQuery('<table/>');
 
-                            $.each(columns, function(i, col) {
+                            jQuery.each(columns, function(i, col) {
                                 if (col.hidden) {
-                                    var $cell = $(api.cell(col.rowIndex, col.columnIndex).node()).clone(),
+                                    var $cell = jQuery(api.cell(col.rowIndex, col.columnIndex).node()).clone(),
                                         markup = '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">';
                                     if ($table.data('head') == 'on') {
-                                        var tableHeadTr = $(api.table().header()).find('tr:not(.stbColumnsSearchWrapper)').eq(0);
+                                        var tableHeadTr = jQuery(api.table().header()).find('tr:not(.stbColumnsSearchWrapper)').eq(0);
                                         var $headerContent = tableHeadTr.find('th').eq(col.columnIndex).html();
                                         markup += '<td>';
                                         if ($headerContent) {
@@ -703,13 +961,13 @@ var g_stbServerSideProcessingIsActive = false;
                                     }
                                     markup += '</tr>';
                                     $cell.after(
-                                        $('<td>')
+                                        jQuery('<td>')
                                         .addClass('collapsed-cell-holder')
                                         .attr('data-cell-row', col.rowIndex)
                                         .attr('data-cell-column', col.columnIndex)
                                         .hide()
                                     );
-                                    $subTable.append($(markup).append($cell.addClass('collapsed').show()));
+                                    $subTable.append(jQuery(markup).append($cell.addClass('collapsed').show()));
                                 }
                             });
                             return $subTable.is(':empty') ? false : $subTable;
@@ -718,7 +976,7 @@ var g_stbServerSideProcessingIsActive = false;
                 };
                 $table.on('responsive-resize.dt', function(event, api, columns) {
                     if (typeof api == 'undefined' || typeof columns == 'undefined') {
-                        var tbl = $(this),
+                        var tbl = jQuery(this),
                             instance = vendor[appName].getTableInstanceById(tbl.data('id'));
 
                         if (instance) {
@@ -732,7 +990,7 @@ var g_stbServerSideProcessingIsActive = false;
                         autoHiding[i] = columns[i] ? 1 : 0;
                     }
                     $table.find('th input.search-column').each(function() {
-                        var th = $(this).parents('th:first'),
+                        var th = jQuery(this).parents('th:first'),
                             i = th.index();
                         if (columns.length > i) {
                             th.css('display', columns[i] ? '' : 'none');
@@ -750,8 +1008,8 @@ var g_stbServerSideProcessingIsActive = false;
                     for (var i = 0, len = columns.length; i < len; i++) {
                         if (columns[i]) {
                             $table.find('tr > td.collapsed-cell-holder[data-cell-column="' + i + '"]').each(function(index, el) {
-                                var $this = $(this);
-                                var $cell = $(api.cell(
+                                var $this = jQuery(this);
+                                var $cell = jQuery(api.cell(
                                     $this.data('cell-row'),
                                     $this.data('cell-column')
                                 ).node());
@@ -782,8 +1040,8 @@ var g_stbServerSideProcessingIsActive = false;
                 if (firstRow.length) {
                     var cntCols = firstRow.length;
                     $table.find('thead tr:first-child th').each(function(i, th) {
-                        if (cntCols > i && $(th).css('width')) {
-                            firstRow.eq(i).css('width', $(th).css('width'));
+                        if (cntCols > i && jQuery(th).css('width')) {
+                            firstRow.eq(i).css('width', jQuery(th).css('width'));
                         }
                     });
                 }
@@ -830,8 +1088,14 @@ var g_stbServerSideProcessingIsActive = false;
             if (typeof translation != 'object') {
                 translation = {}; // for just to be sure that it is object
             }
-            $.each(override, function(key, value) {
+            jQuery.each(override, function(key, value) {
                 if (value.length) {
+                    if (key == 'previous' || key == 'next') {
+                        if (typeof translation['paginate'] === "undefined") {
+                            translation['paginate'] = {};
+                        }
+                        translation['paginate'][key] = value;
+                    }
                     translation[key] = value;
                     // We need to support old DT format, cuz some languages use it
                     translation['s' + key.charAt(0).toUpperCase() + key.substr(1)] = value;
@@ -864,7 +1128,7 @@ var g_stbServerSideProcessingIsActive = false;
                             id: $table.data('id'),
                             searchParams: searchingSettings,
                             searchValue: function() {
-                                var input = $('#' + $table.attr('id') + '_filter.dataTables_filter').find('input');
+                                var input = jQuery('#' + $table.attr('id') + '_filter.dataTables_filter').find('input');
                                 return (input.length ? input.val() : '');
                             },
                             header: headerRowsCount,
@@ -875,7 +1139,7 @@ var g_stbServerSideProcessingIsActive = false;
                         },
                         dataFilter: function(data) {
                             var json = jQuery.parseJSON(data),
-                                rows = $(json.rows).find('tr'),
+                                rows = jQuery(json.rows).find('tr'),
                                 aData = [];
 
                             loadedRows = [];
@@ -883,7 +1147,7 @@ var g_stbServerSideProcessingIsActive = false;
                             for (var i = 0; i < rows.length; i++) {
                                 var row = rows[i];
                                 loadedRows.push(row.attributes);
-                                var cells = $(row).find('td'),
+                                var cells = jQuery(row).find('td'),
                                     attrs = [],
                                     vals = [];
                                 for (var j = 0; j < cells.length; j++) {
@@ -902,8 +1166,8 @@ var g_stbServerSideProcessingIsActive = false;
                     },
                     createdRow: function(row, data, dataIndex) {
                         if (typeof(loadedRows[dataIndex]) != 'undefined') {
-                            $(loadedRows[dataIndex]).each(function() {
-                                $(row).attr(this.name, this.value);
+                            jQuery(loadedRows[dataIndex]).each(function() {
+                                jQuery(row).attr(this.name, this.value);
                             });
                         }
                     }
@@ -918,7 +1182,7 @@ var g_stbServerSideProcessingIsActive = false;
                         if (typeof(loadedCells[row][col]) != 'undefined') {
                             var rowspan = 1,
                                 colspan = 1;
-                            $(loadedCells[row][col]).each(function() {
+                            jQuery(loadedCells[row][col]).each(function() {
                                 if (this.name == 'data-rowspan' && this.value > 1) {
                                     rowspan = this.value;
                                 }
@@ -951,30 +1215,37 @@ var g_stbServerSideProcessingIsActive = false;
                                     }
                                 }
                             }
-                            $(loadedCells[row][col]).each(function() {
+                            jQuery(loadedCells[row][col]).each(function() {
                                 //if(this.name != 'data-formula') {
-                                $(td).attr(this.name, this.value);
+                                jQuery(td).attr(this.name, this.value);
                                 //}
                             });
                         }
                     }
                 });
             }
+            window.table = $table;
             $table.trigger('beforeInitializeTable', $table);
             var dateFormat = $table.data('date-format');
-            $table.dataTable.moment(dateFormat);
-            jQuery.fn.dataTable.ext.order.intl();
-            tableInstance = $table.dataTable($.extend({}, defaultFeatures, config, extraConfig, ajaxSource, reinit));;
+            // if (typeof $table.dataTable.moment !== "undefined") { 
+				$table.dataTable.moment(dateFormat);
+			// }
+			// if (typeof jQuery.fn.dataTable.ext.order.intl !== "undefined") { 
+				jQuery.fn.dataTable.ext.order.intl();
+			// }
+            tableInstance = $table.dataTable(jQuery.extend({}, defaultFeatures, config, extraConfig, ajaxSource, reinit));
             tableInstance.table_id = $table.data('id');
             tableInstance.table_view_id = $table.data('view-id');
-            tableInstance.fnFakeRowspan();
+            if (typeof tableInstance.fnFakeRowspan !== "undefined") { 
+				tableInstance.fnFakeRowspan();
+			}
             self._checkOnClickPopups($table);
             window.table = $table;
             if ($table.data('remove-rows')) {
 
-                $(function() {
+                jQuery(function() {
 
-                    $.contextMenu({
+                    jQuery.contextMenu({
                         selector: '.dataTable td',
                         animation: {
                             duration: 250,
@@ -1013,7 +1284,7 @@ var g_stbServerSideProcessingIsActive = false;
                     function contextMenuAction(e, action, second) {
                         var coltext = e.text();
                         var colvindex = e.parent().children().index(e);
-                        var colindex = $('table.dataTable thead tr th:eq(' + colvindex + ')').data('column-index');
+                        var colindex = jQuery('table.dataTable thead tr th:eq(' + colvindex + ')').data('column-index');
 
                         /* Global var for counter */
                         var giCount = 1;
@@ -1102,7 +1373,7 @@ var g_stbServerSideProcessingIsActive = false;
                 self.setStylesToCell(this);
             });
             $table.bind('column-visibility.dt draw.dt', function(e) {
-                $(this).find('th, td').each(function() {
+                jQuery(this).find('th, td').each(function() {
                     self.setStylesToCell(this);
                 });
             });
@@ -1137,11 +1408,11 @@ var g_stbServerSideProcessingIsActive = false;
                 if (g_stbServerSideProcessing) {
                     g_stbServerSideProcessingIsActive = true;
                 }
-                var table = $(this),
+                var table = jQuery(this),
                     tableSelector = '#supsystic-table-' + table.data('view-id') + ' #supsystic-table-' + table.data('id');
                 self.applyTableEventClb(self.pageEvent, 50, tableSelector);
                 if ($table.data('pagination-scroll') == 'on') {
-                    $('html, body').animate({
+                    jQuery('html, body').animate({
                         scrollTop: table.closest('.dataTables_wrapper').offset().top
                     }, 100);
                 }
@@ -1202,7 +1473,7 @@ var g_stbServerSideProcessingIsActive = false;
 
             if (responsiveMode === 2 || fixedHeader || fixedFooter) {
                 // Responsive Mode: Horizontal Scroll
-                $(window).on('load resize orientationchange', $table, function(event) {
+                jQuery(window).on('load resize orientationchange', $table, function(event) {
                     var tBody = $tableWrap.find('.dataTables_scrollBody'),
                         tBodyTable = tBody.find('.supsystic-table');
 
@@ -1235,7 +1506,7 @@ var g_stbServerSideProcessingIsActive = false;
 
                 if (tBodyTable.is(":visible")) {
                     setTimeout(function() {
-                        $(window).trigger('load');
+                        jQuery(window).trigger('load');
                     }, 200);
                 }
                 var $tHeadTable = $tableWrap.find('.dataTables_scrollHead .supsystic-table');
@@ -1261,7 +1532,7 @@ var g_stbServerSideProcessingIsActive = false;
                     el.each(function() {
                         var thWidth = $tableWrap.find('.dataTables_scrollBody table tbody tr:first-child td:nth-child(' + i + ')');
 
-                        $(this).css({
+                        jQuery(this).css({
                             'width': thWidth.outerWidth(),
                             'min-width': thWidth.outerWidth(),
                             'box-sizing': 'border-box'
@@ -1283,7 +1554,7 @@ var g_stbServerSideProcessingIsActive = false;
             if (fixedColumns) {
                 $table.api().fixedColumns().relayout();
 
-                //var tableCaption = $('.dataTables_scrollHead caption');
+                //var tableCaption = jQuery('.dataTables_scrollHead caption');
                 //
                 //if(tableCaption.length) {
                 //self._fixTableCaption(tableCaption.height(), viewId, 10);
@@ -1325,7 +1596,7 @@ var g_stbServerSideProcessingIsActive = false;
                     }
                     self.getTableInstanceByViewId(viewId).fnFakeRowspan();
                     if (responsiveMode === 0 || responsiveMode === 2) {
-                        $(window).trigger('load');
+                        jQuery(window).trigger('load');
                     }
                 }).trigger('draw.dt');
             }
@@ -1365,7 +1636,7 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].pageEvent = (function(tableSelector) {
-            var table = $(tableSelector),
+            var table = jQuery(tableSelector),
                 tableWrapper = table.parents('.supsystic-tables-wrap:first');
 
             this.getRuleJSInstance(table).init();
@@ -1379,15 +1650,15 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].fixHeaderOfHiddenColumns = (function($table) {
-            $table = $table instanceof $ ? $table : $($table);
+            $table = $table instanceof $ ? $table : jQuery($table);
 
             var tableWrapper = $table.parents('.supsystic-tables-wrap:first');
 
             if (!$table.data('head')) {
                 tableWrapper.find('thead').each(function() {
-                    var thead = $(this);
+                    var thead = jQuery(this);
                     thead.find('th').each(function(iter, item) {
-                        var th = $(this),
+                        var th = jQuery(this),
                             itemIndex = iter + 1,
                             columnAllTd = thead.parents('table:first').find('tbody td:nth-child(' + itemIndex + ')'),
                             columnInvTd = columnAllTd.filter('.invisibleCell'),
@@ -1402,16 +1673,16 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].applyMobileTableComments = (function(e) {
-            var $elem = $(this),
+            var $elem = jQuery(this),
                 title = $elem.attr('title');
 
             if (title) {
                 var tableViewId = $elem.parents('table.supsystic-table:first').data('view-id'),
                     cellId = $elem.data('cell-id'),
-                    comment = $('.stbMobileComment[data-table="' + tableViewId + '"][data-cell="' + cellId + '"]');
+                    comment = jQuery('.stbMobileComment[data-table="' + tableViewId + '"][data-cell="' + cellId + '"]');
 
                 if (!comment.length) {
-                    comment = $('<div class="stbMobileComment" style="display:none;"/>');
+                    comment = jQuery('<div class="stbMobileComment" style="display:none;"/>');
                     comment.text(title)
                         .data('table', tableViewId)
                         .attr('data-table', tableViewId)
@@ -1431,7 +1702,7 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName]._contactFormBtnCellClb = (function(e) {
-            var cell = $(this),
+            var cell = jQuery(this),
                 y = cell.data('y'),
                 pair,
                 valueCell;
@@ -1445,7 +1716,7 @@ var g_stbServerSideProcessingIsActive = false;
                                 if (pair.length && pair[1].match(/[A-Za-z]/)) {
                                     valueCell = cell.parents('tr:first').find('[data-cell-id="' + pair[1] + y + '"]');
                                     if (valueCell.length) {
-                                        pair[1] = $.trim(valueCell.html());
+                                        pair[1] = jQuery.trim(valueCell.html());
                                     }
                                 }
                                 newB[i] = pair.join('=');
@@ -1469,10 +1740,10 @@ var g_stbServerSideProcessingIsActive = false;
             if (inputs.length == 0) {
                 return;
             }
-            //$(document).off('keyup change', ".dataTables_wrapper:first .stbColumnsSearchWrapper .search-column")
+            //jQuery(document).off('keyup change', ".dataTables_wrapper:first .stbColumnsSearchWrapper .search-column")
             //			.on('keyup change', ".dataTables_wrapper:first .stbColumnsSearchWrapper .search-column",function () {
             inputs.off('keyup.dtg change.dtg').on('keyup.dtg change.dtg', function() {
-                var input = $(this),
+                var input = jQuery(this),
                     position = input.parents('th:first').index(),
                     value = this.value,
                     column = table.api().column(position);
@@ -1487,16 +1758,16 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].setCopyEvents = (function(obj, events) {
-            $.each(events, function(event, handlers) {
-                $.each(handlers, function(j, handler) {
-                    $(obj).unbind(event).bind(event, handler);
+            jQuery.each(events, function(event, handlers) {
+                jQuery.each(handlers, function(j, handler) {
+                    jQuery(obj).unbind(event).bind(event, handler);
                 });
             });
         });
 
         // Callback for executing script after table is initialized
         vendor[appName].executeScript = (function(table) {
-            var $table = (table instanceof $ ? table : $(table)),
+            var $table = (table instanceof $ ? table : jQuery(table)),
                 $tableWrap = $table.closest('.supsystic-tables-wrap');
 
             this.getRuleJSInstance($table).init();
@@ -1510,13 +1781,13 @@ var g_stbServerSideProcessingIsActive = false;
 
                 // Fix of sorting for table with multiple header (when header has more than 1 row)
                 if (table.data('head')) {
-                    $.each(table.find('thead tr:last-child th'), function(index, element) {
-                        var th = $(element),
+                    jQuery.each(table.find('thead tr:last-child th'), function(index, element) {
+                        var th = jQuery(element),
                             nthChild = index + 1;
 
                         if (th.data('hide')) {
-                            $(thead).each(function() {
-                                var item = $(this).find('th:nth-child(' + nthChild + ')');
+                            jQuery(thead).each(function() {
+                                var item = jQuery(this).find('th:nth-child(' + nthChild + ')');
 
                                 if (!item.data('hide')) {
                                     item.addClass('sorting');
@@ -1556,7 +1827,7 @@ var g_stbServerSideProcessingIsActive = false;
                 generalTimeFormat = table.data('time-format');
 
             table.find('th, td').each(function(index, el) {
-                var $this = $(this);
+                var $this = jQuery(this);
 
                 if ((table.data('auto-index') != 'off' && $this.is(':first-child')) ||
                     (table.data('responsive-mode') == 1 && table.hasClass('collapsed') && $this.hasClass('child')) ||
@@ -1573,7 +1844,7 @@ var g_stbServerSideProcessingIsActive = false;
                     formatType = $this.data('cell-format-type'),
                     preparedFormat,
                     delimiters,
-                    value = $.trim($this.html()),
+                    value = jQuery.trim($this.html()),
                     noFormat = false;
 
                 // function checkIfDate(parts) {
@@ -1856,7 +2127,7 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].setStylesToCell = (function(cell) {
-            var $cell = cell instanceof jQuery ? cell : $(cell),
+            var $cell = cell instanceof jQuery ? cell : jQuery(cell),
                 viewId = $cell.parents('.supsystic-table:first').data('view-id'),
                 classes = this.getClassesRegexp(),
                 cellClassNames = $cell.get(0).className,
@@ -1905,25 +2176,25 @@ var g_stbServerSideProcessingIsActive = false;
         });
 
         vendor[appName].getAdminCellStylesElem = (function() {
-            var $style = $('#supsystic-tables-style');
+            var $style = jQuery('#supsystic-tables-style');
 
             if (!$style.length) {
-                $style = $('<style/>', {
+                $style = jQuery('<style/>', {
                     id: 'supsystic-tables-style'
                 });
-                $('head').append($style);
+                jQuery('head').append($style);
             }
             return $style;
         });
 
         vendor[appName].getFrontendCellStylesElem = (function(viewId) {
-            var $style = $('#supsystic-table-' + viewId + '-css');
+            var $style = jQuery('#supsystic-table-' + viewId + '-css');
 
             if (!$style.length) {
-                $style = $('<style/>', {
+                $style = jQuery('<style/>', {
                     id: 'supsystic-table-' + viewId + '-css'
                 });
-                $('head').append($style);
+                jQuery('head').append($style);
             }
             return $style;
         });
@@ -1934,7 +2205,7 @@ var g_stbServerSideProcessingIsActive = false;
             // Fix for displaying of caption for tables with fixed columns
             var self = this,
                 tableViewHtmlId = '#supsystic-table-' + viewId,
-                fixedColumnsWrapper = $(tableViewHtmlId + ' .DTFC_LeftWrapper, ' + tableViewHtmlId + ' .DTFC_RightWrapper');
+                fixedColumnsWrapper = jQuery(tableViewHtmlId + ' .DTFC_LeftWrapper, ' + tableViewHtmlId + ' .DTFC_RightWrapper');
 
             if (fixedColumnsWrapper.length) {
                 fixedColumnsWrapper.find('caption').css({
@@ -1984,7 +2255,7 @@ var g_stbServerSideProcessingIsActive = false;
                 if (colspan = cells[i].getAttribute('data-colspan')) {
                     if (colspan > 1) {
                         cells[i].setAttribute('colspan', colspan);
-                        $(cells[i]).attr('colspan', colspan);
+                        jQuery(cells[i]).attr('colspan', colspan);
                     }
                 }
                 if (rowspan = cells[i].getAttribute('data-rowspan')) {
@@ -2029,7 +2300,7 @@ function toeInArray(needle, haystack) {
      * @this jQuery
      * @return {boolean}
      */
-    $.fn.isVerticallyScrollable = function() {
+    jQuery.fn.isVerticallyScrollable = function() {
         if (this.scrollTop()) {
             // Element is already scrolled, so it is scrollable
             return true;
@@ -2051,7 +2322,7 @@ function toeInArray(needle, haystack) {
      * @this jQuery
      * @return {boolean}
      */
-    $.fn.isHorizontallyScrollable = function() {
+    jQuery.fn.isHorizontallyScrollable = function() {
         if (this.scrollLeft()) {
             // Element is already scrolled, so it is scrollable
             return true;
@@ -2068,20 +2339,20 @@ function toeInArray(needle, haystack) {
         return false;
     };
 
-    $.extend($.expr.pseudos || $.expr[":"], {
+    jQuery.extend(jQuery.expr.pseudos || jQuery.expr[":"], {
         "vertically-scrollable": function(a, i, m) {
-            return $(a).isVerticallyScrollable();
+            return jQuery(a).isVerticallyScrollable();
         },
         "horizontally-scrollable": function(a, i, m) {
-            return $(a).isHorizontallyScrollable();
+            return jQuery(a).isHorizontallyScrollable();
         }
     });
 
-    $.fn.removeStyle = function(style) {
+    jQuery.fn.removeStyle = function(style) {
         var search = new RegExp(style + '[^;]+;?', 'g');
 
         return this.each(function() {
-            $(this).attr('style', function(i, style) {
+            jQuery(this).attr('style', function(i, style) {
                 return style && style.replace(search, '');
             });
         });

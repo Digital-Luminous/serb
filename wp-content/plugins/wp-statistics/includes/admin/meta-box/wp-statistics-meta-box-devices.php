@@ -18,6 +18,15 @@ class devices extends MetaBoxAbstract
      */
     public static function get($arg = array())
     {
+        /**
+         * Filters the args used from metabox for query stats
+         *
+         * @param array $args The args passed to query stats
+         * @since 14.2.1
+         *
+         */
+        $arg = apply_filters('wp_statistics_meta_box_devices_args', $arg);
+
         global $wpdb;
 
         // Set Default Params
@@ -26,7 +35,7 @@ class devices extends MetaBoxAbstract
             'from'   => '',
             'to'     => '',
             'order'  => '',
-            'number' => 10 // Get Max number of platform
+            'number' => 4 // Get Max number of platform
         );
         $args     = wp_parse_args($arg, $defaults);
 
@@ -49,10 +58,13 @@ class devices extends MetaBoxAbstract
             $order_by = "ORDER BY `count` " . esc_sql($args['order']);
         }
 
-        $sql = $wpdb->prepare("SELECT device, COUNT(*) as count FROM " . DB::table('visitor') . " WHERE device != '" . _x('Unknown', 'Device', 'wp-statistics') . "' AND `last_counter` BETWEEN %s AND %s GROUP BY device {$order_by}", reset($days_time_list), end($days_time_list));
-
-        // Get List All Platforms
-        $list = $wpdb->get_results($sql, ARRAY_A);
+        // Get List All Operating Systems
+        $list = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT device, COUNT(*) as count FROM `" . DB::table('visitor') . "` WHERE `last_counter` BETWEEN %s AND %s GROUP BY device {$order_by}",
+                reset($days_time_list),
+                end($days_time_list)),
+            ARRAY_A);
 
         // Sort By Count
         Helper::SortByKeyValue($list, 'count');
@@ -60,13 +72,29 @@ class devices extends MetaBoxAbstract
         // Get Last 10 Version that Max number
         $devices = array_slice($list, 0, $args['number']);
 
+        // Prepare Data
+        $data = array();
+        foreach ($devices as $device) {
+            if (!empty(trim($device['device'])) && strtolower($device['device']) != "bot") {
+                $device_name = \WP_STATISTICS\Helper::getDeviceCategoryName($device['device']);
+                if (isset($data[$device_name])) {
+                    $data[$device_name]['count'] += $device['count'];
+                } else {
+                    $data[$device_name] = array(
+                        'device' => $device_name,
+                        'count'  => intval($device['count'])
+                    );
+                }
+            }
+        }
+
         // Push to array
-        foreach ($devices as $l) {
+        foreach ($data as $l) {
 
             if (trim($l['device']) != "") {
 
-                // Sanitize Version name
-                $lists_name[] = sanitize_text_field($l['device']);
+                // Remove device subtype, for example: mobile:smart -> mobile
+                $lists_name[] = ucfirst(Helper::getDeviceCategoryName($l['device']));
 
                 // Get List Count
                 $lists_value[] = (int)$l['count'];
@@ -76,11 +104,18 @@ class devices extends MetaBoxAbstract
             }
         }
 
+        $others = array_slice($list, $args['number']);
+        if (!empty($others)) {
+            $lists_name[]   = __('Others', 'wp-statistics');
+            $lists_value[]  = array_sum(array_column($others, 'count'));
+            $total          += array_sum(array_column($others, 'count'));
+        }
+
         // Set Title
         if (end($days_time_list) == TimeZone::getCurrentDate("Y-m-d")) {
-            $title = sprintf(__('%s Statistics in the last %s days', 'wp-statistics'), __('Devices', 'wp-statistics'), self::$countDays);
+            $title = sprintf(__('Statistics for %1$s in the Past %2$s Days', 'wp-statistics'), __('Devices', 'wp-statistics'), self::$countDays);
         } else {
-            $title = sprintf(__('%s Statistics from %s to %s', 'wp-statistics'), __('Devices', 'wp-statistics'), $args['from'], $args['to']);
+            $title = sprintf(__('Statistics for %1$s Between %2$s and %3$s', 'wp-statistics'), __('Devices', 'wp-statistics'), $args['from'], $args['to']);
         }
 
         // Prepare Response

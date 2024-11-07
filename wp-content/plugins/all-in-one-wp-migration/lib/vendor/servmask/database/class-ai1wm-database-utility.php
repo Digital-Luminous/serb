@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2020 ServMask Inc.
+ * Copyright (C) 2014-2023 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Ai1wm_Database_Utility {
+
+	protected static $db_client = null;
+
+	public static function set_client( $db_client ) {
+		self::$db_client = $db_client;
+	}
+
+	/**
+	 * Get MySQLClient to be used for DB manipulation
+	 *
+	 * @return Ai1wm_Database
+	 */
+	public static function create_client() {
+		global $wpdb;
+
+		if ( self::$db_client ) {
+			return self::$db_client;
+		}
+
+		if ( $wpdb instanceof WP_SQLite_DB ) {
+			return new Ai1wm_Database_Sqlite( $wpdb );
+		}
+
+		if ( PHP_MAJOR_VERSION >= 7 ) {
+			return new Ai1wm_Database_Mysqli( $wpdb );
+		}
+
+		if ( empty( $wpdb->use_mysqli ) ) {
+			return new Ai1wm_Database_Mysql( $wpdb );
+		}
+
+		return new Ai1wm_Database_Mysqli( $wpdb );
+	}
 
 	/**
 	 * Replace all occurrences of the search string with the replacement string.

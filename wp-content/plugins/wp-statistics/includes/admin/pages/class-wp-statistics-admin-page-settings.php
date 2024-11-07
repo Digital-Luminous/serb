@@ -2,8 +2,15 @@
 
 namespace WP_STATISTICS;
 
-class settings_page
+use WP_Statistics\Components\AssetNameObfuscator;
+use WP_Statistics\Components\Singleton;
+use WP_Statistics\Service\Admin\NoticeHandler\Notice;
+use WP_Statistics\Utils\Request;
+
+class settings_page extends Singleton
 {
+
+    private static $redirectAfterSave = true;
 
     public function __construct()
     {
@@ -13,7 +20,7 @@ class settings_page
 
         // Check Access Level
         if (Menus::in_page('settings') and !User::Access('manage')) {
-            wp_die(__('You do not have sufficient permissions to access this page.'));
+            wp_die(__('You do not have sufficient permissions to access this page.')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped	
         }
     }
 
@@ -22,12 +29,6 @@ class settings_page
      */
     public static function view()
     {
-
-        // Check admin notices.
-        if (Option::get('admin_notices') == true) {
-            Option::update('disable_donation_nag', false);
-            Option::update('disable_suggestion_nag', false);
-        }
 
         // Add Class inf
         $args['class'] = 'wp-statistics-settings';
@@ -45,17 +46,13 @@ class settings_page
         $args['selist'] = SearchEngine::getList(true);
 
         // Get Permalink Structure
-        $args['permalink']                    = get_option('permalink_structure');
-        $args['disable_strip_uri_parameters'] = false;
-        if ($args['permalink'] == '' || strpos($args['permalink'], '?') !== false) {
-            $args['disable_strip_uri_parameters'] = true;
-        }
+        $args['permalink'] = get_option('permalink_structure');
 
         // Get List All Options
         $args['wp_statistics_options'] = Option::getOptions();
 
         // Load Template
-        Admin_Template::get_template(array('layout/header', 'layout/tabs-settings', 'layout/title-after', 'settings', 'layout/footer'), $args);
+        Admin_Template::get_template(array('layout/header', 'layout/title-after', 'settings', 'layout/footer'), $args);
     }
 
     /**
@@ -67,7 +64,7 @@ class settings_page
         // Check Form Nonce
         if (isset($_POST['wp-statistics-nonce']) and wp_verify_nonce($_POST['wp-statistics-nonce'], 'update-options')) {
 
-            // Check Reset Option Wp-Statistics
+            // Check Reset Option WP Statistics
             self::reset_wp_statistics_options();
 
             // Get All List Options
@@ -82,47 +79,46 @@ class settings_page
                 'external',
                 'maintenance',
                 'notification',
-                'dashboard',
                 'privacy'
             );
             foreach ($method_list as $method) {
                 $wp_statistics_options = self::{'save_' . $method . '_option'}($wp_statistics_options);
             }
 
+            $wp_statistics_options = apply_filters('wp_statistics_options', $wp_statistics_options);
+
             // Save Option
             Option::save_options($wp_statistics_options);
 
+            // Save Addons Options
+            if (!empty($_POST['wps_addon_settings']) && is_array($_POST['wps_addon_settings'])) {
+                foreach ($_POST['wps_addon_settings'] as $addon_name => $addon_options) {
+                    if (!empty($addon_options) && is_array($addon_options)) {
+                        self::save_addons_options($addon_name, $addon_options);
+                    }
+                }
+            }
+
+            // Trigger Save Settings Action
+            do_action('wp_statistics_save_settings');
+
             // Get tab name for redirect to the current tab
             $tab = isset($_POST['tab']) && $_POST['tab'] ? sanitize_text_field($_POST['tab']) : 'general-settings';
-
-            $redirectAfterSave = true;
 
             // Update Referrer Spam
             if (isset($_POST['update-referrer-spam'])) {
                 $status = Referred::download_referrer_spam();
                 if (is_bool($status)) {
                     if ($status === false) {
-                        Helper::addAdminNotice(__("Error Updating Referrer Spam Blacklist.", "wp-statistics"), "error");
+                        Notice::addFlashNotice(__("Error Encountered While Updating Spam Referrer Blacklist.", "wp-statistics"), "error");
                     } else {
-                        Helper::addAdminNotice(__("Updated Referrer Spam Blacklist.", "wp-statistics"), "success");
+                        Notice::addFlashNotice(__("Spam Referrer Blacklist Successfully Updated.", "wp-statistics"), "success");
                     }
-                    $redirectAfterSave = false;
+                    self::$redirectAfterSave = false;
                 }
             }
 
-            // Update GEO IP
-            if (Option::get('geoip') and isset($_POST['update_geoip']) and isset($_POST['geoip_name'])) {
-                //Check Geo ip Exist in Database
-                if (isset(GeoIP::$library[sanitize_text_field($_POST['geoip_name'])])) {
-                    $result = GeoIP::download(sanitize_text_field($_POST['geoip_name']), "update");
-                    if (is_array($result) and isset($result['status'])) {
-                        Helper::addAdminNotice($result['notice'], ($result['status'] === false ? "error" : "success"));
-                        $redirectAfterSave = false;
-                    }
-                }
-            }
-
-            if ($redirectAfterSave) {
+            if (self::$redirectAfterSave) {
                 // Redirect User To Save Setting
                 wp_redirect(add_query_arg(array(
                     'save_setting' => 'yes',
@@ -136,12 +132,12 @@ class settings_page
 
         // Save Setting
         if (isset($_GET['save_setting'])) {
-            Helper::addAdminNotice(__("Saved Settings.", "wp-statistics"), "success");
+            Notice::addFlashNotice(__("Settings Successfully Saved.", "wp-statistics"), "success");
         }
 
         // Reset Setting
         if (isset($_GET['reset_settings'])) {
-            Helper::addAdminNotice(__("All settings reset.", "wp-statistics"), "success");
+            Notice::addFlashNotice(__("All Settings Have Been Reset to Default.", "wp-statistics"), "success");
         }
     }
 
@@ -167,8 +163,10 @@ class settings_page
         $wps_option_list = array(
             'wps_anonymize_ips',
             'wps_hash_ips',
+            'wps_privacy_audit',
             'wps_store_ua',
-            'wps_all_online',
+            'wps_consent_level_integration',
+            'wps_anonymous_tracking',
             'wps_do_not_track',
         );
 
@@ -194,14 +192,7 @@ class settings_page
     {
 
         if (isset($_POST['wps_time_report'])) {
-            if (Option::get('time_report') != $_POST['wps_time_report']) {
-
-                if (wp_next_scheduled('wp_statistics_report_hook')) {
-                    wp_unschedule_event(wp_next_scheduled('wp_statistics_report_hook'), 'wp_statistics_report_hook');
-                }
-
-                wp_schedule_event(time(), sanitize_text_field($_POST['wps_time_report']), 'wp_statistics_report_hook');
-            }
+            Schedule::rescheduleEvent('wp_statistics_report_hook', $_POST['wps_time_report'], Option::get('time_report'));
         }
 
         $wps_option_list = array(
@@ -209,11 +200,10 @@ class settings_page
             "wps_time_report",
             "wps_send_report",
             "wps_content_report",
+            "wps_email_free_content_header",
+            "wps_email_free_content_footer",
             "wps_email_list",
-            "wps_geoip_report",
-            "wps_prune_report",
-            "wps_upgrade_report",
-            "wps_admin_notices",
+            "wps_upgrade_report"
         );
 
         foreach ($wps_option_list as $option) {
@@ -221,7 +211,7 @@ class settings_page
             $value = '';
 
             if (isset($_POST[$option])) {
-                if ($option == 'wps_content_report') {
+                if (in_array($option, ['wps_content_report', 'wps_email_free_content_header', 'wps_email_free_content_footer'])) {
                     $value = stripslashes(wp_kses_post($_POST[$option]));
                 } else {
                     $value = stripslashes(sanitize_textarea_field($_POST[$option]));
@@ -229,22 +219,6 @@ class settings_page
             }
 
             $wp_statistics_options[self::input_name_to_option($option)] = $value;
-        }
-
-        return $wp_statistics_options;
-    }
-
-    /**
-     * Save Dashboard Option
-     *
-     * @param $wp_statistics_options
-     * @return mixed
-     */
-    public static function save_dashboard_option($wp_statistics_options)
-    {
-        $wps_option_list = array('wps_disable_map', 'wps_disable_dashboard', 'wps_disable_editor');
-        foreach ($wps_option_list as $option) {
-            $wp_statistics_options[self::input_name_to_option($option)] = (isset($_POST[$option]) ? sanitize_text_field($_POST[$option]) : '');
         }
 
         return $wp_statistics_options;
@@ -261,8 +235,6 @@ class settings_page
         $wps_option_list = array(
             'wps_schedule_dbmaint',
             'wps_schedule_dbmaint_days',
-            'wps_schedule_dbmaint_visitor',
-            'wps_schedule_dbmaint_visitor_hits',
         );
         foreach ($wps_option_list as $option) {
             $wp_statistics_options[self::input_name_to_option($option)] = (isset($_POST[$option]) ? sanitize_text_field($_POST[$option]) : '');
@@ -281,10 +253,10 @@ class settings_page
     {
 
         $wps_option_list = array(
-            'wps_geoip',
+            'wps_geoip_license_type',
+            'wps_geoip_license_key',
             'wps_update_geoip',
             'wps_schedule_geoip',
-            'wps_geoip_city',
             'wps_auto_pop',
             'wps_private_country_code',
             'wps_referrerspam',
@@ -304,21 +276,6 @@ class settings_page
 
         foreach ($wps_option_list as $option) {
             $wp_statistics_options[self::input_name_to_option($option)] = (isset($_POST[$option]) ? $_POST[$option] : '');
-        }
-
-        // Check Is Checked GEO-IP and Download
-        foreach (array("geoip" => "country", "geoip_city" => "city") as $geo_opt => $geo_name) {
-            if (!isset($_POST['update_geoip']) and isset($_POST['wps_' . $geo_opt])) {
-
-                //Check File Not Exist
-                $file = GeoIP::get_geo_ip_path($geo_name);
-                if (!file_exists($file)) {
-                    $result = GeoIP::download($geo_name);
-                    if (isset($result['status']) and $result['status'] === false) {
-                        $wp_statistics_options[$geo_opt] = '';
-                    }
-                }
-            }
         }
 
         // Check Update Referrer Spam List
@@ -351,8 +308,8 @@ class settings_page
         if (isset($_POST['wps_create_honeypot'])) {
             $my_post                      = array(
                 'post_type'    => 'page',
-                'post_title'   => __('WP Statistics Honey Pot Page', 'wp-statistics') . ' [' . TimeZone::getCurrentDate() . ']',
-                'post_content' => __('This is the Honey Pot for WP Statistics to use, do not delete.', 'wp-statistics'),
+                'post_title'   => __('WP Statistics - Honey Pot Page for Tracking', 'wp-statistics') . ' [' . TimeZone::getCurrentDate() . ']',
+                'post_content' => __('Do Not Delete: Honey Pot Page for WP Statistics Tracking.', 'wp-statistics'),
                 'post_status'  => 'publish',
                 'post_author'  => 1,
             );
@@ -363,9 +320,9 @@ class settings_page
         $wps_option_list = array(
             'wps_record_exclusions',
             'wps_robotlist',
+            'wps_query_params_allow_list',
             'wps_exclude_ip',
             'wps_exclude_loginpage',
-            'wps_force_robot_update',
             'wps_excluded_countries',
             'wps_included_countries',
             'wps_excluded_hosts',
@@ -375,7 +332,6 @@ class settings_page
             'wps_exclude_feeds',
             'wps_excluded_urls',
             'wps_exclude_404s',
-            'wps_corrupt_browser_info',
         );
 
         foreach ($wps_option_list as $option) {
@@ -409,21 +365,26 @@ class settings_page
      */
     public static function save_visitor_ip_option($wp_statistics_options)
     {
+        $ipMethod = IP::$default_ip_method;
 
-        $value = IP::$default_ip_method;
         if (isset($_POST['ip_method']) and !empty($_POST['ip_method'])) {
 
             // Check Custom Header
-            if ($_POST['ip_method'] == "CUSTOM_HEADER") {
+            if ($_POST['ip_method'] == 'CUSTOM_HEADER') {
                 if (trim($_POST['user_custom_header_ip_method']) != "") {
-                    $value = sanitize_text_field($_POST['user_custom_header_ip_method']);
+                    $ipMethod = sanitize_text_field($_POST['user_custom_header_ip_method']);
+
+                    if (!isset($_SERVER[$ipMethod]) || empty($_SERVER[$ipMethod])) {
+                        Notice::addFlashNotice(__('Custom header IP detection failed or the specified custom header is empty. Will switch to default detection method (Sequential IP Detection).', 'wp-statistics'), 'error');
+                        $ipMethod = IP::$default_ip_method; // Switch to default method if custom header fails
+                    }
                 }
             } else {
-                $value = sanitize_text_field($_POST['ip_method']);
+                $ipMethod = sanitize_text_field($_POST['ip_method']);
             }
         }
 
-        $wp_statistics_options['ip_method'] = $value;
+        $wp_statistics_options['ip_method'] = $ipMethod;
         return $wp_statistics_options;
     }
 
@@ -436,16 +397,11 @@ class settings_page
     public static function save_general_option($wp_statistics_options)
     {
 
-        $selist                       = SearchEngine::getList(true);
-        $permalink                    = get_option('permalink_structure');
-        $disable_strip_uri_parameters = false;
+        $selist = SearchEngine::getList(true);
 
-        if ($permalink == '' || strpos($permalink, '?') !== false) {
-            $disable_strip_uri_parameters = true;
-        }
         foreach ($selist as $se) {
             $se_post     = 'wps_disable_se_' . $se['tag'];
-            $optionValue = isset($_POST[$se_post]) ? sanitize_text_field($_POST[$se_post]) : '';
+            $optionValue = isset($_POST[$se_post]) && sanitize_text_field($_POST[$se_post]) == '1' ? '' : '1';
 
             $wp_statistics_options[self::input_name_to_option($se_post)] = $optionValue;
         }
@@ -456,36 +412,25 @@ class settings_page
             'wps_visitors',
             'wps_visitors_log',
             'wps_enable_user_column',
+            'wps_bypass_ad_blockers',
             'wps_pages',
-            'wps_track_all_pages',
             'wps_use_cache_plugin',
-            'wps_disable_column',
-            'wps_hit_post_metabox',
             'wps_show_hits',
             'wps_display_hits_position',
-            'wps_check_online',
             'wps_menu_bar',
             'wps_coefficient',
-            'wps_chart_totals',
-            'wps_hide_notices',
-            'wps_all_online',
-            'wps_strip_uri_parameters',
-            'wps_addsearchwords',
+            'wps_hide_notices'
         );
-
-        // We need to check the permalink format for the strip_uri_parameters option
-        if ($disable_strip_uri_parameters) {
-            $_POST['wps_strip_uri_parameters'] = '';
-        }
 
         foreach ($wps_option_list as $option) {
             $optionValue                                                = isset($_POST[$option]) ? sanitize_text_field($_POST[$option]) : '';
             $wp_statistics_options[self::input_name_to_option($option)] = $optionValue;
         }
 
-        //Add Visitor RelationShip Table
-        if (isset($_POST['wps_visitors_log']) and $_POST['wps_visitors_log'] == 1) {
-            Install::create_visitor_relationship_table();
+        // Save Views Column & View Chart Metabox
+        foreach (array('wps_disable_column', 'wps_disable_editor', 'wps_disable_dashboard') as $option) {
+            $wps_disable_column                                         = isset($_POST[$option]) && sanitize_text_field($_POST[$option]) == '1' ? '' : '1';
+            $wp_statistics_options[self::input_name_to_option($option)] = $wps_disable_column;
         }
 
         //Flush Rewrite Use Cache Plugin
@@ -493,11 +438,52 @@ class settings_page
             flush_rewrite_rules();
         }
 
+        /**
+         * Remove old hash format assets if bypassed ad-blocker is disabled.
+         *
+         * @version 14.9.2
+         */
+        if (empty($_REQUEST['wps_bypass_ad_blockers']) && Option::get('bypass_ad_blockers')) {
+            $assetNameObfuscator = new AssetNameObfuscator();
+            $assetNameObfuscator->deleteAllHashedFiles();
+            $assetNameObfuscator->deleteDatabaseOption();
+        }
+
         return $wp_statistics_options;
     }
 
     /**
-     * Reset Wp-Statistics Option
+     * Save Addons Options
+     *
+     * @param $addon_name
+     * @param $addon_options
+     */
+    public static function save_addons_options($addon_name, $addon_options)
+    {
+        $options = [];
+        foreach ($addon_options as $option_name => $option_value) {
+            if (in_array($option_name, ['wps_about_widget_content', 'email_content_header', 'email_content_footer'])) {
+                $options[$option_name] = wp_kses_post($option_value);
+            } else {
+                if (is_array($option_value)) {
+                    $options[$option_name] = array_map('sanitize_text_field', $option_value);
+                } else {
+                    $options[$option_name] = sanitize_text_field($option_value);
+                }
+            }
+
+            // Update time_report option based on the value of email_stats_time_range option in Advanced Reporting
+            if ($option_name === 'email_stats_time_range' && Request::compare('tab', 'advanced-reporting-settings')) {
+                Schedule::rescheduleEvent('wp_statistics_report_hook', $options[$option_name], Option::get('time_report'));
+                Option::update('time_report', $options[$option_name]);
+            }
+        }
+
+        Option::saveByAddon($options, $addon_name);
+    }
+
+    /**
+     * Reset WP Statistics Option
      */
     public static function reset_wp_statistics_options()
     {
@@ -541,4 +527,4 @@ class settings_page
     }
 }
 
-new settings_page;
+settings_page::instance();

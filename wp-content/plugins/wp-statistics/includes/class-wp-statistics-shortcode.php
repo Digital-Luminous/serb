@@ -22,7 +22,7 @@ class ShortCode
      * Where:
      * stat = the statistic you want.
      * time = is the timeframe, strtotime() (http://php.net/manual/en/datetime.formats.php) will be used to calculate
-     * it. provider = the search provider to get stats on. format = i18n, english, none. id = the page/post id to get
+     * it. provider = the search provider to get stats on. format = i18n, english, abbreviated, none. id = the page/post id to get
      * stats on.
      *
      * @param $atts
@@ -45,7 +45,7 @@ class ShortCode
             $atts['provider'] = 'all';
         }
         if (!array_key_exists('format', $atts)) {
-            $atts['format'] = null;
+            $atts['format'] = '';
         }
         if (!array_key_exists('id', $atts)) {
             $atts['id'] = -1;
@@ -126,10 +126,38 @@ class ShortCode
                     $result = number_format($result);
 
                     break;
+                // In this line a new function is added so that the abbreviation of larger numbers is displayed with the symbols 1K, 1M or 1B
+                case 'abbreviated':
+                    $result = $this->formatNumber($result);
+                    break;
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Format a number in shorthand notation (1K, 1M, 1B).
+     *
+     * @param int|float $number El número que se formateará.
+     * @return string El número formateado en notación abreviada.
+     */
+    private function formatNumber($number)
+    {
+        $abbreviations = array(
+            'K' => 1000,
+            'M' => 1000000,
+            'B' => 1000000000,
+        );
+
+        foreach ($abbreviations as $symbol => $value) {
+            if ($number >= $value) {
+                $formatted = $number / $value;
+                return round($formatted, 1) . $symbol;
+            }
+        }
+
+        return $number;
     }
 
     public function shortcake()
@@ -166,9 +194,9 @@ class ShortCode
                             'value'       => 'usersonline',
                             'options'     => array(
                                 'usersonline'    => __('Online Users', 'wp-statistics'),
-                                'visits'         => __('Visits', 'wp-statistics'),
+                                'visits'         => __('Views', 'wp-statistics'),
                                 'visitors'       => __('Visitors', 'wp-statistics'),
-                                'pagevisits'     => __('Page Visits', 'wp-statistics'),
+                                'pagevisits'     => __('Page Views', 'wp-statistics'),
                                 'searches'       => __('Searches', 'wp-statistics'),
                                 'postcount'      => __('Post Count', 'wp-statistics'),
                                 'pagecount'      => __('Page Count', 'wp-statistics'),
@@ -204,14 +232,15 @@ class ShortCode
                             'attr'        => 'format',
                             'type'        => 'select',
                             'description' => __(
-                                'The format to display numbers in: i18n, english, none.',
+                                'The format to display numbers in: i18n, english, abbreviated, none.',
                                 'wp-statistics'
                             ),
                             'value'       => 'none',
                             'options'     => array(
-                                'none'    => __('None', 'wp-statistics'),
-                                'english' => __('English', 'wp-statistics'),
-                                'i18n'    => __('International', 'wp-statistics'),
+                                'none'        => __('None', 'wp-statistics'),
+                                'english'     => __('English', 'wp-statistics'),
+                                'i18n'        => __('International', 'wp-statistics'),
+                                'abbreviated' => __('Abbreviated', 'wp-statistics'), // Added for shorthand notation
                             ),
                         ),
                         array(

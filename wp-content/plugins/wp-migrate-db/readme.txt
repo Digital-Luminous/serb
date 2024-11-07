@@ -2,9 +2,9 @@
 Contributors: wpengine, deliciousbrains, bradt, ahmedgeek, philwebs, dalewilliams, tysonreeder, kevinwhoffman
 Tags: migrate, push pull, clone, import site, export site, transfer, restore, backup, wordpress migration plugin, move site, database migration, site migration
 Requires at least: 5.2
-Tested up to: 6.2.2
+Tested up to: 6.6
 Requires PHP: 5.6
-Stable tag: 2.6.7
+Stable tag: 2.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -116,6 +116,27 @@ Yes, WP Migrate Lite includes `export` and `find-replace` commands. Qualifying l
 10. Saved migration profiles
 
 == Changelog ==
+
+= WP Migrate 2.7.0 - 2024-10-04 =
+* Security: The plugin now uses its own update mechanism from WP Engine servers
+* New: PHP and JS dependencies have been updated
+
+= WP Migrate 2.6.11 - 2024-05-30 =
+* Added: A new filter `wpmdb_check_table_column_for_reference` now helps to avoid memory errors by excluding columns from the find and replace operation when a serialized reference is detected
+
+= WP Migrate 2.6.10 - 2024-02-08 =
+* Security: Plugin configuration data now uses JSON encoding instead of serialization to prevent PHP Object Injection (thanks to Patchstack for responsible disclosure on January 15, 2024 followed by development and testing of the fix by WP Engine)
+* Security: Unserializing an object during find and replace operations now passes `'allowed_classes' => false` to avoid instantiating the complete object and potentially running malicious code stored in the database
+* Security: The wp-queue library now ensures that only its own classes can be unserialized via `allowed_classes`
+* Fix: Sites with "bundle" or "runtime" in the domain name can now load plugin pages in WP Admin
+
+= WP Migrate 2.6.9 - 2023-08-29 =
+* New: Links to plugin documentation, support, feedback, and changelog are now available in the footer of WP Admin
+* Improvement: Migration performance is now improved for sites that do not organize uploads into month- and year-based folders
+* Bug: Form data types are now consistent when using default fallbacks
+
+= WP Migrate 2.6.8 - 2023-07-10 =
+* Improvement: PHP 8.2 and WP Migrate are now compatible
 
 = WP Migrate 2.6.7 - 2023-06-01 =
 * Bug Fix: All-In-One Security and WP Migrate are now more compatible as a result of skipping the `stacktrace` column in the `aiowps_audit_log` table during find and replace operations

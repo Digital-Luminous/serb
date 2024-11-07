@@ -452,7 +452,6 @@ class Twig_SupTwgDtgs_Environment
                     $this->cache->write($key, $content);
                     $this->cache->load($key);
                 }
-
                 if (!class_exists($mainCls, false)) {
                     /* Last line of defense if either $this->bcWriteCacheFile was used,
                      * $this->cache is implemented as a no-op or we have a race condition

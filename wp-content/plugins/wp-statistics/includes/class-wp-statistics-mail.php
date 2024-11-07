@@ -6,9 +6,7 @@ class WP_Statistics_Mail
     private $cc = array();
     private $bcc = array();
     private $headers = array();
-    private $attachments = array();
     private $sendAsHTML = true;
-    private $subject = '';
     private $from = '';
     private $headerTemplate = false;
     private $headerVariables = array();
@@ -16,7 +14,9 @@ class WP_Statistics_Mail
     private $variables = array();
     private $afterTemplate = false;
     private $footerVariables = array();
-    private $body;
+    public $body;
+    public $attachments = array();
+    public $subject = '';
 
     /**
      * Init WordPress Mail
@@ -201,14 +201,14 @@ class WP_Statistics_Mail
             $this->attachments = array();
             foreach ($path as $path_) {
                 if (!file_exists($path_)) {
-                    throw new Exception("Attachment not found at $path");
+                    throw new Exception("Attachment not found at " . esc_html($path));
                 } else {
                     $this->attachments[] = $path_;
                 }
             }
         } else {
             if (!file_exists($path)) {
-                throw new Exception("Attachment not found at $path");
+                throw new Exception("Attachment not found at " . esc_html($path));
             }
             $this->attachments = array($path);
         }
@@ -341,14 +341,14 @@ class WP_Statistics_Mail
 
         } elseif ($extension === 'html') {
 
-            $template = file_get_contents($templateFile);
+            $template = wp_remote_get($templateFile);
             if (!is_array($variables) || empty($variables)) {
                 return $template;
             }
             return $this->parseAsMustache($template, $variables);
 
         } else {
-            throw new Exception("Unknown extension {$extension} in path '{$templateFile}'");
+            throw new Exception(sprintf('Unknown extension %1$s in path %2$s', esc_html($extension), esc_html($templateFile)));
         }
     }
 
@@ -380,15 +380,19 @@ class WP_Statistics_Mail
     {
         $headers = '';
         $headers .= implode("\r\n", $this->headers) . "\r\n";
+
         foreach ($this->bcc as $bcc) {
             $headers .= sprintf("Bcc: %s \r\n", $bcc);
         }
+
         foreach ($this->cc as $cc) {
             $headers .= sprintf("Cc: %s \r\n", $cc);
         }
-        if (!empty($this->from)) {
+
+        if ($this->from && $this->from != '') {
             $headers .= sprintf("From: %s \r\n", $this->from);
         }
+
         return $headers;
     }
 
@@ -415,6 +419,8 @@ class WP_Statistics_Mail
         if ($this->sendAsHTML) {
             add_filter('wp_mail_content_type', array($this, 'HTMLFilter'));
         }
+
+        $this->attachments = apply_filters('wp_statistics_mail_attachments', $this->attachments, $this);
 
         return wp_mail($this->to, $this->buildSubject(), $this->body, $this->buildHeaders(), $this->attachments);
     }

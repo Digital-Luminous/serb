@@ -3,10 +3,10 @@ Contributors: Jules Colle
 Donate link: https://shop.bdwm.be/contact-form-7-conditional-fields-pro/
 Author: Jules Colle
 Website: http://bdwm.be
-Tags: wordpress, contact form 7, forms, conditional fields
+Tags: contact form 7, forms, form, conditional fields, conditional logic
 Requires at least: 5.0
-Tested up to: 6.2
-Stable tag: 2.3.9
+Tested up to: 6.6
+Stable tag: 2.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -134,6 +134,82 @@ Because the nature of the changes introduced in version 5.7 of Contact Form 7 yo
 Reverted autop-fix because it was causing addional errors. Bottom line: Make sure you are om Conditional Fields version 2.2.11 and CF7 version 5.6.4
 
 == Changelog ==
+
+= 2.5 (2024-10-22) =
+* Add Plugin Dependency for CF7 in plugin header
+* fix deprecated warning dynamic property creation
+* fix Using ${var} in strings is deprecated
+* Fix XSS vulnerability in admin settings page. Thanks to [Patchstack](patchstack.com) for reporting this issue.
+* PRO: Fix: [response] tag doesn't work properly in multistep [#127](https://github.com/pwkip/contact-form-7-conditional-fields/issues/127)
+* PRO: Add support for checkbox free_text option in summary field [#126](https://github.com/pwkip/contact-form-7-conditional-fields/issues/126)
+* PRO: Fix: [multifile] allows uploading of filetype that is not specified in allowed filetypes [#103]((https://github.com/pwkip/contact-form-7-conditional-fields/issues/103)
+
+= 2.4.15 (2024-07-27) =
+* Fully tested with Contact Form 7 version 5.9.8
+
+= 2.4.14 (2024-07-18) =
+* Fix medium security problem (CVSS 4.3). Thanks to Wordfence for reporting this issue.
+* Fully tested with Contact Form 7 version 5.9.7
+* Tested up to WP 6.6
+
+= 2.4.13 (2024-06-29) =
+* Fully tested with Contact Form 7 version 5.9.6
+
+= 2.4.12 (2024-05-25) =
+* Fully tested with Contact Form 7 version 5.9.5
+
+= 2.4.11 (2024-05-12) =
+* PRO: multistep - Disable next button and prevent submitting while step is being validated.
+* Fully tested with Contact Form 7 version 5.9.4
+
+= 2.4.10 (2024-03-30) =
+* Fix crappy release
+
+= 2.4.9 (2024-03-30) =
+* Fully tested with Contact Form 7 version 5.9.3
+
+= 2.4.8 (2024-03-14) =
+* Fully tested with Contact Form 7 version 5.9.2
+
+= 2.4.7 (2024-02-13) =
+* Fully tested with Contact Form 7 version 5.8.7
+
+= 2.4.6 (2024-01-15) =
+* Fully tested with Contact Form 7 version 5.8.6
+
+= 2.4.5 (2023-12-19) =
+* Fix bug with Multistep validation. Caused by cf7cf script not depending on cf7 script.
+* Fully tested with Contact Form 7 version 5.8.5
+
+= 2.4.4 (2023-12-10) =
+* Fully tested with Contact Form 7 version 5.8.4
+
+= 2.4.3 (2023-11-23) =
+* Tested up to WP 6.4
+
+= 2.4.2 (2023-11-22) =
+* Prevent "CF7 needs to be installed" notice from being dismissable. (This notice is only shown to users with the update_plugins capability)
+* Add nonce for dismissing other notices, so bad people who are stealing your session can't dismiss your precious CF7CF related notices on your behalf anymore. Hopefully now the people of Patchstack will be happy and stop marking this plugin as vulnerable.
+* Tested up to WP 6.3
+* Remove some unused constants
+
+= 2.4.1 (2023-11-16) =
+* Patch minor access-control vulnerability reported by [patchstack](https://patchstack.com/database/vulnerability/cf7-conditional-fields/wordpress-conditional-fields-for-contact-form-7-plugin-2-4-broken-access-control-vulnerability?_a_id=110)
+* Fully tested with Contact Form 7 version 5.8.3
+
+= 2.4 (2023-11-13) =
+* Removed webpack build. (This might cause JS errors in outdated browsers.)
+* Fix admin validator Error. Thanks to [joostdekeijzer](https://github.com/pwkip/contact-form-7-conditional-fields/pull/113)
+* Fix some jQuery code. Thanks to [hirasso](https://github.com/pwkip/contact-form-7-conditional-fields/pull/111)
+
+= 2.3.12 (2023-10-27) =
+* Fully tested with Contact Form 7 version 5.8.2
+
+= 2.3.11 (2023-10-03) =
+* Fully tested with Contact Form 7 version 5.8.1
+
+= 2.3.10 (2023-08-07) =
+* Fully tested with Contact Form 7 version 5.8
 
 = 2.3.9 (2023-05-31) =
 * Fully tested with Contact Form 7 version 5.7.7

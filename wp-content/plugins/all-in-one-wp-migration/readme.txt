@@ -1,13 +1,13 @@
-=== All-in-One WP Migration ===
+=== All-in-One WP Migration and Backup ===
 Contributors: yani.iliev, bangelov, pimjitsawang
-Tags: move, transfer, copy, migrate, backup, clone, restore, db migration, wordpress migration, website migration, database export, database import, apoyo, sauvegarde, di riserva, バックアップ
+Tags: backup, transfer, copy, move, clone
 Requires at least: 3.3
-Tested up to: 6.3
+Tested up to: 6.7
 Requires PHP: 5.3
-Stable tag: 7.78
+Stable tag: 7.87
 License: GPLv2 or later
 
-Move, transfer, copy, migrate, and backup a site with 1-click. Quick, easy, and reliable.
+Backup, transfer, copy, and move a site with 1-click. Quick, easy, and reliable.
 
 == Description ==
 Introduced in 2013 and used by over 60 million websites, All-in-One WP Migration is verifiably one of WordPress' most trusted and utilized plugins for moving websites with absolute ease.
@@ -24,7 +24,7 @@ Follow these three simple steps, and your site will be live at its new location 
 
 One feature that makes All-in-One WP Migration widely loved (to the tune of over 6,000 5-star user reviews) is that the technical requirements for installing the plugin are simple.
 
-If you have WordPress version between 3.3 and 6.0 and PHP version between 5.3 and 8.2.6, you are good to go. All-in-One WP Migration also supports all versions of MySQL and MariaDB.
+If you have WordPress version between 3.3 and 6.6.1 and PHP version between 5.3 and 8.4, you are good to go. All-in-One WP Migration also supports all versions of MySQL, MariaDB and SQLite.
 
 **Features Spotlight:**
 
@@ -39,6 +39,7 @@ If you have WordPress version between 3.3 and 6.0 and PHP version between 5.3 an
 * Full product support.
 * Browse WPRESS files online with [Traktor Web](https://traktor.servmask.com)
 * Extract WPRESS files on your computer with [Traktor Desktop](https://traktor.wp-migration.com)
+* New in v7.82: Integration with WordPress Playground, enabling easy migration between SQLite and MySQL.
 * And lots more!
 
 Here are other reasons to use All-in-One WP Migration ...
@@ -47,6 +48,9 @@ Here are other reasons to use All-in-One WP Migration ...
 
 Many enterprise customers, government organizations, and universities use, love, and trust All-in-One WP Migration. Here are some: Boeing, NASA, VW, IBM, Harvard University, Stanford University, Lego, P&G, Automattic, State of California, State of Hawaii.
 This broad adoption and usage of All-in-One WP Migration demonstrate how **safe, reliable and adaptable** the plugin is for just about any website migration need.
+
+**Update Frequency:**
+Our team is dedicated to keeping All-in-One WP Migration up-to-date and secure. We release updates every two weeks or at least once a month, ensuring compatibility with the latest WordPress versions, including beta releases. Our proactive testing and feedback to the WordPress core team help in preemptively addressing any potential issues, providing our users with a reliable and forward-compatible migration and backup solution.
 
 **Full Compatibility and Support:**
 
@@ -60,7 +64,14 @@ These vendors trust us and our plugin to provide their customers with reliable p
 All-in-One WP Migration supports and syncs seamlessly with top cloud storage services.
 The plugin comes preinstalled on all Bitnami WordPress sites running on AWS, Google Compute Cloud, and Microsoft Azure.
 
+**Case Studies:**
+
+* Small Business Growth: A small online retailer was able to seamlessly migrate to a more robust hosting solution to handle increasing traffic during peak shopping seasons, ensuring smooth customer experiences without downtime.
+* Educational Institutions: A prominent university utilized All-in-One WP Migration to consolidate multiple departmental sites into a single, unified WordPress network, simplifying management and enhancing site security.
+* Government Reliability: Following a directive to improve digital accessibility, a government agency used our plugin to migrate their content to a new, compliant platform without impacting public access to critical information.
+
 = Contact us =
+* [Report a security vulnerability](https://patchstack.com/database/vdp/all-in-one-wp-migration)
 * [Get free help from us here](https://servmask.com/help)
 * [Report a bug or request a feature](https://servmask.com/help)
 * [Find out more about us](https://servmask.com)
@@ -87,6 +98,63 @@ All-in-One WP Migration is in full compliance with General Data Protection Regul
 See our [GDPR Compliant Privacy Policy here](https://www.iubenda.com/privacy-policy/946881).
 
 == Changelog ==
+= 7.87 =
+**Fixed**
+
+* Resolved a vulnerability where error logs were publicly accessible with a known name by appending random affixes to error log filenames, making them unguessable. Error logs are now automatically deleted daily and during plugin updates. Special thanks to villu164 for responsibly disclosing this issue.
+* Resolved a vulnerability where an administrator user could inject arbitrary PHP code through specific inputs. This vulnerability requires administrator-level access to exploit, ensuring that unauthorized users cannot perform this action. Special thanks to Ryan Kozak for responsibly disclosing this issue.
+
+= 7.86 =
+**Fixed**
+
+* Resolved an issue with PHP 8.4 compatibility and restoring backup files via WP-CLI
+
+= 7.85 =
+**Added**
+
+* PHP 8.4 compatibility
+
+= 7.84 =
+**Added**
+
+* New hooks during the export and import processes to allow for custom actions and integrations
+
+= 7.83 =
+**Fixed**
+
+* Resolved an issue where downloading backup files was failing on WordPress Playground environments
+
+= 7.82 =
+**Added**
+
+* SQLite support
+* WordPress Playground support
+
+= 7.81 =
+**Added**
+
+* Reset Hub Page: Introducing a new reset hub page, providing users with powerful reset tools for efficient site management. This feature allows for easier resets of WordPress environments, facilitating smoother development and testing workflows.
+
+**Improved**
+
+* Better W3TC Support
+* PHP Compatibility Checks: Display a warning notification, when you move/restore your site to a different PHP version.
+
+= 7.80 =
+**Added**
+
+* Support for update-services plugin
+* Domain name conversion to dashes from dots in the backup name for improved hosting providers compatibility
+
+**Improved**
+
+* Better support for Multisite to Standalone and Standalone to Multisite exports and imports, streamlining the migration process
+
+= 7.79 =
+**Added**
+
+* Support for WordPress v6.4
+
 = 7.78 =
 **Added**
 
@@ -101,17 +169,3 @@ See our [GDPR Compliant Privacy Policy here](https://www.iubenda.com/privacy-pol
 **Fixed**
 
 * Removed the [beta] label from advanced settings
-
-= 7.75 =
-**Fixed**
-
-* Custom backups path on database import step
-
-= 7.74 =
-**Fixed**
-
-* Resolved an ongoing issue with the compatibility of the plugin with servers running Imunify360. The file "wp-content/plugins/all-in-one-wp-migration/functions.php" was being falsely flagged and deleted due to a detection error. This update includes small changes to the "functions.php" file to modify its checksum and prevent the false flag by Imunify360
-
-**Notes**
-
-* Imunify360 has updated its signatures, which should prevent this issue from occurring on servers running the updated version. However, this plugin update serves as an additional measure to ensure that the issue is resolved for all users

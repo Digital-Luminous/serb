@@ -28,7 +28,7 @@ class AddOnDecorator
 
     public function getUrl()
     {
-        return $this->addOn->url;
+        return $this->addOn->url . '?' . AddOnsFactory::$addOnUtm[$this->getSlug()];
     }
 
     public function getDescription()
@@ -124,16 +124,20 @@ class AddOnDecorator
             $this->status = $this->getRemoteStatus();
 
             if (is_wp_error($this->status)) {
+                $this->updateStatuses(false);
                 return $this->status->get_error_message();
             }
 
             if ($this->status) {
+                $this->updateStatuses(true);
                 return __('Activated', 'wp-statistics');
             } else {
+                $this->updateStatuses(false);
                 return __('Not activated', 'wp-statistics');
             }
 
         } else if ($this->isExist()) {
+            $this->updateStatuses(false);
             return __('Inactive', 'wp-statistics');
         }
 
@@ -152,16 +156,20 @@ class AddOnDecorator
             return $this->status;
         }
 
-        $transientKey = AddOnsFactory::getLicenseTransientKey($this->getSlug());
+        $transientKey         = AddOnsFactory::getLicenseTransientKey($this->getSlug());
+        $downloadTransientKey = AddOnsFactory::getDownloadTransientKey($this->getSlug());
 
         // Get any existing copy of our transient data
         if (false === ($response = get_transient($transientKey))) {
-
-            $response = wp_remote_get(add_query_arg(array(
+            $args = add_query_arg([
                 'plugin-name' => $this->getSlug(),
                 'license_key' => $this->getLicense(),
                 'website'     => get_bloginfo('url'),
-            ), WP_STATISTICS_SITE . '/wp-json/plugins/v1/validate'));
+            ], WP_STATISTICS_SITE_URL . '/wp-json/plugins/v1/validate');
+
+            $response = wp_remote_get($args, [
+                'timeout' => 35,
+            ]);
 
             if (is_wp_error($response)) {
                 return $response;
@@ -172,7 +180,7 @@ class AddOnDecorator
 
             set_transient($transientKey, $response, DAY_IN_SECONDS);
         }
-        
+
         if (isset($response->code) && $response->code == 'error') {
             return new \WP_Error($response->data->status, $response->message);
         }
@@ -180,7 +188,25 @@ class AddOnDecorator
         if (isset($response->status) and $response->status == 200) {
             $this->isActivated = true;
 
+            // To clear the download transient and sync with download status
+            delete_transient($downloadTransientKey);
+
             return true;
         }
+    }
+
+    private function updateStatuses($status)
+    {
+        $statues                     = get_option('wp_statistics_activate_addons', []);
+        $statues[$this->addOn->slug] = $status;
+
+        unset($statues['add-ons-bundle']);
+
+        update_option('wp_statistics_activate_addons', $statues);
+    }
+
+    public static function countActivatedAddOns()
+    {
+        return array_sum(get_option('wp_statistics_activate_addons', []));
     }
 }

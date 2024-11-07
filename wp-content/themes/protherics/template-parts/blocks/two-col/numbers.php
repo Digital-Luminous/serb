@@ -3,7 +3,7 @@
 ?>
 
 <?php if ( $numbers ) : ?>
-	<div class="c-columns c-numbers">
+	<div class="c-columns c-numbers c-numbers__wrap">
 		<?php foreach ( $numbers as $item ) : ?>
 			<div class="c-columns__column c-numbers__column">
 				<?php if ( isset( $item['title'] ) && $item['title'] ) : ?>

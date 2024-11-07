@@ -2,11 +2,13 @@
 
 namespace WP_STATISTICS;
 
+use WP_Statistics\Components\Assets;
+use WP_Statistics\Service\Integrations\WpConsentApi;
+
 class Frontend
 {
     public function __construct()
     {
-
         # Enable ShortCode in Widget
         add_filter('widget_text', 'do_shortcode');
 
@@ -15,9 +17,6 @@ class Frontend
 
         # Enqueue scripts & styles
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
-
-        # Register and enqueue check online users scripts
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 
         # Print out the WP Statistics HTML comment
         add_action('wp_head', array($this, 'print_out_plugin_html'));
@@ -35,54 +34,65 @@ class Frontend
     {
         if (Option::get('use_honeypot') && Option::get('honeypot_postid') > 0) {
             $post_url = get_permalink(Option::get('honeypot_postid'));
-            echo '<a href="' . esc_html($post_url) . '" style="display: none;">&nbsp;</a>';
+            echo sprintf('<a href="%s" style="display: none;" rel="noindex">&nbsp;</a>', esc_html($post_url));
         }
     }
-
 
     /**
      * Enqueue Scripts
      */
     public function enqueue_scripts()
     {
-        wp_enqueue_script('wp-statistics-tracker', WP_STATISTICS_URL . 'assets/js/tracker.js');
+        if (Option::get('use_cache_plugin')) {
 
-        $params = array(
-            Hits::$rest_hits_key => 'yes',
-        );
+            /**
+             * Get default params
+             */
+            $params = array_merge([Hits::$rest_hits_key => 1], Helper::getHitsDefaultParams());
 
-        /**
-         * Merge parameters
-         */
-        $params = array_merge($params, Helper::getHitsDefaultParams());
+            /**
+             * Handle the bypass ad blockers
+             */
+            if (Option::get('bypass_ad_blockers', false)) {
+                // AJAX params
+                $requestUrl   = get_site_url();
+                $hitParams    = array_merge($params, ['action' => 'wp_statistics_hit_record']);
+                $onlineParams = array_merge($params, ['action' => 'wp_statistics_online_check']);
+            } else {
+                // REST params
+                $requestUrl   = get_rest_url(null, RestAPI::$namespace);
+                $hitParams    = array_merge($params, ['endpoint' => Api\v2\Hit::$endpoint]);
+                $onlineParams = array_merge($params, ['endpoint' => Api\v2\CheckUserOnline::$endpoint]);
+            }
 
-        /**
-         * Build request URL
-         */
-        $hitRequestUrl        = add_query_arg($params, get_rest_url(null, RestAPI::$namespace . '/' . Api\v2\Hit::$endpoint));
-        $keepOnlineRequestUrl = add_query_arg($params, get_rest_url(null, RestAPI::$namespace . '/' . Api\v2\CheckUserOnline::$endpoint));
+            /**
+             * Build the parameters
+             */
+            $jsArgs = array(
+                'requestUrl'   => $requestUrl,
+                'ajaxUrl'      => admin_url('admin-ajax.php'),
+                'hitParams'    => $hitParams,
+                'onlineParams' => $onlineParams,
+                'option'       => [
+                    'userOnline'           => Option::get('useronline'),
+                    'consentLevel'         => Option::get('consent_level_integration', 'disabled'),
+                    'dntEnabled'           => Option::get('do_not_track'),
+                    'bypassAdBlockers'     => Option::get('bypass_ad_blockers', false),
+                    'isWpConsentApiActive' => WpConsentApi::isWpConsentApiActive(),
+                    'trackAnonymously'     => Helper::shouldTrackAnonymously(),
+                    'isPreview'            => is_preview(),
+                ],
+                'jsCheckTime'  => apply_filters('wp_statistics_js_check_time_interval', 60000),
+            );
 
-        $jsArgs = array(
-            'hitRequestUrl'        => $hitRequestUrl,
-            'keepOnlineRequestUrl' => $keepOnlineRequestUrl,
-            'option'               => [
-                'dntEnabled'         => Option::get('do_not_track'),
-                'cacheCompatibility' => Option::get('use_cache_plugin')
-            ],
-        );
+            Assets::script('tracker', 'js/tracker.js', [], $jsArgs, true, Option::get('bypass_ad_blockers', false));
+        }
 
-        wp_localize_script('wp-statistics-tracker', 'WP_Statistics_Tracker_Object', $jsArgs);
-    }
-
-    /**
-     * Enqueue Scripts
-     */
-    public function enqueue_styles()
-    {
-
-        // Load Admin Bar Css
-        if (AdminBar::show_admin_bar() and is_admin_bar_showing()) {
-            wp_enqueue_style('wp-statistics', WP_STATISTICS_URL . 'assets/css/frontend.min.css', true, WP_STATISTICS_VERSION);
+        // Load Chart.js library
+        if (Helper::isAdminBarShowing()) {
+            Assets::script('chart.js', 'js/chartjs/chart.umd.min.js', [], [], true, false, null, '4.4.4');
+            Assets::script('mini-chart', 'js/mini-chart.js', [], [], true);
+            Assets::style('front', 'css/frontend.min.css');
         }
     }
 
@@ -92,7 +102,7 @@ class Frontend
     public function print_out_plugin_html()
     {
         if (apply_filters('wp_statistics_html_comment', true)) {
-            echo '<!-- Analytics by WP Statistics v' . WP_STATISTICS_VERSION . ' - ' . WP_STATISTICS_SITE . ' -->' . "\n";
+            echo '<!-- Analytics by WP Statistics v' . WP_STATISTICS_VERSION . ' - ' . WP_STATISTICS_SITE_URL . ' -->' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
     }
 
@@ -115,7 +125,7 @@ class Frontend
 
         // Get post hits
         $hits      = wp_statistics_pages('total', "", $post_id);
-        $hits_html = '<p>' . sprintf(__('Hits: %s', 'wp-statistics'), $hits) . '</p>';
+        $hits_html = '<p>' . sprintf(__('Views: %s', 'wp-statistics'), $hits) . '</p>';
 
         // Check hits position
         if (Option::get('display_hits_position') == 'before_content') {

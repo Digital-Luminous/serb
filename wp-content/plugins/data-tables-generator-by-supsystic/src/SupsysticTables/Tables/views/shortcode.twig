@@ -19,10 +19,15 @@
 
         <{{tag}}
         data-cell-id="{{ context.cols[context.countIter] ~ context.cols[context.cellIter] ~ cellY }}"
+        
         data-x="{{ cellIndex }}"
         data-y="{{ cellY }}"
         data-db-index="{{ cellDbIndex }}"
         class="{{ cell.meta | join(' ') | trim }}"
+
+        {% if 'invisibleCell' in cell.meta  %}
+         data-hidden-cell="true"
+        {% endif %}
 
         {% if cell.comment is defined and cell.comment.value is defined %}
             title="{{ cell.comment.value }}"
@@ -440,7 +445,7 @@
 
             {% if existBodyRow == true %}
                 <tr
-                        {% if rowHeightExists == true and row.height != 'NaN' and row.height matches '/^[0-9]*\\.?[0-9]+$/' %}
+                        {% if rowHeightExists == true and row.height != 'NaN' %}
                             style="height: {{ row.height }}px"
                         {% endif %}
                         >

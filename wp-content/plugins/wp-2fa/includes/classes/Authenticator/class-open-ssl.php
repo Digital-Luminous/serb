@@ -3,10 +3,12 @@
  * Open SSL encrypt / decrypt class.
  *
  * @package   wp2fa
- * @copyright 2023 WP White Security
+ * @copyright 2024 Melapress
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://wordpress.org/plugins/wp-2fa/
  */
+
+declare(strict_types=1);
 
 namespace WP2FA\Authenticator;
 
@@ -27,9 +29,9 @@ if ( ! class_exists( '\WP2FA\Authenticator\Open_SSL' ) ) {
 	 */
 	class Open_SSL {
 
-		const CIPHER_METHOD    = 'aes-256-ctr';
-		const BLOCK_BYTE_SIZE  = 16;
-		const DIGEST_ALGORITHM = 'SHA256';
+		const CIPHER_METHOD     = 'aes-256-ctr';
+		const BLOCK_BYTE_SIZE   = 16;
+		const DIGEST_ALGORITHM  = 'SHA256';
 		const SECRET_KEY_PREFIX = 'lsc_';
 
 		/**
@@ -51,8 +53,6 @@ if ( ! class_exists( '\WP2FA\Authenticator\Open_SSL' ) ) {
 		 * @since 2.0.0
 		 */
 		public static function encrypt( string $text ): string {
-			Debugging::log( 'Encrypting a text: ' . $text );
-			Debugging::log( 'Will use the following salt: ' . wp_salt() );
 			if ( self::is_ssl_available() ) {
 				$iv   = self::secure_random( self::BLOCK_BYTE_SIZE );
 				$key  = \openssl_digest( \base64_decode( wp_salt() ), self::DIGEST_ALGORITHM, true ); //phpcs:ignore
@@ -66,7 +66,6 @@ if ( ! class_exists( '\WP2FA\Authenticator\Open_SSL' ) ) {
 
 				$text = \base64_encode( $iv . $text ); //phpcs:ignore
 			}
-			Debugging::log( 'Encrypted text: ' . $text );
 
 			return $text;
 		}

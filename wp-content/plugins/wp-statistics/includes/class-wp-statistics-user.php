@@ -11,6 +11,8 @@ class User
      */
     public static $default_manage_cap = 'manage_options';
 
+    public static $dateFilterMetaKey = 'wp_statistics_date_filter';
+
     /**
      * Check User is Logged in WordPress
      *
@@ -66,6 +68,20 @@ class User
         return $user_info;
     }
 
+
+
+    public static function getMeta($metaKey, $single = false, $userId = false)
+    {
+        $userId = !empty($userId) ? $userId : get_current_user_id();
+        return get_user_meta($userId, $metaKey, $single);
+    }
+
+    public static function saveMeta($metaKey, $metaValue, $userId = false)
+    {
+        $userId = !empty($userId) ? $userId : get_current_user_id();
+        return update_user_meta($userId, $metaKey, $metaValue);
+    }
+
     /**
      * Get Full name of User
      *
@@ -84,8 +100,8 @@ class User
         }
 
         # Check First and Last name
-        if ($user_info['first_name'] != "") {
-            return $user_info['first_name'] . " " . $user_info['last_name'];
+        if ($user_info['meta']['first_name'] != "") {
+            return $user_info['meta']['first_name'] . " " . $user_info['meta']['last_name'];
         }
 
         # return Username
@@ -108,12 +124,18 @@ class User
     }
 
     /**
-     * Get WordPress Role List
+     * Returns WordPress' roles names + an extra "Anonymous Users" index.
+     *
+     * @return  array
      */
     public static function get_role_list()
     {
         global $wp_roles;
-        return $wp_roles->get_names();
+
+        $rolesNames   = $wp_roles->get_names();
+        $rolesNames[] = 'Anonymous Users';
+
+        return $rolesNames;
     }
 
     /**
@@ -189,4 +211,99 @@ class User
         return false;
     }
 
+    /**
+     * Get Date Filter
+     *
+     * @param $metaKey
+     * @param $defaultValue
+     * @return mixed
+     */
+    public static function getDefaultDateFilter($metaKey, $defaultValue)
+    {
+        // get user id
+        $userID = self::get_user_id();
+
+        // check user id
+        if (empty($userID)) {
+            return $defaultValue;
+        }
+
+        // get meta
+        $meta = get_user_meta($userID, self::$dateFilterMetaKey, true);
+
+        // return
+        return !empty($meta[$metaKey]) ? $meta[$metaKey] : $defaultValue;
+    }
+
+    /**
+     * Save Date Filter
+     *
+     * @param $metaKey
+     * @param $value
+     * @return void
+     */
+    public static function saveDefaultDateFilter($metaKey, $defaults)
+    {
+        // get user id
+        $userID = self::get_user_id();
+
+        // check user id
+        if (empty($userID)) {
+            return;
+        }
+
+        // check defaults
+        if (empty($defaults)) {
+            return;
+        }
+
+        // check if type and filter exists
+        if (!isset($defaults['type']) or !isset($defaults['filter'])) {
+            return;
+        }
+
+        // check type
+        if ($defaults['type'] == 'ago') {
+            return;;
+        }
+
+        // get meta
+        $meta = get_user_meta($userID, self::$dateFilterMetaKey, true);
+
+        // check meta
+        if (empty($meta)) {
+            $meta = array();
+        }
+
+        // prepare value
+        $value = $defaults['type'] . '|' . $defaults['filter'];
+        if ($defaults['filter'] == 'custom') {
+            $value .= ':' . $defaults['from'] . ':' . $defaults['to'];
+        }
+
+        // update meta value
+        $meta[$metaKey] = sanitize_text_field($value);
+
+        // save meta
+        update_user_meta($userID, self::$dateFilterMetaKey, $meta);
+    }
+
+    /**
+     * Retrieves the last login time of a WordPress user.
+     *
+     * @param int|false $userId The ID of the user to retrieve the last login time for. Defaults to the current user.
+     * @return string|false The last login time of the user, or false if no login time is found.
+     */
+    public static function getLastLogin($userId = false)
+    {
+        $userId     = empty($userId) ? get_current_user_id() : $userId;
+        $lastLogin  = get_user_meta($userId, 'session_tokens', true);
+
+        if (!empty($lastLogin)) {
+            $lastLogin = array_values($lastLogin);
+            return $lastLogin[0]['login'];
+        } else {
+            return false;
+        }
+    }
 }

@@ -2,7 +2,7 @@
     padding: 2.5rem 0 1rem;
 
     @include media(mobile) {
-        padding: 5rem 0 1rem;
+        padding: 5rem 0;
     }
 }
 
@@ -10,10 +10,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
-    @include media(mobile) {
-        flex-direction: row;
-    }
 }
 
 .c-footer__row:not(:last-child) {
@@ -22,10 +18,6 @@
 
 .c-footer__logo {
     width: 28rem;
+	min-height: 9.2rem;
     margin-bottom: 4rem;
-
-    @include media(mobile) {
-        width: 22rem;
-        margin: 0;
-    }
 }

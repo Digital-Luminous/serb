@@ -14,8 +14,8 @@
  * @depends DataTables 1.10+, Moment.js 1.7+
  *
  * @example
- *    $.fn.dataTable.moment( 'HH:mm MMM D, YY' );
- *    $.fn.dataTable.moment( 'dddd, MMMM Do, YYYY' );
+ *    jQuery.fn.dataTable.moment( 'HH:mm MMM D, YY' );
+ *    jQuery.fn.dataTable.moment( 'dddd, MMMM Do, YYYY' );
  *
  *    $('#example').DataTable();
  */
@@ -26,10 +26,10 @@
 	} else {
 		factory(jQuery, moment);
 	}
-}(function ($, moment) {
+}(function (jQuery, moment) {
 
-$.fn.dataTable.moment = function ( format, locale, reverseEmpties ) {
-	var types = $.fn.dataTable.ext.type;
+jQuery.fn.dataTable.moment = function ( format, locale, reverseEmpties ) {
+	var types = jQuery.fn.dataTable.ext.type;
 
 	// Add type detection
 	types.detect.unshift( function ( d ) {
@@ -40,7 +40,7 @@ $.fn.dataTable.moment = function ( format, locale, reverseEmpties ) {
 			}
 
 			// Strip out surrounding white space
-			d = $.trim( d );
+			d = jQuery.trim( d );
 		}
 
 		// Null and empty values are acceptable
@@ -65,7 +65,7 @@ $.fn.dataTable.moment = function ( format, locale, reverseEmpties ) {
 			}
 
 			// Strip out surrounding white space
-			d = $.trim( d );
+			d = jQuery.trim( d );
 		}
 
 		return !moment(d, format, locale, true).isValid() ?

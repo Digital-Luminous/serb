@@ -2,9 +2,10 @@
 
 namespace WP_STATISTICS;
 
+use WP_Statistics\Components\Singleton;
 use WP_Statistics\Service\Admin\AddOnsFactory;
 
-class plugins_page
+class plugins_page extends Singleton
 {
     /**
      * plugins_page constructor.
@@ -79,6 +80,10 @@ class plugins_page
             check_admin_referer('wps_optimization_nonce');
 
             foreach ($_POST['licences'] as $key => $licence) {
+                if (!$licence) {
+                    continue;
+                }
+
                 $optionName            = AddOnsFactory::getSettingNameByKey($key);
                 $option                = get_option($optionName);
                 $option['license_key'] = sanitize_text_field($licence);
@@ -97,4 +102,4 @@ class plugins_page
 
 }
 
-new plugins_page;
+plugins_page::instance();

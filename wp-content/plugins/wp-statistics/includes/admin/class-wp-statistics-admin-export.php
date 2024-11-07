@@ -42,8 +42,7 @@ class Export
                 $type  = sanitize_text_field($_POST['export-file-type']);
 
                 // Validate the table name the user passed to us.
-                $allow_tbl = array("useronline", "visit", "visitor", "exclusions", "pages", "search");
-                if (!in_array($table, $allow_tbl)) {
+                if (!in_array($table, DB::$db_table)) {
                     $table = false;
                 }
 
@@ -69,13 +68,19 @@ class Export
 
                     $exporter->initialize();
 
-                    // We need to limit the number of results we retrieve to ensure we don't run out of memory
-                    $query_base = "SELECT * FROM " . DB::table($table);
-                    $query      = $query_base . ' LIMIT 0,1000';
+                    /**
+                     * We need to limit the number of results we retrieve to ensure we don't run out of memory, also allow to modify the base query
+                     */
+                    $query_base = apply_filters('wp_statistics_data_export_base_query', "SELECT * FROM " . DB::table($table), $table);
+
+                    /**
+                     * Allow to modify the query
+                     */
+                    $query = apply_filters('wp_statistics_data_export_query', $query_base . ' LIMIT 0,1000', $table);
 
                     $i            = 1;
                     $more_results = true;
-                    $result       = $wpdb->get_results($query, ARRAY_A);
+                    $result       = $wpdb->get_results($query, ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared	
 
                     // If we didn't get any rows, don't output anything.
                     if (count($result) < 1) {
@@ -103,7 +108,7 @@ class Export
                         $wpdb->flush();
 
                         $query  = $query_base . ' LIMIT ' . ($i * 1000) . ',1000';
-                        $result = $wpdb->get_results($query, ARRAY_A);
+                        $result = $wpdb->get_results($query, ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared	
 
                         if (count($result) == 0) {
                             $more_results = false;

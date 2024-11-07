@@ -34,6 +34,7 @@
 
 .c-header__img {
     width: 100%;
+	min-height: 5.6rem;
 }
 
 .c-header__img--menu{
@@ -72,13 +73,18 @@
 .c-header__nav {
     display: flex;
 
+	& .l-footer {
+		margin-top: auto;
+		margin-bottom: 10rem;
+	}
+
     @include media(0, tablet) {
         position: fixed;
         right: 0;
         left: 0;
         top: 10.2rem;
 
-        height: calc(100vh - 10.2rem);
+        height: 100vh;
 
         flex-direction: column;
         overflow-y: auto;
@@ -131,11 +137,7 @@
 }
 
 .c-header__region {
-    margin-top: 1rem;
-
-    @include media(mobile) {
-        margin-top: 0;
-    }
+	margin-top: -5px;
 }
 
 .l-header.is-open .c-header__current-region {
@@ -174,4 +176,20 @@
     @include media(tablet) {
         transform: scaleX(1);
     }
+}
+
+.wpml-ls-current-language {
+    font-weight: 700;
+}
+
+.wpml-ls-first-item {
+    border-right: 2px solid color(purple-1);
+}
+
+.wpml-ls-item {
+    color: color(purple-1);
+}
+
+.wpcf7-radio .wpcf7-list-item-label {
+	text-transform: capitalize;
 }

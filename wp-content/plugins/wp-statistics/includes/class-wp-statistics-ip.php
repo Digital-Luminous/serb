@@ -2,7 +2,9 @@
 
 namespace WP_STATISTICS;
 
-use IPTools\Range;
+use Exception;
+use WP_Statistics;
+use WP_Statistics\Dependencies\IPTools\Range;
 
 class IP
 {
@@ -25,14 +27,14 @@ class IP
      *
      * @var array
      */
-    public static $ip_methods_server = array('REMOTE_ADDR', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'HTTP_X_REAL_IP', 'HTTP_X_CLUSTER_CLIENT_IP');
+    public static $ip_methods_server = array('HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR', 'HTTP_CLIENT_IP', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_X_REAL_IP', 'HTTP_INCAP_CLIENT_IP');
 
     /**
      * Default $_SERVER for Get User Real IP
      *
      * @var string
      */
-    public static $default_ip_method = 'REMOTE_ADDR';
+    public static $default_ip_method = 'sequential';
 
     /**
      * Hash IP Prefix
@@ -42,29 +44,57 @@ class IP
     public static $hash_ip_prefix = '#hash#';
 
     /**
+     * Returns all IP method options
+     *
+     * @return array
+     */
+    public static function getIpOptions()
+    {
+        $ipOptions = self::$ip_methods_server;
+
+        if (isset($_SERVER[Option::get('ip_method')])) {
+            $ipOptions[] = Option::get('ip_method');
+        }
+
+        return array_unique($ipOptions);
+    }
+
+    /**
      * Returns the current IP address of the remote client.
      *
      * @return bool|string
      */
     public static function getIP()
     {
-
         // Set Default
         $ip = false;
 
         // Get User IP Methods
-        $ip_method = self::getIPMethod();
+        $ip_method = self::getIpMethod();
 
-        // Check isset $_SERVER
-        if (isset($_SERVER[$ip_method])) {
-            $ip = sanitize_text_field($_SERVER[$ip_method]);
+        // Check IP detection method
+        if ($ip_method === 'sequential') {
+            foreach (self::$ip_methods_server as $method) {
+                if (isset($_SERVER[$method])) {
+                    $ip = $_SERVER[$method];
+                    break;
+                }
+            }
+        } else {
+            $ip = isset($_SERVER[$ip_method]) ? $_SERVER[$ip_method] : false;
+
+            // Ensure backward compatibility for IP handling.
+            if ($ip == '') {
+                // If the IP address is not available, set the IP method to the default value for the next visitor to ensure consistent behavior.
+                Option::update('ip_method', self::$default_ip_method);
+            }
         }
 
         /**
          * This Filter Used For Custom $_SERVER String
          * @see https://wp-statistics.com/sanitize-user-ip/
          */
-        $ip = apply_filters('wp_statistics_sanitize_user_ip', $ip);
+        $ip = apply_filters('wp_statistics_sanitize_user_ip', sanitize_text_field($ip));
 
         // Sanitize For HTTP_X_FORWARDED
         foreach (explode(',', $ip) as $user_ip) {
@@ -82,21 +112,64 @@ class IP
         return apply_filters('wp_statistics_user_ip', sanitize_text_field($ip));
     }
 
-    /**
-     * Generate hash string
-     *
-     * @param bool $ip
-     * @return bool
-     */
-    public static function getHashIP($ip = false)
+    public static function getIpVersion()
     {
+        try {
+            $ipTools = new \WP_Statistics\Dependencies\IPTools\IP(self::getIP());
+            return $ipTools->getVersion();
+        } catch (Exception $e) {
+            return '';
+        }
+    }
 
-        // Check Enabled Options
-        if (Option::get('hash_ips') == true) {
-            return apply_filters('wp_statistics_hash_ip', self::$hash_ip_prefix . sha1(($ip === false ? self::getIP() : $ip) . (UserAgent::getHttpUserAgent() == '' ? 'Unknown' : UserAgent::getHttpUserAgent())));
+    /**
+     * Generates a hashed version of an IP address using a daily salt, provided the hashing option is enabled.
+     *
+     * @example 192.168.1.1 -> #hash#e7b398f96b14993b571215e36b41850c65f39b1a
+     * @param string|false $ip Optional. The IP address to be hashed. If false, the current user's IP is used.
+     * @return string|false The hashed IP address if hashing is enabled and successful, false otherwise.
+     */
+    public static function hashUserIp($ip = false)
+    {
+        $date           = date('Y-m-d'); // Capture the current date to use in salt generation.
+        $saltOptionName = 'wp_statistics_daily_salt'; // Define the option name for storing the daily salt.
+
+        // Retrieve the currently stored daily salt from the WordPress options.
+        $dailySalt = get_option($saltOptionName);
+
+        // If today's date is different from the stored salt's date, generate and save a new daily salt.
+        if (isset($dailySalt['date']) && $dailySalt['date'] != $date) {
+            $dailySalt = [
+                'date' => $date, // Update the salt's date to today.
+                'salt' => sha1(wp_generate_password()) // Generate a new salt based on a new password and today's date.
+            ];
+
+            // Save the new daily salt in the WordPress options for future use.
+            update_option($saltOptionName, $dailySalt);
         }
 
-        return false;
+        // If there is no existing daily salt, generate and save it.
+        if (!$dailySalt || !is_array($dailySalt)) {
+            $dailySalt = [
+                'date' => $date, // Set the salt's date to today.
+                'salt' => sha1(wp_generate_password()) // Generate a new salt.
+            ];
+
+            // Save the new daily salt in the WordPress options.
+            update_option($saltOptionName, $dailySalt);
+        }
+
+        // Determine the IP address to hash; use the provided IP or the current user's IP if none is provided.
+        if (!$ip) {
+            $ip = self::getIP();
+        }
+
+        // Retrieve the current user agent, defaulting to 'Unknown' if unavailable or empty.
+        $userAgent = (UserAgent::getHttpUserAgent() == '' ? 'Unknown' : UserAgent::getHttpUserAgent());
+
+        // Hash the combination of daily salt, IP, and user agent to create a unique identifier.
+        // This hash is then prefixed and filtered for potential modification before being returned.
+        return apply_filters('wp_statistics_hash_ip', self::$hash_ip_prefix . sha1($dailySalt['salt'] . $ip . $userAgent));
     }
 
     /**
@@ -126,18 +199,19 @@ class IP
 
         /**
          * If the anonymize IP is enabled because of the data privacy & GDPR.
-         * @example 888.888.888.888 -> 888.888.888.000
+         *
+         * @example 192.168.1.1 -> 192.168.1.0
+         * @example 0897:D836:7A7C:803F:344B:5348:71EE:1130 -> 897:d836:7a7c:803f::
          */
-        if (Option::get('anonymize_ips') == true) {
-            $user_ip = substr($user_ip, 0, strrpos($user_ip, '.')) . '.0';
+        if (Option::get('anonymize_ips') == true || Helper::shouldTrackAnonymously()) {
+            $user_ip = wp_privacy_anonymize_ip($user_ip);
         }
 
         /**
-         * If the hash IP is enabled because of the data privacy & GDPR.
-         * @example 888.888.888.888 -> #hash#e7b398f96b14993b571215e36b41850c65f39b1a
+         * Check if the option to hash IP addresses is enabled in the settings.
          */
-        if (self::getHashIP()) {
-            $user_ip = self::getHashIP($user_ip);
+        if (Option::get('hash_ips') == true || Helper::shouldTrackAnonymously()) {
+            $user_ip = self::hashUserIp($user_ip);
         }
 
         return sanitize_text_field($user_ip);
@@ -149,7 +223,7 @@ class IP
      * @param $ip
      * @param array $range
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public static function CheckIPRange($range = array(), $ip = false)
     {
@@ -159,18 +233,23 @@ class IP
 
         // Get Range OF This IP
         try {
-            $ip = new \IPTools\IP($ip);
-        } catch (\Exception $e) {
-            \WP_Statistics::log($e->getMessage());
-            $ip = new \IPTools\IP(self::$default_ip);
+            $ip = new WP_Statistics\Dependencies\IPTools\IP($ip);
+        } catch (Exception $e) {
+            WP_Statistics::log($e->getMessage(), 'warning');
+            $ip = new WP_Statistics\Dependencies\IPTools\IP(self::$default_ip);
         }
 
         // Check List
         foreach ($range as $list) {
             try {
-                $contains_ip = Range::parse($list)->contains($ip);
-            } catch (\Exception $e) {
-                \WP_Statistics::log($e->getMessage());
+                $parsedRange = Range::parse($list);
+                $contains_ip = false;
+
+                if ($parsedRange->contains($ip)) {
+                    $contains_ip = true;
+                }
+            } catch (Exception $e) {
+                WP_Statistics::log($e->getMessage(), 'warning');
                 $contains_ip = false;
             }
 
@@ -194,12 +273,34 @@ class IP
     }
 
     /**
-     * what is Method $_SERVER for get User Real IP
+     * Retrieves the method used to obtain the user's real IP address.
+     *
+     * This method checks the configured IP method from the options and ensures
+     * backward compatibility by setting the option to a default value if an invalid
+     * method is found.
+     *
+     * @return string The method used to get the user's real IP address.
      */
-    public static function getIPMethod()
+    public static function getIpMethod()
     {
-        $ip_method = Option::get('ip_method');
-        return ($ip_method != false ? $ip_method : self::$default_ip_method);
+        // Retrieve the IP method from options
+        $ipMethod = Option::get('ip_method');
+
+        // If no method is set, return the default IP method
+        if (empty($ipMethod)) {
+            return self::$default_ip_method;
+        }
+
+        // Check for backward compatibility
+        if (!in_array($ipMethod, self::getIpOptions())) {
+            // Set the option to the default method for backward compatibility
+            Option::update('ip_method', self::$default_ip_method);
+
+            return self::$default_ip_method;
+        }
+
+        // Return the valid IP method
+        return $ipMethod;
     }
 
     /**
@@ -222,16 +323,21 @@ class IP
         global $wpdb;
 
         // Get the rows from the Visitors table.
-        $result = $wpdb->get_results("SELECT DISTINCT ip FROM " . DB::table('visitor'));
+        $visitorTable = DB::table('visitor');
+        $result       = $wpdb->get_results("SELECT DISTINCT ip FROM {$visitorTable} WHERE ip NOT LIKE '#hash#%'");
+        $resultUpdate = [];
+
         foreach ($result as $row) {
-            if (IP::IsHashIP($row->ip)) {
-                $wpdb->update(
-                    DB::table('visitor'),
-                    array('ip' => IP::$hash_ip_prefix . sha1($row->ip . Helper::random_string()),),
+            if (!self::IsHashIP($row->ip)) {
+                $resultUpdate[] = $wpdb->update(
+                    $visitorTable,
+                    array('ip' => self::hashUserIp($row->ip)),
                     array('ip' => $row->ip)
                 );
             }
         }
+
+        return count($resultUpdate);
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2020 ServMask Inc.
+ * Copyright (C) 2014-2023 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ function ai1wm_storage_path( $params ) {
 	// Get storage path
 	$storage = AI1WM_STORAGE_PATH . DIRECTORY_SEPARATOR . basename( $params['storage'] );
 	if ( ! is_dir( $storage ) ) {
-		mkdir( $storage );
+		mkdir( $storage, 0777, true );
 	}
 
 	return $storage;
@@ -66,6 +66,11 @@ function ai1wm_backup_path( $params ) {
 	// Validate archive path
 	if ( ai1wm_validate_file( $params['archive'] ) !== 0 ) {
 		throw new Ai1wm_Archive_Exception( __( 'Your archive file name contains invalid characters. It cannot contain: < > : " | ? * \0. <a href="https://help.servmask.com/knowledgebase/invalid-archive-name/" target="_blank">Technical details</a>', AI1WM_PLUGIN_NAME ) );
+	}
+
+	// Validate file extension
+	if ( ! ai1wm_is_filename_supported( $params['archive'] ) ) {
+		throw new Ai1wm_Archive_Exception( __( 'Invalid archive file type. Only .wpress files are allowed. <a href="https://help.servmask.com/knowledgebase/invalid-file-type/" target="_blank">Technical details</a>', AI1WM_PLUGIN_NAME ) );
 	}
 
 	return AI1WM_BACKUPS_PATH . DIRECTORY_SEPARATOR . $params['archive'];
@@ -108,6 +113,11 @@ function ai1wm_archive_path( $params ) {
 	// Validate archive path
 	if ( ai1wm_validate_file( $params['archive'] ) !== 0 ) {
 		throw new Ai1wm_Archive_Exception( __( 'Your archive file name contains invalid characters. It cannot contain: < > : " | ? * \0. <a href="https://help.servmask.com/knowledgebase/invalid-archive-name/" target="_blank">Technical details</a>', AI1WM_PLUGIN_NAME ) );
+	}
+
+	// Validate file extension
+	if ( ! ai1wm_is_filename_supported( $params['archive'] ) ) {
+		throw new Ai1wm_Archive_Exception( __( 'Invalid archive file type. Only .wpress files are allowed. <a href="https://help.servmask.com/knowledgebase/invalid-file-type/" target="_blank">Technical details</a>', AI1WM_PLUGIN_NAME ) );
 	}
 
 	// Get archive path
@@ -291,10 +301,11 @@ function ai1wm_cookies_path( $params ) {
 /**
  * Get error log absolute path
  *
+ * @param  string $nonce Log nonce
  * @return string
  */
-function ai1wm_error_path() {
-	return AI1WM_STORAGE_PATH . DIRECTORY_SEPARATOR . AI1WM_ERROR_NAME;
+function ai1wm_error_path( $nonce ) {
+	return AI1WM_STORAGE_PATH . DIRECTORY_SEPARATOR . sprintf( AI1WM_ERROR_NAME, $nonce );
 }
 
 /**
@@ -472,12 +483,20 @@ function ai1wm_archive_file( $blog_id = null ) {
 	$name = array();
 
 	// Add domain
-	$name[] = parse_url( get_site_url( $blog_id ), PHP_URL_HOST );
+	if ( defined( 'AI1WM_KEEP_DOMAIN_NAME' ) ) {
+		$name[] = parse_url( get_site_url( $blog_id ), PHP_URL_HOST );
+	} elseif ( ( $domain = explode( '.', parse_url( get_site_url( $blog_id ), PHP_URL_HOST ) ) ) ) {
+		foreach ( $domain as $subdomain ) {
+			if ( ( $subdomain = strtolower( $subdomain ) ) ) {
+				$name[] = $subdomain;
+			}
+		}
+	}
 
 	// Add path
 	if ( ( $path = parse_url( get_site_url( $blog_id ), PHP_URL_PATH ) ) ) {
 		foreach ( explode( '/', $path ) as $directory ) {
-			if ( $directory ) {
+			if ( ( $directory = strtolower( preg_replace( '/[^A-Za-z0-9\-]/', '', $directory ) ) ) ) {
 				$name[] = $directory;
 			}
 		}
@@ -490,7 +509,7 @@ function ai1wm_archive_file( $blog_id = null ) {
 	$name[] = date_i18n( 'His' );
 
 	// Add unique identifier
-	$name[] = ai1wm_generate_random_string( 6, false );
+	$name[] = ai1wm_generate_random_string( 12, false );
 
 	return sprintf( '%s.wpress', strtolower( implode( '-', $name ) ) );
 }
@@ -505,12 +524,20 @@ function ai1wm_archive_folder( $blog_id = null ) {
 	$name = array();
 
 	// Add domain
-	$name[] = parse_url( get_site_url( $blog_id ), PHP_URL_HOST );
+	if ( defined( 'AI1WM_KEEP_DOMAIN_NAME' ) ) {
+		$name[] = parse_url( get_site_url( $blog_id ), PHP_URL_HOST );
+	} elseif ( ( $domain = explode( '.', parse_url( get_site_url( $blog_id ), PHP_URL_HOST ) ) ) ) {
+		foreach ( $domain as $subdomain ) {
+			if ( ( $subdomain = strtolower( $subdomain ) ) ) {
+				$name[] = $subdomain;
+			}
+		}
+	}
 
 	// Add path
 	if ( ( $path = parse_url( get_site_url( $blog_id ), PHP_URL_PATH ) ) ) {
 		foreach ( explode( '/', $path ) as $directory ) {
-			if ( $directory ) {
+			if ( ( $directory = strtolower( preg_replace( '/[^A-Za-z0-9\-]/', '', $directory ) ) ) ) {
 				$name[] = $directory;
 			}
 		}
@@ -531,7 +558,7 @@ function ai1wm_archive_bucket( $blog_id = null ) {
 	// Add domain
 	if ( ( $domain = explode( '.', parse_url( get_site_url( $blog_id ), PHP_URL_HOST ) ) ) ) {
 		foreach ( $domain as $subdomain ) {
-			if ( $subdomain = strtolower( preg_replace( '/[^A-Za-z0-9\-]/', '', $subdomain ) ) ) {
+			if ( ( $subdomain = strtolower( $subdomain ) ) ) {
 				$name[] = $subdomain;
 			}
 		}
@@ -561,7 +588,7 @@ function ai1wm_archive_vault( $blog_id = null ) {
 	// Add domain
 	if ( ( $domain = explode( '.', parse_url( get_site_url( $blog_id ), PHP_URL_HOST ) ) ) ) {
 		foreach ( $domain as $subdomain ) {
-			if ( $subdomain = strtolower( preg_replace( '/[^A-Za-z0-9\-]/', '', $subdomain ) ) ) {
+			if ( ( $subdomain = strtolower( $subdomain ) ) ) {
 				$name[] = $subdomain;
 			}
 		}
@@ -591,7 +618,7 @@ function ai1wm_archive_project( $blog_id = null ) {
 	// Add domain
 	if ( ( $domain = explode( '.', parse_url( get_site_url( $blog_id ), PHP_URL_HOST ) ) ) ) {
 		foreach ( $domain as $subdomain ) {
-			if ( $subdomain ) {
+			if ( ( $subdomain = strtolower( $subdomain ) ) ) {
 				$name[] = $subdomain;
 			}
 		}
@@ -600,7 +627,7 @@ function ai1wm_archive_project( $blog_id = null ) {
 	// Add path
 	if ( ( $path = parse_url( get_site_url( $blog_id ), PHP_URL_PATH ) ) ) {
 		foreach ( explode( '/', $path ) as $directory ) {
-			if ( $directory ) {
+			if ( ( $directory = strtolower( preg_replace( '/[^A-Za-z0-9\-]/', '', $directory ) ) ) ) {
 				$name[] = $directory;
 			}
 		}
@@ -621,7 +648,7 @@ function ai1wm_archive_share( $blog_id = null ) {
 	// Add domain
 	if ( ( $domain = explode( '.', parse_url( get_site_url( $blog_id ), PHP_URL_HOST ) ) ) ) {
 		foreach ( $domain as $subdomain ) {
-			if ( $subdomain = strtolower( preg_replace( '/[^A-Za-z0-9\-]/', '', $subdomain ) ) ) {
+			if ( ( $subdomain = strtolower( $subdomain ) ) ) {
 				$name[] = $subdomain;
 			}
 		}
@@ -875,6 +902,7 @@ function ai1wm_content_filters( $filters = array() ) {
 			AI1WM_PACKAGE_NAME,
 			AI1WM_MULTISITE_NAME,
 			AI1WM_DATABASE_NAME,
+			AI1WM_W3TC_CONFIG_FILE,
 		)
 	);
 }
@@ -930,8 +958,6 @@ function ai1wm_plugin_filters( $filters = array() ) {
 			AI1WMWE_PLUGIN_BASEDIR,
 		)
 	);
-
-	return $filters;
 }
 
 /**
@@ -1733,11 +1759,15 @@ function ai1wm_setup_environment() {
 	if ( @ob_get_length() ) {
 		@ob_end_clean();
 	}
+}
 
-	// Set error handler
+/**
+ * PHP register error handlers
+ *
+ * @return void
+ */
+function ai1wm_setup_errors() {
 	@set_error_handler( 'Ai1wm_Handler::error' );
-
-	// Set shutdown handler
 	@register_shutdown_function( 'Ai1wm_Handler::shutdown' );
 }
 
@@ -2117,4 +2147,47 @@ function ai1wm_is_decryption_password_valid( $encrypted_signature, $password ) {
 	} catch ( Ai1wm_Not_Decryptable_Exception $exception ) {
 		return false;
 	}
+}
+
+function ai1wm_populate_roles() {
+	if ( ! function_exists( 'populate_roles' ) && ! function_exists( 'populate_options' ) && ! function_exists( 'populate_network' ) ) {
+		require_once( ABSPATH . 'wp-admin/includes/schema.php' );
+	}
+
+	if ( function_exists( 'populate_roles' ) ) {
+		populate_roles();
+	}
+}
+
+/**
+ * Set basic auth header to request
+ *
+ * @param array $headers
+ *
+ * @return array
+ */
+function ai1wm_auth_headers( $headers = array() ) {
+	if ( $hash = get_option( AI1WM_AUTH_HEADER ) ) {
+		$headers['Authorization'] = sprintf( 'Basic %s', $hash );
+	}
+
+	if ( ( $user = get_option( AI1WM_AUTH_USER ) ) && ( $password = get_option( AI1WM_AUTH_PASSWORD ) ) ) {
+		if ( ! isset( $headers['Authorization'] ) && ( $hash = base64_encode( sprintf( '%s:%s', $user, $password ) ) ) ) {
+			update_option( AI1WM_AUTH_HEADER, $hash );
+			$headers['Authorization'] = sprintf( 'Basic %s', $hash );
+		}
+		delete_option( AI1WM_AUTH_USER );
+		delete_option( AI1WM_AUTH_PASSWORD );
+	}
+
+	return $headers;
+}
+
+/**
+ * Check if direct download of backup supported
+ *
+ * @return bool
+ */
+function ai1wm_direct_download_supported() {
+	return ! ( $_SERVER['SERVER_NAME'] === 'playground.wordpress.net' || $_SERVER['SERVER_SOFTWARE'] === 'PHP.wasm' );
 }

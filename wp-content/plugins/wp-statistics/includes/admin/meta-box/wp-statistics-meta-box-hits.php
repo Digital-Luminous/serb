@@ -3,6 +3,7 @@
 namespace WP_STATISTICS\MetaBox;
 
 use WP_STATISTICS\Option;
+use WP_Statistics\Service\Admin\VisitorInsights\VisitorInsightsDataProvider;
 use WP_STATISTICS\TimeZone;
 
 class hits extends MetaBoxAbstract
@@ -23,6 +24,15 @@ class hits extends MetaBoxAbstract
      */
     public static function get($args = array())
     {
+        /**
+         * Filters the args used from metabox for query stats
+         *
+         * @param array $args The args passed to query stats
+         * @since 14.2.1
+         *
+         */
+        $args = apply_filters('wp_statistics_meta_box_hits_args', $args);
+
         // Check Number Days Or Between
         if (isset($args['from']) and isset($args['to'])) {
             $params = array('from' => $args['from'], 'to' => $args['to']);
@@ -35,7 +45,7 @@ class hits extends MetaBoxAbstract
         $response = self::HitsChart($params);
 
         // Check For No Data Meta Box
-        if ((isset($response['visits']) and (!isset($args['no-data'])) and isset($response['visitors']) and count(array_filter($response['visits'])) < 1 and count(array_filter($response['visitors'])) < 1) || (isset($response['visits']) and !isset($response['visitors']) and count(array_filter($response['visits'])) < 1) || (!isset($response['visits']) and isset($response['visitors']) and count(array_filter($response['visitors'])) < 1)) {
+        if ((isset($response['visits']) and (!isset($args['no-data'])) and isset($response['visitors']) and count(array_filter($response['visits'])) < 0 and count(array_filter($response['visitors'])) < 0) || (isset($response['visits']) and !isset($response['visitors']) and count(array_filter($response['visits'])) < 0) || (!isset($response['visits']) and isset($response['visitors']) and count(array_filter($response['visitors'])) < 0)) {
             $response['no_data'] = 1;
         }
 
@@ -52,64 +62,22 @@ class hits extends MetaBoxAbstract
      */
     public static function HitsChart($args = array())
     {
-
-        // Set Default Params
-        $defaults = array(
+        $args = wp_parse_args($args, [
             'ago'  => 0,
             'from' => '',
             'to'   => ''
-        );
-        $args     = wp_parse_args($args, $defaults);
-
-        // Prepare Default
-        $visitors     = $date = $visits = array();
-        $total_visits = $total_visitors = 0;
-
-        // Filter By Date
+        ]);
         self::filterByDate($args);
+      
+        $range = array_keys(self::$daysList);
 
-        // Get List Of Days
-        $days_time_list = array_keys(self::$daysList);
-        foreach (self::$daysList as $k => $v) {
-            $date[] = $v['format'];
-        }
+        $visitorDataProvider = new VisitorInsightsDataProvider([
+            'date' => [
+                'from'  => reset($range),
+                'to'    => end($range)
+            ]
+        ]);
 
-        // Set Title
-        if (end($days_time_list) == TimeZone::getCurrentDate("Y-m-d")) {
-            $title = sprintf(__('Hits in the last %s days', 'wp-statistics'), self::$countDays);
-        } else {
-            $title = sprintf(__('Hits from %s to %s', 'wp-statistics'), $args['from'], $args['to']);
-        }
-
-        // Push Basic Chart Data
-        $data = array(
-            'title' => $title,
-            'date'  => $date
-        );
-
-        // Get Visits Chart
-        if (Option::get('visits')) {
-            foreach ($days_time_list as $d) {
-                $total_visits += $visits[] = (int)wp_statistics_visit($d, true);
-            }
-            $data['visits'] = $visits;
-        }
-
-        // Get Visitors Chart
-        if (Option::get('visitors')) {
-            foreach ($days_time_list as $d) {
-                $total_visitors += $visitors[] = (int)wp_statistics_visitor($d, true);
-            }
-            $data['visitors'] = $visitors;
-        }
-
-        // Set Total
-        $data['total'] = array(
-            'visits'   => number_format_i18n($total_visits),
-            'visitors' => number_format_i18n($total_visitors)
-        );
-
-        return $data;
+        return $visitorDataProvider->getTrafficChartData();
     }
-
 }

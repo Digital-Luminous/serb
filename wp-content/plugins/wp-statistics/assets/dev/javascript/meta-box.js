@@ -35,9 +35,14 @@ wps_js.no_meta_box_data = function () {
  */
 wps_js.error_meta_box_data = function (xhr) {
     if (typeof xhr !== 'undefined') {
-        let data = JSON.parse(xhr);
-        if (wps_js.isset(data, 'message')) {
-            return '<div class="o-wrap o-wrap--no-data">' + data['message'] + '</div>';
+        try {
+            let data = JSON.parse(xhr);
+
+            if (wps_js.isset(data, 'message')) {
+                return '<div class="o-wrap o-wrap--no-data">' + data['message'] + '</div>';
+            }
+        } catch (error) {
+            console.log('An unexpected error occurred: ', xhr, error);
         }
     }
     return '<div class="o-wrap o-wrap--no-data">' + wps_js._('rest_connect') + '</div>';
@@ -86,7 +91,7 @@ wps_js.meta_box_button = function (key) {
     let meta_box_info = wps_js.get_meta_box_info(key);
 
     // Gutenberg Button Style
-    let gutenberg_style = 'z-index: 9999;position: absolute;top: 1px;';
+    let gutenberg_style = 'z-index: 9999;position: absolute;top: 1px;display:none;right: calc(44px + 3.24rem) !important;height: 44px !important;';
     let position_gutenberg = 'right';
     if (wps_js.is_active('rtl')) {
         position_gutenberg = 'left';
@@ -96,8 +101,28 @@ wps_js.meta_box_button = function (key) {
     jQuery("#" + wps_js.getMetaBoxKey(key) + " button[class*=wps-refresh]").remove();
 
     // Add Refresh Button
-    jQuery(`<button class="handlediv wps-refresh"` + (wps_js.is_active('gutenberg') ? ` style="${gutenberg_style}${position_gutenberg}: 3%;" ` : 'style="line-height: 28px;"') + ` type="button" data-tooltip="` + wps_js._('reload') + `"><span class="wps-refresh-icon"></span> <span class="screen-reader-text">` + wps_js._('reload') + `</span></button>`).insertBefore(selector);
+    jQuery(`<button class="handlediv wps-refresh"` + (wps_js.is_active('gutenberg') ? ` style="${gutenberg_style}${position_gutenberg}: 3%;" ` : 'style="line-height: 28px;"') + ` type="button" data-tooltip="` + wps_js._('reload') + `"></button>`).insertBefore(selector);
+
+    if (wps_js.is_active('gutenberg')){
+        jQuery('body').addClass('wps-gutenberg');
+    }
+
+    jQuery("#" + wps_js.getMetaBoxKey(key) + " .hndle, #" + wps_js.getMetaBoxKey(key) + " .handlediv").on('click', function() {
+        jQuery(this).closest('.postbox').addClass('handle');
+    });
 };
+
+wps_js.meta_box_tooltip = function (key) {
+    let selector = "#" + wps_js.getMetaBoxKey(key) + " h2.hndle";
+    let meta_box_info = wps_js.get_meta_box_info(key);
+
+    if (meta_box_info.hasOwnProperty('description')) {
+        const title = jQuery(selector).text();
+        const tooltip = meta_box_info.description;
+        const newTitle = '<a href="#" class="wps-tooltip" title="' + tooltip + '"><i class="wps-tooltip-icon"></i></a>';
+        if (tooltip) jQuery(selector).append(newTitle);
+    }
+}
 
 /**
  * Run Meta Box
@@ -116,6 +141,9 @@ wps_js.run_meta_box = function (key, params = false, button = true) {
 
         // Get Meta Box Method
         let method = wps_js.get_meta_box_method(key);
+
+        // Add tooltip
+        wps_js.meta_box_tooltip(key);
 
         // Check Exist Method name
         if (method in wps_js) {
@@ -149,6 +177,25 @@ wps_js.run_meta_box = function (key, params = false, button = true) {
     }
 };
 
+wps_js.prepare_date_filter_data = function (args) {
+    let data = {'ago': ''};
+    if (args.hasOwnProperty('footer_options')) {
+        const selectedDateFilter = args.footer_options.default_date_filter;
+        if (selectedDateFilter.length) {
+            let dateFilterSplted = selectedDateFilter.split('|');
+            if (dateFilterSplted[0] == 'filter') {
+                data.ago = dateFilterSplted[1];
+            } else {
+                let customDateRange = dateFilterSplted[1].split(':');
+                data.ago = '';
+                data.from = customDateRange[1];
+                data.to = customDateRange[2];
+            }
+        }
+    }
+    return data;
+}
+
 /**
  * Load all Meta Boxes
  */
@@ -157,12 +204,13 @@ wps_js.run_meta_boxes = function (list = false) {
         list = Object.keys(wps_js.global.meta_boxes);
     }
     list.forEach(function (value) {
-        let ago = '';
         let args = wps_js.global.meta_boxes[value];
-        if (args.hasOwnProperty('footer_options')) {
-            ago = args.footer_options.default_date_filter;
-        }
-        wps_js.run_meta_box(value, {'ago': ago});
+
+        // Check Date Filter
+        let data = wps_js.prepare_date_filter_data(args);
+
+        // Run Meta Box
+        wps_js.run_meta_box(value, data);
     });
 };
 
@@ -216,7 +264,7 @@ wps_js.meta_box_footer = function (key, data) {
     let html = '<div class="c-footer"><div class="c-footer__filter js-widget-filters">';
     if (params.footer_options.filter_by_date) {
         html += `
-            <button class="c-footer__filter__btn js-filters-toggle">` + wps_js._('str_' + params.footer_options.default_date_filter) + `</button>
+            <button class="c-footer__filter__btn js-filters-toggle">` + wps_js._('str_' + selectedDateFilter) + `</button>
             <div class="c-footer__filters">
                 <div class="c-footer__filters__current-filter">
                     <span class="c-footer__current-filter__title js-filter-title">Last 7 days</span>
@@ -225,16 +273,17 @@ wps_js.meta_box_footer = function (key, data) {
                 <div class="c-footer__filters__list">
                     <button data-metabox-key="${key}" data-filter="today" class="c-footer__filters__list-item">` + wps_js._('str_today') + `</button>
                     <button data-metabox-key="${key}" data-filter="yesterday" class="c-footer__filters__list-item">` + wps_js._('str_yesterday') + `</button>
-                    <button data-metabox-key="${key}" data-filter="7days" class="c-footer__filters__list-item">` + wps_js._('str_7days') + `</button>
-                    <button data-metabox-key="${key}" data-filter="30days" class="c-footer__filters__list-item">` + wps_js._('str_30days') + `</button>
-                    <button data-metabox-key="${key}" data-filter="90days" class="c-footer__filters__list-item">` + wps_js._('str_90days') + `</button>
+                    <button data-metabox-key="${key}" data-filter="this_week" class="c-footer__filters__list-item">` + wps_js._('str_this_week') + `</button>
+                    <button data-metabox-key="${key}" data-filter="last_week" class="c-footer__filters__list-item">` + wps_js._('str_last_week') + `</button>
+                    <button data-metabox-key="${key}" data-filter="this_month" class="c-footer__filters__list-item">` + wps_js._('str_this_month') + `</button>
+                    <button data-metabox-key="${key}" data-filter="last_month" class="c-footer__filters__list-item">` + wps_js._('str_last_month') + `</button>
                     <button class="c-footer__filters__list-item c-footer__filters__list-item--more" onclick="jQuery(this).closest('.c-footer__filters__list').find('.js-more-filters').addClass('is-open')">` + wps_js._('str_more') + ` <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.25736 5.07544L4.32794 5.14601C4.241 5.23295 4.12308 5.28182 4.00009 5.28182C3.87715 5.28182 3.7592 5.233 3.67226 5.14604C3.67226 5.14603 3.67225 5.14603 3.67225 5.14602L0.0358041 1.50968L0.106514 1.43896L0.0358032 1.50968C-0.14526 1.32861 -0.14526 1.03507 0.0357727 0.854006M4.25736 5.07544L0.10649 0.92471M4.25736 5.07544L4.32794 5.14601L7.9642 1.50965C8.14527 1.32859 8.14527 1.03504 7.9642 0.853976C7.78317 0.67294 7.4896 0.672907 7.30853 0.853976L7.37924 0.924687M4.25736 5.07544L7.37924 0.924687M0.0357727 0.854006L0.10649 0.92471M0.0357727 0.854006C0.0357708 0.854008 0.0357689 0.85401 0.035767 0.854012L0.10649 0.92471M0.0357727 0.854006C0.126294 0.763456 0.245135 0.718189 0.363629 0.718189C0.482123 0.718189 0.600959 0.763457 0.691478 0.853975L4.00008 4.16249M0.10649 0.92471C0.177495 0.85368 0.270562 0.818189 0.363629 0.818189C0.456695 0.818189 0.549762 0.85368 0.620768 0.924686L3.92938 4.2332L4.00008 4.16249M4.00008 4.16249L7.30853 0.853977L7.37924 0.924687M4.00008 4.16249L4.0708 4.2332L7.37924 0.924687" fill="#5F6368" stroke="#5F6368" stroke-width="0.2"/></svg></button>
                     <div class="c-footer__filters__more-filters js-more-filters">
-                        <button data-metabox-key="${key}" data-filter="14days" class="c-footer__filters__list-item">` + wps_js._('str_14days') + `</button>
-                        <button data-metabox-key="${key}" data-filter="60days" class="c-footer__filters__list-item">` + wps_js._('str_60days') + `</button>
-                        <button data-metabox-key="${key}" data-filter="120days" class="c-footer__filters__list-item">` + wps_js._('str_120days') + `</button>
+                        <button data-metabox-key="${key}" data-filter="7days" class="c-footer__filters__list-item">` + wps_js._('str_7days') + `</button>
+                        <button data-metabox-key="${key}" data-filter="30days" class="c-footer__filters__list-item">` + wps_js._('str_30days') + `</button>
+                        <button data-metabox-key="${key}" data-filter="90days" class="c-footer__filters__list-item">` + wps_js._('str_90days') + `</button>
                         <button data-metabox-key="${key}" data-filter="6months" class="c-footer__filters__list-item">` + wps_js._('str_6months') + `</button>
-                        <button data-metabox-key="${key}" data-filter="year" class="c-footer__filters__list-item">` + wps_js._('str_year') + `</button>
+                        <button data-metabox-key="${key}" data-filter="this_year" class="c-footer__filters__list-item">` + wps_js._('str_this_year') + `</button>
                         <button class="c-footer__filters__close-more-filters" onclick="jQuery(this).closest('.js-more-fi' + 'lters').removeClass('is-open')"><svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.25736 5.07544L4.32794 5.14601C4.241 5.23295 4.12308 5.28182 4.00009 5.28182C3.87715 5.28182 3.7592 5.233 3.67226 5.14604C3.67226 5.14603 3.67225 5.14603 3.67225 5.14602L0.0358041 1.50968L0.106514 1.43896L0.0358032 1.50968C-0.14526 1.32861 -0.14526 1.03507 0.0357727 0.854006M4.25736 5.07544L0.10649 0.92471M4.25736 5.07544L4.32794 5.14601L7.9642 1.50965C8.14527 1.32859 8.14527 1.03504 7.9642 0.853976C7.78317 0.67294 7.4896 0.672907 7.30853 0.853976L7.37924 0.924687M4.25736 5.07544L7.37924 0.924687M0.0357727 0.854006L0.10649 0.92471M0.0357727 0.854006C0.0357708 0.854008 0.0357689 0.85401 0.035767 0.854012L0.10649 0.92471M0.0357727 0.854006C0.126294 0.763456 0.245135 0.718189 0.363629 0.718189C0.482123 0.718189 0.600959 0.763457 0.691478 0.853975L4.00008 4.16249M0.10649 0.92471C0.177495 0.85368 0.270562 0.818189 0.363629 0.818189C0.456695 0.818189 0.549762 0.85368 0.620768 0.924686L3.92938 4.2332L4.00008 4.16249M4.00008 4.16249L7.30853 0.853977L7.37924 0.924687M4.00008 4.16249L4.0708 4.2332L7.37924 0.924687" fill="#5F6368" stroke="#5F6368" stroke-width="0.2"/></svg> ` + wps_js._('str_back') + `</button>
                     </div>
                     <input type="text" class="c-footer__filters__custom-date-input js-datepicker-input"/>
@@ -245,7 +294,7 @@ wps_js.meta_box_footer = function (key, data) {
     }
     html += `</div><div class="c-footer__more">`;
     if (params.footer_options.display_more_link) {
-        html += `<a class="c-footer__more__link" href="` + wps_js.global.admin_url + 'admin.php?page=' + args.page_url + `">${params.footer_options.more_link_title}<svg width="14" height="10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m9.61181.611328-.71269.712722 3.17148 3.17149L0 4.49951v1.00398h12.0706L8.89912 8.67495l.71269.71272L14 4.99948 9.61181.611328Z" fill="#404BF2"/></svg></a>`;
+        html += `<a class="c-footer__more__link" href="` + args.page_url + `">${params.footer_options.more_link_title}<svg width="14" height="10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m9.61181.611328-.71269.712722 3.17148 3.17149L0 4.49951v1.00398h12.0706L8.89912 8.67495l.71269.71272L14 4.99948 9.61181.611328Z" fill="#404BF2"/></svg></a>`;
     }
     html += `</div></div>`;
 
@@ -288,25 +337,31 @@ wps_js.meta_box_footer = function (key, data) {
 /**
  * Set As Selected Date Filter
  */
-wps_js.set_date_filter_as_selected = function (key, selectedDateFilter, selectedStartDate, selectedEndDate, fromDate, toDate) {
+wps_js.set_date_filter_as_selected = function (key, selectedDateFilter = "30days", selectedStartDate, selectedEndDate, fromDate, toDate) {
     const metaBoxInner = jQuery(wps_js.meta_box_inner(key));
     const filterBtn = jQuery(metaBoxInner).find('.c-footer__filter__btn');
     const filterList = jQuery(metaBoxInner).find('.c-footer__filters__list');
     const currentFilterTitle = jQuery(metaBoxInner).find('.c-footer__current-filter__title');
     const currentFilterRange = jQuery(metaBoxInner).find('.c-footer__current-filter__date-range');
+
+    if (!selectedDateFilter) {
+        selectedDateFilter = "30days"
+    }
+
     if (selectedDateFilter.length) {
         filterList.find('button[data-filter]').removeClass('is-selected');
         filterList.find('button[data-filter="' + selectedDateFilter + '"').addClass('is-selected');
         filterBtn.text(wps_js._('str_' + selectedDateFilter));
         currentFilterTitle.text(wps_js._('str_' + selectedDateFilter));
         if (selectedDateFilter == 'custom') {
+            filterBtn.text(selectedStartDate + ' - ' + selectedEndDate);
             const datePickerElement = jQuery(wps_js.meta_box_inner(key)).find('.js-datepicker-input').first();
             datePickerElement.data('daterangepicker').setStartDate(moment(fromDate).format('MM/DD/YYYY'));
             datePickerElement.data('daterangepicker').setEndDate(moment(toDate).format('MM/DD/YYYY'));
         }
     }
     if (selectedStartDate.length && selectedEndDate.length) {
-        currentFilterRange.text(selectedStartDate + '-' + selectedEndDate);
+        currentFilterRange.text(selectedStartDate + ' - ' + selectedEndDate);
     }
 }
 
@@ -345,16 +400,27 @@ jQuery(document).on("click", '.wps-refresh', function (e) {
     // Get Meta Box name By Parent ID
     let parentID = jQuery(this).closest(".postbox").attr("id");
     let meta_box_name = wps_js.meta_box_name_by_id(parentID);
-    let ago = '';
     let args = wps_js.global.meta_boxes[meta_box_name];
-    if (args.hasOwnProperty('footer_options')) {
-        ago = args.footer_options.default_date_filter;
+
+    if(args.footer_options?.default_date_filter){
+        let current_filter = jQuery('#' + parentID).find('.c-footer__filters__list .is-selected')?.attr('data-filter');
+        if(current_filter !== 'custom'){
+            args.footer_options.default_date_filter= `filter|${current_filter}`;
+        }else{
+            const datePickerElement =  jQuery('#' + parentID).find('.js-datepicker-input').data('daterangepicker');
+            const startDate =datePickerElement.startDate.format('YYYY-MM-DD');
+            const endDate =datePickerElement.endDate.format('YYYY-MM-DD');
+            args.footer_options.default_date_filter=  `between|custom:${startDate}:${endDate}`;
+
+        }
     }
+    // Check Date Filter
+    let data = wps_js.prepare_date_filter_data(args);
 
     // Run Meta Box
-    wps_js.run_meta_box(meta_box_name, {'ago': ago}, false);
+    wps_js.run_meta_box(meta_box_name, data, false);
     setTimeout(function () {
-        jQuery('#' + parentID).find('.wps-refresh').blur();
+        jQuery('#' + parentID).find('.wps-refresh').trigger('blur');
     }, 1000);
 });
 

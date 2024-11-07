@@ -28,11 +28,12 @@ if ( ! function_exists( 'pp_free_fs' ) ) {
 					'type'                => 'plugin',
 					'public_key'          => 'pk_e9210517721d27b5112fa7773a600',
 					'is_premium'          => false,
-					'has_addons'          => true,
+//					'has_addons'          => true,
 					'has_paid_plans'      => false,
 					'menu'                => array(
 						'slug'           => 'password-protected',
 						'support'        => false,
+						'contact'        => false,
 					),
 				)
 			);

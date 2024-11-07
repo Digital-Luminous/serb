@@ -1218,6 +1218,28 @@
                             "placeholder": ""
                         }
                     ]
+                },
+                {
+                "key": "field_csddd6339e327",
+                "label": "Region",
+                "name": "region",
+                "type": "post_object",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+                },
+                "post_type": [
+                "region"
+                ],
+                "taxonomy": "",
+                "allow_null": 0,
+                "multiple": 0,
+                 "return_format": "id",
+                "ui": 1
                 }
             ]
         }

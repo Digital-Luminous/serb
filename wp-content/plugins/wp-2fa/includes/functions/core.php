@@ -8,8 +8,11 @@
 namespace WP2FA\Core;
 
 use WP2FA\WP2FA;
+use WP2FA\Utils\Settings_Utils;
 use WP2FA\Admin\Helpers\WP_Helper;
-use WP2FA\Utils\Settings_Utils as Settings_Utils;
+use WP2FA\Admin\Views\Re_Login_2FA;
+use WP2FA\Admin\Helpers\User_Helper;
+use WP2FA\Admin\Controllers\Settings;
 
 /**
  * Default setup routine
@@ -17,7 +20,7 @@ use WP2FA\Utils\Settings_Utils as Settings_Utils;
  * @return void
  */
 function setup() {
-	$n = function( $function ) {
+	$n = function ( $function ) {
 		return __NAMESPACE__ . "\\$function";
 	};
 
@@ -34,7 +37,7 @@ function setup() {
 	 *
 	 * @since 2.0.0
 	 */
-  	do_action( WP_2FA_PREFIX . 'loaded' );
+	do_action( WP_2FA_PREFIX . 'loaded' );
 }
 
 /**
@@ -91,7 +94,6 @@ function activate() {
  * @return void
  */
 function deactivate() {
-
 }
 
 /**
@@ -100,6 +102,7 @@ function deactivate() {
  * @return void
  */
 function uninstall() {
+	WP2FA::init();
 	if ( ! empty( WP2FA::get_wp2fa_general_setting( 'delete_data_upon_uninstall' ) ) ) {
 		// Delete settings from wp_options.
 		if ( WP_Helper::is_multisite() ) {
@@ -207,7 +210,7 @@ function admin_scripts() {
 		return;
 	}
 
-	wp_enqueue_script(
+	\wp_enqueue_script(
 		'wp_2fa_admin',
 		script_url( 'admin', 'admin' ),
 		array( 'jquery-ui-widget', 'jquery-ui-core', 'jquery-ui-autocomplete', 'wp_2fa_micro_modals', 'select2' ),
@@ -215,7 +218,7 @@ function admin_scripts() {
 		true
 	);
 
-	wp_enqueue_script(
+	\wp_enqueue_script(
 		'wp_2fa_micro_modals',
 		script_url( 'micromodal', 'admin' ),
 		array(),
@@ -225,45 +228,37 @@ function admin_scripts() {
 
 	enqueue_select2_scripts();
 
-	if ( WP_Helper::is_multisite() ) {
-		enqueue_multi_select_scripts();
-	}
-
 	// Data array.
 	$data_array = array(
-		'ajaxURL'                        => admin_url( 'admin-ajax.php' ),
-		'roles'                          => WP2FA::wp_2fa_get_roles(),
-		'nonce'                          => wp_create_nonce( 'wp-2fa-settings-nonce' ),
-		'codeValidatedHeading'           => esc_html__( 'Congratulations', 'wp-2fa' ),
-		'codeValidatedText'              => esc_html__( 'Your account just got more secure', 'wp-2fa' ),
-		'codeValidatedButton'            => esc_html__( 'Close Wizard & Refresh', 'wp-2fa' ),
-		'processingText'                 => esc_html__( 'Processing Update', 'wp-2fa' ),
-		'email_sent_success'             => esc_html__( 'Email successfully sent', 'wp-2fa' ),
-		'email_sent_failure'             => esc_html__( 'Email delivery failed', 'wp-2fa' ),
-		'invalidEmail'                   => esc_html__( 'Please use a valid email address', 'wp-2fa' ),
-		'license_validation_in_progress' => esc_html__( 'Validating your license, please wait...', 'wp-2fa' ),
+		'ajaxURL'                        => \admin_url( 'admin-ajax.php' ),
+		'roles'                          => WP_Helper::get_roles_wp(),
+		'nonce'                          => \wp_create_nonce( 'wp-2fa-settings-nonce' ),
+		'codeValidatedHeading'           => \esc_html__( 'Congratulations', 'wp-2fa' ),
+		'codeValidatedText'              => \esc_html__( 'Your account just got more secure', 'wp-2fa' ),
+		'codeValidatedButton'            => \esc_html__( 'Close Wizard & Refresh', 'wp-2fa' ),
+		'processingText'                 => \esc_html__( 'Processing Update', 'wp-2fa' ),
+		'email_sent_success'             => \esc_html__( 'Email successfully sent', 'wp-2fa' ),
+		'email_sent_failure'             => \esc_html__( 'Email delivery failed', 'wp-2fa' ),
+		'invalidEmail'                   => \esc_html__( 'Please use a valid email address', 'wp-2fa' ),
+		'license_validation_in_progress' => \esc_html__( 'Validating your license, please wait...', 'wp-2fa' ),
 	);
-	wp_localize_script( 'wp_2fa_admin', 'wp2faData', $data_array );
+	\wp_localize_script( 'wp_2fa_admin', 'wp2faData', $data_array );
+
+	$role = User_Helper::get_user_role();
+
+	$re_login = Settings::get_role_or_default_setting( Re_Login_2FA::RE_LOGIN_SETTINGS_NAME, 'current', $role );
 
 	$data_array = array(
-		'ajaxURL'         => admin_url( 'admin-ajax.php' ),
-		'nonce'           => wp_create_nonce( 'wp2fa-verify-wizard-page' ),
-		'codesPreamble'   => esc_html__( 'These are the 2FA backup codes for the user', 'wp-2fa' ),
-		'readyText'       => esc_html__( 'I\'m ready', 'wp-2fa' ),
-		'codeReSentText'  => esc_html__( 'New code sent', 'wp-2fa' ),
-		'backupCodesSent' => esc_html__( 'Backup codes sent', 'wp-2fa' ),
+		'ajaxURL'         => \admin_url( 'admin-ajax.php' ),
+		'nonce'           => \wp_create_nonce( 'wp2fa-verify-wizard-page' ),
+		'codesPreamble'   => \esc_html__( 'These are the 2FA backup codes for the user', 'wp-2fa' ),
+		'readyText'       => \esc_html__( 'I\'m ready', 'wp-2fa' ),
+		'codeReSentText'  => \esc_html__( 'New code sent', 'wp-2fa' ),
+		'backupCodesSent' => \esc_html__( 'Backup codes sent', 'wp-2fa' ),
+		'reLoginEnabled'  => Re_Login_2FA::ENABLED_SETTING_VALUE,
+		'reLogin'         => $re_login,
 	);
-	wp_localize_script( 'wp_2fa_admin', 'wp2faWizardData', $data_array );
-
-}
-
-/**
- * Enqueue multi select for multinetwork WP
- *
- * @return void
- */
-function enqueue_multi_select_scripts() {
-	wp_enqueue_script( 'multi-site-select', script_url( 'multi-site-select', 'admin' ), array( 'jquery', 'select2' ), WP_2FA_VERSION, false );
+	\wp_localize_script( 'wp_2fa_admin', 'wp2faWizardData', $data_array );
 }
 
 /**
@@ -272,8 +267,8 @@ function enqueue_multi_select_scripts() {
  * @return void
  */
 function enqueue_select2_scripts() {
-	wp_enqueue_style( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css', array(), WP_2FA_VERSION );
-	wp_enqueue_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', array( 'jquery' ), WP_2FA_VERSION, false );
+	wp_enqueue_style( 'select2', style_url( 'select2.min', 'admin' ), array(), WP_2FA_VERSION );
+	wp_enqueue_script( 'select2', script_url( 'select2.min', 'admin' ), array( 'jquery' ), WP_2FA_VERSION, false );
 }
 
 /**
@@ -289,7 +284,6 @@ function admin_styles() {
 		array(),
 		WP_2FA_VERSION
 	);
-
 }
 
 /**

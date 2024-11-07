@@ -1,4 +1,5 @@
 import Choices from 'choices.js';
+const { __ } = wp.i18n;
 
 const element = {
   selects: document.querySelectorAll('.js-select'),
@@ -50,7 +51,7 @@ export const choicesInstances = [...element.selects].map((select) => {
     return new Choices(select, {
       removeItemButton: true,
       allowHTML: true,
-      searchPlaceholderValue: 'Type to search products',
+      searchPlaceholderValue: __('Type to search products', 'protherics'),
       classNames: {
         ...params.classNames,
         containerOuter: 'c-select c-select--alt',

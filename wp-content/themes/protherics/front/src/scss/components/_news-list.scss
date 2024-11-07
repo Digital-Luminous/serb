@@ -2,6 +2,7 @@
     @include list-reset;
 
     display: flex;
+    width: 100%;
 }
 
 .c-news-list__item {
@@ -11,7 +12,8 @@
     background: bottom right url('../images/decor-box.png') no-repeat, rgba(color(grey-1), .5);
 
     @include media(mobile) {
-        flex: 1;
+        flex: 1 1 33%;
+        max-width: 33%;
     }
 }
 

@@ -66,7 +66,7 @@
 
         this.$mailButton.on('click', function(e) {
             e.preventDefault();
-            if(!$userMail.val() || !$userText.val()) {
+            if(!$userMail.val() || !$userText.val() || !jQuery('#supsysticOverviewACTermsCheckbox').is(':checked') ) {
                 $userMail.closest('tr').find('.required').css('color', 'red');
                 $userText.closest('tr').find('.required').css('color', 'red');
                 $('.required-notification').show();
@@ -130,7 +130,7 @@
 
         this.$subscribeButton.on('click', function(e) {
             e.preventDefault();
-            if(!$userMail.val() || !$userName.val()) {
+            if(!$userMail.val() || !$userName.val() || !jQuery('#supsysticOverviewACTermsCheckbox').is(':checked')) {
                 $('.supsysticOverviewACFormNotification').show();
                 return;
             }
@@ -228,6 +228,12 @@ jQuery(document).ready(function(){
   });
   jQuery('.supsysticOverviewACBtnDisable, .supsysticOverviewACClose, .supsysticOverviewACBtnRemind').on('click', function(){
     jQuery('.supsysticOverviewACFormOverlay').fadeOut();
+  });
+  jQuery('.supsysticOverviewACTerms').on('click', function(){
+    jQuery('.supsysticOverviewACFormOverlayTerms').fadeIn();
+  });
+  jQuery('.supsysticOverviewACFormOverlayTermsClose').on('click', function(){
+    jQuery('.supsysticOverviewACFormOverlayTerms').fadeOut();
   });
   jQuery('.overview-section-btn').eq(0).trigger('click');
 });

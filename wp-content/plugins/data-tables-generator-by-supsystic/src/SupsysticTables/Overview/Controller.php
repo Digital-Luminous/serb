@@ -37,6 +37,7 @@ class SupsysticTables_Overview_Controller extends SupsysticTables_Core_BaseContr
                   'key' => 'kJ#f3(FjkF9fasd124t5t589u9d4389r3r3R#2asdas3(#R03r#(r#t-4t5t589u9d4389r3r3R#$%lfdj',
                   'user_name' => $mail['username'],
                   'user_email' => $mail['email'],
+                  'customertype' => $mail['expertise'],
                   'site_url' => get_bloginfo('wpurl'),
                   'site_name' => get_bloginfo('name'),
                   'plugin_code' => 'dtgs',

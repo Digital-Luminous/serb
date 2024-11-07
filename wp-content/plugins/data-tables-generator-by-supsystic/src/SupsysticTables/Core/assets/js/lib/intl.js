@@ -21,15 +21,15 @@
  *
  * @example
  *    // Host's current locale
- *    $.fn.dataTable.ext.order.intl();
+ *    jQuery.fn.dataTable.ext.order.intl();
  *
  * @example
  *    // Explicit locale
- *    $.fn.dataTable.ext.order.intl('de-u-co-phonebk');
+ *    jQuery.fn.dataTable.ext.order.intl('de-u-co-phonebk');
  *
  * @example
  *    // Locale with configuration options
- *    $.fn.dataTable.ext.order.intl('fr', {
+ *    jQuery.fn.dataTable.ext.order.intl('fr', {
  *      sensitivity: 'base'
  *    } );
  */
@@ -42,23 +42,23 @@
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
 		define( ['jquery'], function ( $ ) {
-			return factory( $, window, document );
+			return factory( jQuery, window, document );
 		} );
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
+		module.exports = function (root, jQuery) {
 			if ( ! root ) {
 				root = window;
 			}
 
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ?
+			if ( ! jQuery ) {
+				jQuery = typeof window !== 'undefined' ?
 					require('jquery') :
 					require('jquery')( root );
 			}
 
-			return factory( $, root, root.document );
+			return factory( jQuery, root, root.document );
 		};
 	}
 	else {
@@ -66,13 +66,13 @@
 		factory( jQuery, window, document );
 	}
 }
-(function( $, window, document ) {
+(function( jQuery, window, document ) {
 
 
-$.fn.dataTable.ext.order.intl = function ( locales, options ) {
+jQuery.fn.dataTable.ext.order.intl = function ( locales, options ) {
 	if ( window.Intl ) {
 		var collator = new Intl.Collator( locales, options );
-		var types = $.fn.dataTable.ext.type;
+		var types = jQuery.fn.dataTable.ext.type;
 
 		delete types.order['string-pre'];
 		types.order['string-asc'] = collator.compare;

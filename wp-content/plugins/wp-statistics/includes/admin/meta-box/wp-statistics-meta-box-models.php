@@ -18,6 +18,15 @@ class models extends MetaBoxAbstract
      */
     public static function get($arg = array())
     {
+        /**
+         * Filters the args used from metabox for query stats
+         *
+         * @param array $args The args passed to query stats
+         * @since 14.2.1
+         *
+         */
+        $arg = apply_filters('wp_statistics_meta_box_models_args', $arg);
+
         global $wpdb;
 
         // Set Default Params
@@ -26,7 +35,7 @@ class models extends MetaBoxAbstract
             'from'   => '',
             'to'     => '',
             'order'  => '',
-            'number' => 10 // Get Max number of platform
+            'number' => 4 // Get Max number of platform
         );
         $args     = wp_parse_args($arg, $defaults);
 
@@ -49,10 +58,10 @@ class models extends MetaBoxAbstract
             $order_by = "ORDER BY `count` " . esc_sql($args['order']);
         }
 
-        $sql = $wpdb->prepare("SELECT model, COUNT(*) as count FROM " . DB::table('visitor') . " WHERE model != '" . _x('Unknown', 'Model', 'wp-statistics') . "' AND `last_counter` BETWEEN %s AND %s GROUP BY model {$order_by}", reset($days_time_list), end($days_time_list));
-
-        // Get List All Platforms
-        $list = $wpdb->get_results($sql, ARRAY_A);
+        // Get List All Operating Systems
+        $list = $wpdb->get_results(
+            $wpdb->prepare("SELECT model, COUNT(*) as count FROM `" . DB::table('visitor') . "` WHERE `last_counter` BETWEEN %s AND %s GROUP BY model {$order_by}", reset($days_time_list), end($days_time_list)),
+            ARRAY_A);
 
         // Sort By Count
         Helper::SortByKeyValue($list, 'count');
@@ -76,11 +85,18 @@ class models extends MetaBoxAbstract
             }
         }
 
+        $others = array_slice($list, $args['number']);
+        if (!empty($others)) {
+            $lists_name[]   = __('Others', 'wp-statistics');
+            $lists_value[]  = array_sum(array_column($others, 'count'));
+            $total          += array_sum(array_column($others, 'count'));
+        }
+
         // Set Title
         if (end($days_time_list) == TimeZone::getCurrentDate("Y-m-d")) {
-            $title = sprintf(__('%s Statistics in the last %s days', 'wp-statistics'), __('Manufacturers', 'wp-statistics'), self::$countDays);
+            $title = sprintf(__('Statistics for %1$s in the Past %2$s Days', 'wp-statistics'), __('Manufacturers', 'wp-statistics'), self::$countDays);
         } else {
-            $title = sprintf(__('%s Statistics from %s to %s', 'wp-statistics'), __('Manufacturers', 'wp-statistics'), $args['from'], $args['to']);
+            $title = sprintf(__('Statistics for %1$s Between %2$s and %3$s', 'wp-statistics'), __('Manufacturers', 'wp-statistics'), $args['from'], $args['to']);
         }
 
         // Prepare Response

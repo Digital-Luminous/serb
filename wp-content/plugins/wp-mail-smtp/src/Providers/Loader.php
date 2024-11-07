@@ -20,6 +20,7 @@ class Loader {
 	 * @since 1.0.0
 	 * @since 1.6.0 Added Sendinblue.
 	 * @since 1.7.0 Added AmazonSES/Outlook as indication of the Pro mailers.
+	 * @since 4.1.0 Added SMTP2GO.
 	 *
 	 * @var array
 	 */
@@ -35,6 +36,7 @@ class Loader {
 		'pepipostapi' => 'WPMailSMTP\Providers\PepipostAPI\\',
 		'postmark'    => 'WPMailSMTP\Providers\Postmark\\',
 		'sendgrid'    => 'WPMailSMTP\Providers\Sendgrid\\',
+		'smtp2go'     => 'WPMailSMTP\Providers\SMTP2GO\\',
 		'sparkpost'   => 'WPMailSMTP\Providers\SparkPost\\',
 		'zoho'        => 'WPMailSMTP\Providers\Zoho\\',
 		'smtp'        => 'WPMailSMTP\Providers\SMTP\\',
@@ -198,7 +200,7 @@ class Loader {
 			$entity = null;
 		}
 
-		return apply_filters( 'wp_mail_smtp_providers_loader_get_entity', $entity, $provider, $request );
+		return apply_filters( 'wp_mail_smtp_providers_loader_get_entity', $entity, $provider, $request, $args );
 	}
 
 	/**

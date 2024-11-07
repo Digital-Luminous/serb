@@ -5,11 +5,7 @@
     right: 0;
     left: 0;
 
-    height: 10.2rem;
-
-    @include media(tablet) {
-        height: 15.5rem;
-    }
+    height: 15.5rem;
 }
 
 .l-header .l-inner {

@@ -32,7 +32,19 @@ function custom_productlist_form_tag_handler( $tag ) {
 
     wp_reset_query();
 
-    $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="Type to search products" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+    if (get_current_blog_id() === 1) {
+        $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Type to search products', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+    } else if (get_current_blog_id() === 2) {
+        $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Tapez pour rechercher des produits', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+    } else {
+        $current_language = apply_filters( 'wpml_current_language', null );
+
+        if ( $current_language === 'nl' ) {
+            $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Typ om naar producten te zoeken', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+        } else {
+            $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Tapez pour rechercher des produits', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+        }
+    }
 
     return $customlist;
 }
@@ -103,23 +115,38 @@ function protherics_dynamic_emails( $contact_form, $abort, $submission ) {
                 }
             }
         }
-
-        if ( isset( $posted_data['country_select'] ) && count( $step_1 ) > 0 ) {
-            foreach ( $step_1 as $item ) {
-                if ( $item['geography'] == '' ) {
-                    $step_2[] = $item;
-                } else {
-                    foreach ( $item['geography'] as $geo ) {
-                        if ( $posted_data['country_select'] == $geo->name || $geo == null ) {
+        if(count( $step_1 ) > 0) {
+            if(is_main_site() ) {
+                if ( isset( $posted_data['country_select'] ) ) {
+                    foreach ( $step_1 as $item ) {
+                        if ( $item['geography'] == '' ) {
+                            $step_2[] = $item;
+                        } else {
+                            foreach ( $item['geography'] as $geo ) {
+                                if ( $posted_data['country_select'] == $geo->name || $geo == null ) {
+                                    $step_2[] = $item;
+                                }
+                            }
+                        }
+                        // if ( $posted_data['country_select'] == $item['geography']->name || $item['geography'] == null ) {
+                        //     $step_2[] = $item;
+                        // }
+                    }
+                }
+            } else {
+                foreach ( $step_1 as $item ) {
+                    if ( $item['geography'] == '' ) {
+                        $step_2[] = $item;
+                    } else {
+                        foreach ( $item['geography'] as $geo ) {
                             $step_2[] = $item;
                         }
                     }
                 }
-                // if ( $posted_data['country_select'] == $item['geography']->name || $item['geography'] == null ) {
-                //     $step_2[] = $item;
-                // }
             }
         }
+       
+        
 
         if ( isset( $posted_data['product_select'] ) && count( $step_2 ) > 0 ) {
             foreach ( $step_2 as $item ) {

@@ -1,4 +1,4 @@
-(function ($, app) {
+(function (jQuery, app) {
 	// Custom Natural Sort Function
 	// see https://datatables.net/plug-ins/sorting/natural
 	function naturalSort (a, b, html) {
@@ -63,16 +63,16 @@
 		return 0;
 	}
 
-	$.fn.dataTableExt.oApi.fnFakeRowspan = function (oSettings) {
+	jQuery.fn.dataTableExt.oApi.fnFakeRowspan = function (oSettings) {
 		if(oSettings) {
 			var cells;
-			$.each(oSettings.aoData, function(index, rowData) {
+			jQuery.each(oSettings.aoData, function(index, rowData) {
 				app.setCellAttributes(rowData.anCells);
 			});
 			if (oSettings.aoHeader.length) {
 				cells = [];
-				$.each(oSettings.aoHeader, function(index, rowData) {
-					$.each(rowData, function(index, cellData) {
+				jQuery.each(oSettings.aoHeader, function(index, rowData) {
+					jQuery.each(rowData, function(index, cellData) {
 						cells.push(cellData.cell);
 					});
 				});
@@ -80,8 +80,8 @@
 			}
 			if (oSettings.aoFooter.length) {
 				cells = [];
-				$.each(oSettings.aoFooter, function(index, rowData) {
-					$.each(rowData, function(index, cellData) {
+				jQuery.each(oSettings.aoFooter, function(index, rowData) {
+					jQuery.each(rowData, function(index, cellData) {
 						cells.push(cellData.cell);
 					});
 				});
@@ -90,31 +90,31 @@
 		}
 		return this;
 	};
-	$.fn.dataTableExt.oApi.fnResetFakeRowspan = function (oSettings) {
+	jQuery.fn.dataTableExt.oApi.fnResetFakeRowspan = function (oSettings) {
 		if(oSettings) {
 			var displayRows = oSettings.aiDisplay,
-				mergedData = $(oSettings.nTable).data('merged');
+				mergedData = jQuery(oSettings.nTable).data('merged');
 			if(!mergedData || mergedData.length == 0 || displayRows.length == 0) return this;
 
 			var rows = oSettings.aoData,
-				table = $(oSettings.nTable),
+				table = jQuery(oSettings.nTable),
 				autoHiding = table.attr('data-auto-hiding'),
 				rowNums = {},
 				first = table.attr('data-auto-index') == 'new' ? 1 : 0;
 			autoHiding = (typeof(autoHiding) != 'undefined' && autoHiding.length > 0) ? autoHiding.split(',').map(Number) : [];
 
-			$.each(displayRows, function(index, rowNum) {
+			jQuery.each(displayRows, function(index, rowNum) {
 				var cells = rows[rowNum].anCells;
 				rowNums[cells[first].getAttribute('data-y')] = rowNum;
 				for(var i = 0; i < cells.length; i++) {
 					if(cells[i].getAttribute('data-hide') == "true" && (autoHiding.length <= i || autoHiding[i] == 1)) {
-						$(cells[i]).css('display', '');
+						jQuery(cells[i]).css('display', '');
 					}
 					cells[i].setAttribute('rowspan', 1);
 					cells[i].setAttribute('colspan', 1);
 				}
 			});
-			$.each(mergedData, function(index, value) {
+			jQuery.each(mergedData, function(index, value) {
 				var firstRow = Number(value.row) + 1,
 					lastRow = firstRow + Number(value.rowspan) - 1,
 					colspan = Number(value.colspan),
@@ -152,7 +152,7 @@
 		return this;
 	};
 
-	$.extend( $.fn.dataTableExt.oSort, {
+	jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 		"natural-asc": function ( a, b ) {
 			return naturalSort(a,b,true);
 		},

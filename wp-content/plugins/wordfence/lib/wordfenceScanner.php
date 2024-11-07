@@ -23,7 +23,8 @@ class wordfenceScanner {
 
 	//serialized:
 	protected $path = '';
-	protected $results = array(); 
+	protected $results = []; 
+	protected $resultFilesByShac = [];
 	public $errorMsg = false;
 	protected $apiKey = false;
 	protected $wordpressVersion = '';
@@ -42,7 +43,7 @@ class wordfenceScanner {
 	private $urlHoover;
 
 	public function __sleep(){
-		return array('path', 'results', 'errorMsg', 'apiKey', 'wordpressVersion', 'urlHoover', 'totalFilesScanned',
+		return array('path', 'results', 'resultFilesByShac', 'errorMsg', 'apiKey', 'wordpressVersion', 'urlHoover', 'totalFilesScanned',
 			'startTime', 'lastStatusTime', 'patterns', 'scanEngine');
 	}
 	public function __wakeup(){
@@ -56,9 +57,7 @@ class wordfenceScanner {
 		}
 		$this->path = $path;
 		$this->scanEngine = $scanEngine;
-		
-		
-		$this->results = array();
+			
 		$this->errorMsg = false;
 		//First extract hosts or IPs and their URLs into $this->hostsFound and URL's into $this->urlsFound
 		$options = $this->scanEngine->scanController()->scanOptions();
@@ -221,18 +220,19 @@ class wordfenceScanner {
 				break;
 			}
 			
+			$completed = [];
 			foreach ($files as $record) {
 				$file = $record->filename;
 				if ($excludePatterns) {
 					foreach ($excludePatterns as $pattern) {
 						if (preg_match($pattern, $file)) {
-							$record->markComplete();
+							$completed[] = $record;
 							continue 2;
 						}
 					}
 				}
 				if (!file_exists($record->realPath)) {
-					$record->markComplete();
+					$completed[] = $record;
 					continue;
 				}
 				$fileSum = $record->newMD5;
@@ -264,7 +264,7 @@ class wordfenceScanner {
 						$isScanImagesFile = true;
 					}
 					else if (!$isJS) {
-						$record->markComplete();
+						$completed[] = $record;
 						continue;
 					}
 				}
@@ -274,20 +274,18 @@ class wordfenceScanner {
 						$isHighSensitivityFile = true;
 					}
 					else {
-						$record->markComplete();
+						$completed[] = $record;
 						continue;
 					}
 				}
-				if(wfUtils::fileTooBig($record->realPath)){ //We can't use filesize on 32 bit systems for files > 2 gigs
+				if(wfUtils::fileTooBig($record->realPath, $fsize, $fh)){ //We can't use filesize on 32 bit systems for files > 2 gigs
 					//We should not need this check because files > 2 gigs are not hashed and therefore won't be received back as unknowns from the API server
 					//But we do it anyway to be safe.
 					wordfence::status(2, 'error', sprintf(/* translators: File path. */ __('Encountered file that is too large: %s - Skipping.', 'wordfence'), $file));
-					$record->markComplete();
+					$completed[] = $record;
 					continue;
 				}
-				wfUtils::beginProcessingFile($file);
 
-				$fsize = @filesize($record->realPath); //Checked if too big above
 				$fsize = wfUtils::formatBytes($fsize);
 				if (function_exists('memory_get_usage')) {
 					wordfence::status(4, 'info', sprintf(
@@ -307,16 +305,20 @@ class wordfenceScanner {
 				}
 
 				$stime = microtime(true);
-				$fh = @fopen($record->realPath, 'r');
 				if (!$fh) {
-					$record->markComplete();
+					$completed[] = $record;
 					continue;
 				}
-				$totalRead = $record->stoppedOnPosition;
+				$totalRead = (int) $record->stoppedOnPosition;
 				if ($totalRead > 0) {
 					if (@fseek($fh, $totalRead, SEEK_SET) !== 0) {
 						$totalRead = 0;
 					}
+				}
+				if ($totalRead === 0 && @fseek($fh, $totalRead, SEEK_SET) !== 0) {
+					wordfence::status(2, 'error', sprintf(/* translators: File path. */ __('Seek error occurred in file: %s - Skipping.', 'wordfence'), $file));
+					$completed[] = $record;
+					continue;
 				}
 
 				$dataForFile = $this->dataForFile($file);
@@ -341,104 +343,87 @@ class wordfenceScanner {
 					
 					$treatAsBinary = ($isPHP || $isHTML || $options['scansEnabled_scanImages']);
 					if ($options['scansEnabled_fileContents']) {
-						if ($treatAsBinary && wfUtils::strpos($data, '$allowed'.'Sites') !== false && wfUtils::strpos($data, "define ('VER"."SION', '1.") !== false && wfUtils::strpos($data, "TimThum"."b script created by") !== false) {
-							$this->addResult(array(
-								'type' => 'file',
-								'severity' => wfIssues::SEVERITY_CRITICAL,
-								'ignoreP' => $record->realPath,
-								'ignoreC' => $fileSum,
-								'shortMsg' => __('File is an old version of TimThumb which is vulnerable.', 'wordfence'),
-								'longMsg' => __('This file appears to be an old version of the TimThumb script which makes your system vulnerable to attackers. Please upgrade the theme or plugin that uses this or remove it.', 'wordfence') . $extraMsg,
-								'data' => array_merge(array(
-									'file' => $file,
-									'realFile' => $record->realPath,
-									'shac' => $record->SHAC,
-									'highSense' => $options['scansEnabled_highSense']
-								), $dataForFile),
-							));
-							break;
-						}
-						else {
-							$allCommonStrings = $this->patterns['commonStrings'];
-							$commonStringsFound = array_fill(0, count($allCommonStrings), null); //Lazily looked up below
-							
-							$regexMatched = false;
-							foreach ($this->patterns['rules'] as $rule) {
-								$stoppedOnSignature = $record->stoppedOnSignature;
-								if (!empty($stoppedOnSignature)) { //Advance until we find the rule we stopped on last time
-									//wordfence::status(4, 'info', "Searching for malware scan resume point (". $stoppedOnSignature . ") at rule " . $rule[0]);
-									if ($stoppedOnSignature == $rule[0]) {
-										$record->updateStoppedOn('', $currentPosition);
-										wordfence::status(4, 'info', sprintf(/* translators: Malware signature rule ID. */ __('Resuming malware scan at rule %s.', 'wordfence'), $rule[0]));
-									}
-									continue;
+						$allCommonStrings = $this->patterns['commonStrings'];
+						$commonStringsFound = array_fill(0, count($allCommonStrings), null); //Lazily looked up below
+
+						$regexMatched = false;
+						foreach ($this->patterns['rules'] as $rule) {
+							$stoppedOnSignature = $record->stoppedOnSignature;
+							if (!empty($stoppedOnSignature)) { //Advance until we find the rule we stopped on last time
+								//wordfence::status(4, 'info', "Searching for malware scan resume point (". $stoppedOnSignature . ") at rule " . $rule[0]);
+								if ($stoppedOnSignature == $rule[0]) {
+									$record->updateStoppedOn('', $currentPosition);
+									wordfence::status(4, 'info', sprintf(/* translators: Malware signature rule ID. */ __('Resuming malware scan at rule %s.', 'wordfence'), $rule[0]));
 								}
-								
-								$type = (isset($rule[4]) && !empty($rule[4])) ? $rule[4] : 'server';
-								$logOnly = (isset($rule[5]) && !empty($rule[5])) ? $rule[5] : false;
-								$commonStringIndexes = (isset($rule[8]) && is_array($rule[8])) ? $rule[8] : array();
-								if ($type == 'server' && !$treatAsBinary) { continue; }
-								else if (($type == 'both' || $type == 'browser') && $isJS) { $extraMsg = ''; }
-								else if (($type == 'both' || $type == 'browser') && !$treatAsBinary) { continue; }
-								
-								if (!$first && substr($rule[2], 0, 1) == '^') {
-									//wordfence::status(4, 'info', "Skipping malware signature ({$rule[0]}) because it only applies to the file beginning.");
-									continue;
+								continue;
+							}
+
+							$type = (isset($rule[4]) && !empty($rule[4])) ? $rule[4] : 'server';
+							$logOnly = (isset($rule[5]) && !empty($rule[5])) ? $rule[5] : false;
+							$commonStringIndexes = (isset($rule[8]) && is_array($rule[8])) ? $rule[8] : array();
+							if ($type == 'server' && !$treatAsBinary) { continue; }
+							else if (($type == 'both' || $type == 'browser') && $isJS) { $extraMsg = ''; }
+							else if (($type == 'both' || $type == 'browser') && !$treatAsBinary) { continue; }
+
+							if (!$first && substr($rule[2], 0, 1) == '^') {
+								//wordfence::status(4, 'info', "Skipping malware signature ({$rule[0]}) because it only applies to the file beginning.");
+								continue;
+							}
+
+							foreach ($commonStringIndexes as $i) {
+								if ($commonStringsFound[$i] === null) {
+									$s = $allCommonStrings[$i];
+									$commonStringsFound[$i] = (preg_match('/' . $s . '/i', $data) == 1);
 								}
-								
-								foreach ($commonStringIndexes as $i) {
-									if ($commonStringsFound[$i] === null) {
-										$s = $allCommonStrings[$i];
-										$commonStringsFound[$i] = (preg_match('/' . $s . '/i', $data) == 1);
-									}
-									
-									if (!$commonStringsFound[$i]) {
-										//wordfence::status(4, 'info', "Skipping malware signature ({$rule[0]}) due to short circuit.");
-										continue 2;
-									}
-								}
-								
-								/*if (count($commonStringIndexes) > 0) {
-									wordfence::status(4, 'info', "Processing malware signature ({$rule[0]}) because short circuit matched.");
-								}*/
-								
-								if (preg_match('/(' . $rule[2] . ')/iS', $data, $matches, PREG_OFFSET_CAPTURE)) {
-									$customMessage = isset($rule[9]) ? $rule[9] : __('This file appears to be installed or modified by a hacker to perform malicious activity. If you know about this file you can choose to ignore it to exclude it from future scans.', 'wordfence');
-									$matchString = $matches[1][0];
-									$matchOffset = $matches[1][1];
-									$beforeString = wfWAFUtils::substr($data, max(0, $matchOffset - 100), $matchOffset - max(0, $matchOffset - 100));
-									$afterString = wfWAFUtils::substr($data, $matchOffset + strlen($matchString), 100);
-									if (!$logOnly) {
-										$this->addResult(array(
-											'type' => 'file',
-											'severity' => wfIssues::SEVERITY_CRITICAL,
-											'ignoreP' => $record->realPath,
-											'ignoreC' => $fileSum,
-											'shortMsg' => sprintf(__('File appears to be malicious or unsafe: %s', 'wordfence'), esc_html($record->getDisplayPath())),
-											'longMsg' => $customMessage . ' ' . sprintf(__('The matched text in this file is: %s', 'wordfence'), '<strong style="color: #F00;" class="wf-split-word">' . wfUtils::potentialBinaryStringToHTML((wfUtils::strlen($matchString) > 200 ? wfUtils::substr($matchString, 0, 200) . '...' : $matchString)) . '</strong>') . ' ' . '<br><br>' . sprintf(/* translators: Scan result type. */ __('The issue type is: %s', 'wordfence'), '<strong>' . esc_html($rule[7]) . '</strong>') . '<br>' . sprintf(/* translators: Scan result description. */ __('Description: %s', 'wordfence'), '<strong>' . esc_html($rule[3]) . '</strong>') . $extraMsg,
-											'data' => array_merge(array(
-												'file' => $file,
-												'realFile' => $record->realPath,
-												'shac' => $record->SHAC,
-												'highSense' => $options['scansEnabled_highSense']
-											), $dataForFile),
-										));
-									}
-									$regexMatched = true;
-									$this->scanEngine->recordMetric('malwareSignature', $rule[0], array('file' => substr($file, 0, 255), 'match' => substr($matchString, 0, 65535), 'before' => $beforeString, 'after' => $afterString, 'md5' => $record->newMD5, 'shac' => $record->SHAC), false);
-									break;
-								}
-								
-								if ($forkObj->shouldFork()) {
-									$record->updateStoppedOn($rule[0], $currentPosition);
-									fclose($fh);
-									
-									wordfence::status(4, 'info', sprintf(/* translators: Malware signature rule ID. */ __('Forking during malware scan (%s) to ensure continuity.', 'wordfence'), $rule[0]));
-									$forkObj->fork(); //exits
+
+								if (!$commonStringsFound[$i]) {
+									//wordfence::status(4, 'info', "Skipping malware signature ({$rule[0]}) due to short circuit.");
+									continue 2;
 								}
 							}
-							if ($regexMatched) { break; }
+
+							/*if (count($commonStringIndexes) > 0) {
+								wordfence::status(4, 'info', "Processing malware signature ({$rule[0]}) because short circuit matched.");
+							}*/
+
+							if (preg_match('/(' . $rule[2] . ')/iS', $data, $matches, PREG_OFFSET_CAPTURE)) {
+								$customMessage = isset($rule[9]) ? $rule[9] : __('This file appears to be installed or modified by a hacker to perform malicious activity. If you know about this file you can choose to ignore it to exclude it from future scans.', 'wordfence');
+								$matchString = $matches[1][0];
+								$matchOffset = $matches[1][1];
+								$beforeString = wfWAFUtils::substr($data, max(0, $matchOffset - 100), $matchOffset - max(0, $matchOffset - 100));
+								$afterString = wfWAFUtils::substr($data, $matchOffset + strlen($matchString), 100);
+								if (!$logOnly) {
+									$this->addResult(array(
+										'type' => 'file',
+										'severity' => wfIssues::SEVERITY_CRITICAL,
+										'ignoreP' => $record->realPath,
+										'ignoreC' => $fileSum,
+										'shortMsg' => sprintf(__('File appears to be malicious or unsafe: %s', 'wordfence'), esc_html($record->getDisplayPath())),
+										'longMsg' => $customMessage . ' ' . sprintf(__('The matched text in this file is: %s', 'wordfence'), '<strong style="color: #F00;" class="wf-split-word">' . wfUtils::potentialBinaryStringToHTML((wfUtils::strlen($matchString) > 200 ? wfUtils::substr($matchString, 0, 200) . '...' : $matchString)) . '</strong>') . ' ' . '<br><br>' . sprintf(/* translators: Scan result type. */ __('The issue type is: %s', 'wordfence'), '<strong>' . esc_html($rule[7]) . '</strong>') . '<br>' . sprintf(/* translators: Scan result description. */ __('Description: %s', 'wordfence'), '<strong>' . esc_html($rule[3]) . '</strong>') . $extraMsg,
+										'data' => array_merge(array(
+											'file' => $file,
+											'realFile' => $record->realPath,
+											'shac' => $record->SHAC,
+											'highSense' => $options['scansEnabled_highSense']
+										), $dataForFile),
+									));
+								}
+								$regexMatched = true;
+								$this->scanEngine->recordMetric('malwareSignature', $rule[0], array('file' => substr($file, 0, 255), 'match' => substr($matchString, 0, 65535), 'before' => $beforeString, 'after' => $afterString, 'md5' => $record->newMD5, 'shac' => $record->SHAC), false);
+								break;
+							}
+
+							if ($forkObj->shouldFork()) {
+								$record->updateStoppedOn($rule[0], $currentPosition);
+								fclose($fh);
+
+								wordfenceMalwareScanFile::markCompleteBatch($completed);
+
+								wordfence::status(4, 'info', sprintf(/* translators: Malware signature rule ID. */ __('Forking during malware scan (%s) to ensure continuity.', 'wordfence'), $rule[0]));
+								$forkObj->fork(); //exits
+							}
 						}
+						if ($regexMatched) { break; }
 						if ($treatAsBinary && $options['scansEnabled_highSense']) {
 							$badStringFound = false;
 							if (strpos($data, $this->patterns['badstrings'][0]) !== false) {
@@ -487,9 +472,18 @@ class wordfenceScanner {
 					$this->writeScanningStatus();
 				}
 				
-				$record->markComplete();
-				$forkObj->forkIfNeeded();
+				$completed[] = $record;
+				$shouldFork = $forkObj->shouldFork();
+				if ($shouldFork || count($completed) > 100) {
+					wordfenceMalwareScanFile::markCompleteBatch($completed);
+					$completed = [];
+					if ($shouldFork) {
+						wordfence::status(4, 'info', __("Forking during malware scan to ensure continuity.", 'wordfence'));
+						$forkObj->fork();
+					}
+				}
 			}
+			wordfenceMalwareScanFile::markCompleteBatch($completed);
 		}
 		$this->writeScanningStatus();
 		if ($options['scansEnabled_fileContentsGSB']) {
@@ -578,20 +572,15 @@ class wordfenceScanner {
 				}
 			}
 		}
-		wfUtils::endProcessingFile();
+		wfUtils::afterProcessingFile();
 		
 		wordfence::status(4, 'info', __('Finalizing malware scan results', 'wordfence'));
-		$hashesToCheck = array();
-		foreach ($this->results as $r) {
-			$hashesToCheck[] = $r['data']['shac'];
-		}
 		
-		if (count($hashesToCheck) > 0) {
-			$safeFiles = $this->isSafeFile($hashesToCheck);
-			foreach ($this->results as $index => $value) {
-				if (in_array($value['data']['shac'], $safeFiles)) {
-					unset($this->results[$index]);
-				}
+		if (!empty($this->results)) {
+			$safeFiles = $this->scanEngine->isSafeFile(array_keys($this->resultFilesByShac));
+			foreach ($safeFiles as $hash) {
+				foreach ($this->resultFilesByShac[$hash] as $file)
+					unset($this->results[$file]);
 			}
 		}
 		
@@ -609,43 +598,22 @@ class wordfenceScanner {
 	}
 
 	protected function addResult($result) {
-		for ($i = 0; $i < sizeof($this->results); $i++) {
-			if ($this->results[$i]['type'] == 'file' && $this->results[$i]['data']['file'] == $result['data']['file']) {
-				if ($this->results[$i]['severity'] > $result['severity']) {
-					$this->results[$i] = $result; //Overwrite with more severe results
+		if (isset($result['data']['file'])) {
+			$file = $result['data']['file'];
+			$existing = array_key_exists($file, $this->results) ? $this->results[$file] : null;
+			if ($existing === null || $existing['severity'] > $result['severity']) {
+				$this->results[$file] = $result;
+				if (isset($result['data']['shac'])) {
+					$shac = $result['data']['shac'];
+					if (!array_key_exists($shac, $this->resultFilesByShac))
+						$this->resultFilesByShac[$shac] = [];
+					$this->resultFilesByShac[$shac][] = $file;
 				}
-				return;
 			}
 		}
-		//We don't have a results for this file so append
-		$this->results[] = $result;
-	}
-	
-	/**
-	 * Queries the is_safe_file endpoint. If provided an array, it does a bulk check and returns an array containing the
-	 * hashes that were marked as safe. If provided a string, it returns a boolean to indicate the safeness of the file.
-	 *
-	 * @param string|array $shac
-	 * @return array|bool
-	 */
-	private function isSafeFile($shac) {
-		if(! $this->api){
-			$this->api = new wfAPI($this->apiKey, $this->wordpressVersion);
+		else {
+			$this->results[] = $result;
 		}
-		
-		if (is_array($shac)) {
-			$result = $this->api->call('is_safe_file', array(), array('multipleSHAC' => json_encode($shac)));
-			if (isset($result['isSafe'])) {
-				return $result['isSafe'];
-			}
-			return array();
-		}
-		
-		$result = $this->api->call('is_safe_file', array(), array('shac' => strtoupper($shac)));
-		if(isset($result['isSafe']) && $result['isSafe'] == 1){
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -730,6 +698,7 @@ class wordfenceMalwareScanFile {
 	protected $_filename;
 	protected $_realPath;
 	protected $_filenameMD5;
+	protected $_filenameMD5Hex;
 	protected $_newMD5;
 	protected $_shac;
 	protected $_stoppedOnSignature;
@@ -751,7 +720,7 @@ class wordfenceMalwareScanFile {
 	
 	public static function files($limit = 500) {
 		$db = self::getDB();
-		$result = $db->querySelect("SELECT filename, real_path, filenameMD5, HEX(newMD5) AS newMD5, HEX(SHAC) AS SHAC, stoppedOnSignature, stoppedOnPosition, isSafeFile FROM " . wfDB::networkTable('wfFileMods') . " WHERE oldMD5 != newMD5 AND knownFile = 0 limit %d", $limit);
+		$result = $db->querySelect("SELECT filename, real_path, filenameMD5, HEX(newMD5) AS newMD5, HEX(SHAC) AS SHAC, stoppedOnSignature, stoppedOnPosition, isSafeFile FROM " . wfDB::networkTable('wfFileMods') . " WHERE oldMD5 != newMD5 AND knownFile = 0 AND isSafeFile != '1' LIMIT %d", $limit);
 		$files = array();
 		foreach ($result as $row) {
 			$files[] = new wordfenceMalwareScanFile($row['filename'], $row['real_path'], $row['filenameMD5'], $row['newMD5'], $row['SHAC'], $row['stoppedOnSignature'], $row['stoppedOnPosition'], $row['isSafeFile']);
@@ -769,6 +738,7 @@ class wordfenceMalwareScanFile {
 		$this->_filename = $filename;
 		$this->_realPath = $realPath;
 		$this->_filenameMD5 = $filenameMD5;
+		$this->_filenameMD5Hex = bin2hex($filenameMD5);
 		$this->_newMD5 = $newMD5;
 		$this->_shac = strtoupper($shac);
 		$this->_stoppedOnSignature = $stoppedOnSignature;
@@ -784,6 +754,8 @@ class wordfenceMalwareScanFile {
 				return $this->_realPath;
 			case 'filenameMD5':
 				return $this->_filenameMD5;
+			case 'filenameMD5Hex':
+				return $this->_filenameMD5Hex;
 			case 'newMD5':
 				return $this->_newMD5;
 			case 'SHAC':
@@ -800,34 +772,36 @@ class wordfenceMalwareScanFile {
 	public function __toString() {
 		return "Record [filename: {$this->filename}, realPath: {$this->realPath}, filenameMD5: {$this->filenameMD5}, newMD5: {$this->newMD5}, stoppedOnSignature: {$this->stoppedOnSignature}, stoppedOnPosition: {$this->stoppedOnPosition}]";
 	}
-	
-	public function markComplete() {
+
+	public static function markCompleteBatch($records) {
+		if (empty($records))
+			return;
 		$db = self::getDB();
-		$db->queryWrite("UPDATE " . wfDB::networkTable('wfFileMods') . " SET oldMD5 = newMD5 WHERE filenameMD5 = '%s'", $this->filenameMD5); //A way to mark as scanned so that if we come back from a sleep we don't rescan this one.
+		$db->update(
+			wfDB::networkTable('wfFileMods'),
+			[
+				'oldMD5' => 'newMD5'
+			],
+			[
+				'filenameMD5' => array_map(function($record) { return $record->filenameMD5Hex; }, $records)
+			],
+			[
+				'filenameMD5' => 'UNHEX(%s)'
+			]
+		);
 	}
 	
 	public function updateStoppedOn($signature, $position) {
 		$this->_stoppedOnSignature = $signature;
 		$this->_stoppedOnPosition = $position;
 		$db = self::getDB();
-		$db->queryWrite("UPDATE " . wfDB::networkTable('wfFileMods') . " SET stoppedOnSignature = '%s', stoppedOnPosition = %d WHERE filenameMD5 = '%s'", $this->stoppedOnSignature, $this->stoppedOnPosition, $this->filenameMD5);
+		$db->queryWrite("UPDATE " . wfDB::networkTable('wfFileMods') . " SET stoppedOnSignature = '%s', stoppedOnPosition = %d WHERE filenameMD5 = UNHEX(%s)", $this->stoppedOnSignature, $this->stoppedOnPosition, $this->filenameMD5Hex);
 	}
 	
-	public function markSafe() {
-		$db = self::getDB();
-		$db->queryWrite("UPDATE " . wfDB::networkTable('wfFileMods') . " SET isSafeFile = '1' WHERE filenameMD5 = '%s'", $this->filenameMD5);
-		$this->isSafeFile = '1';
-	}
-	
-	public function markUnsafe() {
-		$db = self::getDB();
-		$db->queryWrite("UPDATE " . wfDB::networkTable('wfFileMods') . " SET isSafeFile = '0' WHERE filenameMD5 = '%s'", $this->filenameMD5);
-		$this->isSafeFile = '0';
-	}
-
 	public function getDisplayPath() {
 		if (preg_match('#(^|/)..(/|$)#', $this->filename))
 			return $this->realPath;
 		return $this->filename;
 	}
+
 }

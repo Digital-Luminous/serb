@@ -1,22 +1,16 @@
 === Search & Replace ===
-Contributors: inpsyde, Bueltge, derpixler, ChriCo, s-hinse
-Tags: search, replace, backup, import, sql, migrate, multisite
+Contributors: wp_media, krafit, Bueltge, derpixler, ChriCo, s-hinse
+Tags: search, replace, import, sql, migrate,
 Requires at least: 4.0
-Tested up to: 5.2
+Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 3.2.1
+Stable tag: 3.2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Search & Replace data in your database with WordPress admin, replace domains/URLs of your WordPress installation.
 
 == Description ==
-
-> **Note:** This plugin is not maintained.
-
-The code will stay inside the SVN and also on Github if you are interested.
-
-
 With Search & Replace you can search for everything and replace this with everything **but before** you do this you can easily **create** a simple **database backup** and restore it.
 
 For avoiding problem please keep in mind that this plugin search and replace strictly what is specified in "Replace With".
@@ -39,7 +33,7 @@ Our goal with this plugin is to give you a good solution for manipulating your d
 
 > **Note:** This plugin requires PHP 5.6 or higher to be activated.
 
-[**Checkout our GitHub Repository**](https://github.com/inpsyde/search-and-replace)
+[**Checkout our GitHub Repository**](https://github.com/wp-media/search-and-replace)
 
 = Features =
 - Search & replace data in your WordPress database
@@ -51,8 +45,8 @@ Our goal with this plugin is to give you a good solution for manipulating your d
 - WordPress Multisite support
 - Localized and ready for your own language
 
-= Crafted by Inpsyde =
-The team at [Inpsyde](https://inpsyde.com) is engineering the web and WordPress since 2006.
+= Crafted by WP Media =
+**Made by [WP Media](https://wp-media.me)**.
 
 = Donation? =
 You want to donate - we prefer a [positive review](https://wordpress.org/support/view/plugin-reviews/search-and-replace?rate=5#postform), not more.
@@ -70,24 +64,32 @@ You want to donate - we prefer a [positive review](https://wordpress.org/support
 5. Result screen after search or search and replace
 
 == Changelog ==
+= 3.2.3 (2024-08-26) =
+* Fix a vulnerability when deserializing objects from the database
+* Fix deprecation logs about optional parameters declared before required parameters
+
+= 3.2.2 (2024-05-16) =
+* Now owned by WP Media
+* Fixed potential time based SQL injection
+
 = 3.2.1 (2019-06-06) =
 * Update readme for tested up WP versions
-* Add check for replace function to get more solid replace for custom tables. [#132](https://github.com/inpsyde/search-and-replace/pull/132/files)
+* Add check for replace function to get more solid replace for custom tables. [#132](https://github.com/wp-media/search-and-replace/pull/132/files)
 * Fix small typos
 * Fix Throwable because we set as minimum php 5.6
 
 = 3.2.0 (2019-01-17) =
-* Added CSV format alternative for search/replace [#82](https://github.com/inpsyde/search-and-replace/issues/82).
+* Added CSV format alternative for search/replace [#82](https://github.com/wp-media/search-and-replace/issues/82).
 * Improve code structure, preparation for more solid UnitTests.
 * Improve Modal Table UI.
-* Added Multiline searching [#119](https://github.com/inpsyde/search-and-replace/issues/119).
+* Added Multiline searching [#119](https://github.com/wp-media/search-and-replace/issues/119).
 * Fix several issues to run always with php 5.6 to 7.2.
 
 = v3.1.2 (2016-12-31) =
 * hotfix: prevent declaration error with Requisite
 
 = v3.1.1 (2016-12-24) =
-* Refactor Plugin loading [#67](https://github.com/inpsyde/search-and-replace/issues/67)
+* Refactor Plugin loading [#67](https://github.com/wp-media/search-and-replace/issues/67)
 * Display error notice is the search value the current domain and save changes to Database selected
 
 = v3.1.0 (2016-02-07) =
@@ -95,14 +97,14 @@ You want to donate - we prefer a [positive review](https://wordpress.org/support
 * Prepared for localization (GlotPress)
 * Prevent doing idle prozesses if search & replace pattern the same
 * Implement better BigData handling.
-* Implement better tab and adminpage handling [#33](https://github.com/inpsyde/search-and-replace/issues/33)
-* Prepare the Plugin for localization, change Text-Domain.[#47](https://github.com/inpsyde/search-and-replace/issues/47)
-* Remove difference in wordings for buttons between descriptions.[#46](https://github.com/inpsyde/search-and-replace/issues/46)
+* Implement better tab and adminpage handling [#33](https://github.com/wp-media/search-and-replace/issues/33)
+* Prepare the Plugin for localization, change Text-Domain.[#47](https://github.com/wp-media/search-and-replace/issues/47)
+* Remove difference in wordings for buttons between descriptions.[#46](https://github.com/wp-media/search-and-replace/issues/46)
 
 = v3.0.1 (2016-02-09) =
-* Add support for Searchpattern with quotes. [#40](https://github.com/inpsyde/search-and-replace/issues/40)
-* Basic travis support for travis was added. [#38](https://github.com/inpsyde/search-and-replace/issues/38)
-* Fix Unittest [#37](https://github.com/inpsyde/search-and-replace/issues/37)
+* Add support for Searchpattern with quotes. [#40](https://github.com/wp-media/search-and-replace/issues/40)
+* Basic travis support for travis was added. [#38](https://github.com/wp-media/search-and-replace/issues/38)
+* Fix Unittest [#37](https://github.com/wp-media/search-and-replace/issues/37)
 
 = v3.0.0 (2016-01-29) =
 * Refactor the plugin, new requirements, goal and result.

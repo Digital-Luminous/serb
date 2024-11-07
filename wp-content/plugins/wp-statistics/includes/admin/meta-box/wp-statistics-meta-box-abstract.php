@@ -2,7 +2,9 @@
 
 namespace WP_STATISTICS\MetaBox;
 
+use WP_STATISTICS\Meta_Box;
 use WP_STATISTICS\TimeZone;
+use WP_STATISTICS\User;
 
 abstract class MetaBoxAbstract
 {
@@ -74,9 +76,14 @@ abstract class MetaBoxAbstract
             'to'                => self::$endDate,
             'type'              => self::$filterType,
             'filter'            => self::$dateFilter,
-            'filter_start_date' => wp_date('M j, Y', strtotime(self::$startDate)),
-            'filter_end_date'   => wp_date('M j, Y', strtotime(self::$endDate)),
+            'filter_start_date' => wp_date('j M Y', strtotime(self::$startDate)),
+            'filter_end_date'   => wp_date('j M Y', strtotime(self::$endDate)),
         ];
+
+        // save date filter
+        $metaboxKey = Meta_Box::getMetaBoxKeyByClassName(get_called_class());
+        User::saveDefaultDateFilter($metaboxKey, $defaults);
+
         $response = wp_parse_args($response, $defaults);
         return $response;
     }

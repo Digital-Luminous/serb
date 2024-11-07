@@ -1,3 +1,24 @@
+.statistics_page_wps_settings_page.wps_page  #TB_window {
+  top: 50%!important;
+  table{
+    width: 100%;
+    tr{
+      &:first-child{
+        td{
+          white-space: nowrap;
+        }
+      }
+      td{
+        word-break: break-word;
+        @media screen and (max-width: 650px) {
+          white-space: nowrap;
+          width: auto;
+        }
+      }
+    }
+  }
+}
+
 .wps_page #TB_window {
   max-height: 90vh;
   max-width: 98%;
@@ -6,7 +27,6 @@
   transform: translateY(-50%) translateX(-50%);
 
   #TB_ajaxContent {
-    height: auto !important;
     width: auto !important;
     max-width: 100% !important;
 
@@ -116,7 +136,12 @@
     }
   }
 }
-
+.statistics_page_wps_visitors_page.wps_page #TB_window{
+  overflow-y: auto;
+  #TB_ajaxContent{
+    overflow: visible;
+  }
+}
 .select2-search--dropdown .select2-search__field {
   padding: 0 12px !important;
   line-height: 36px !important;

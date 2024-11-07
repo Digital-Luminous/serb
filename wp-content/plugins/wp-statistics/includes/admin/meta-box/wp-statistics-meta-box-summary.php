@@ -2,6 +2,8 @@
 
 namespace WP_STATISTICS\MetaBox;
 
+use Exception;
+use WP_Statistics\Components\DateRange;
 use WP_STATISTICS\Helper;
 use WP_STATISTICS\Menus;
 use WP_STATISTICS\Option;
@@ -15,25 +17,20 @@ class summary
      *
      * @param array $args
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function get($args = array())
     {
-        return self::getSummaryHits(array('user-online', 'visitors', 'visits'));
-    }
+        /**
+         * Filters the args used from metabox for query stats
+         *
+         * @param array $args The args passed to query stats
+         * @since 14.2.1
+         *
+         */
+        $args = apply_filters('wp_statistics_meta_box_summary_args', $args);
 
-    /**
-     * Summary Meta Box Lang
-     *
-     * @return array
-     */
-    public static function lang()
-    {
-        return array(
-            'search_engine'     => __('Search Engine Referrals', 'wp-statistics'),
-            'current_time_date' => __('Current Time and Date', 'wp-statistics'),
-            'adjustment'        => __('(Adjustment)', 'wp-statistics')
-        );
+        return self::getSummaryHits(array('user-online', 'visitors', 'visits'));
     }
 
     /**
@@ -41,7 +38,7 @@ class summary
      *
      * @param array $component
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getSummaryHits($component = array())
     {
@@ -58,156 +55,174 @@ class summary
             if (Option::get('useronline')) {
                 $data['user_online'] = array(
                     'value' => wp_statistics_useronline(),
-                    'link'  => Menus::admin_url('online')
+                    'link'  => Menus::admin_url('wps_visitors_page', ['tab' => 'online'])
                 );
             }
         }
+
+        $is_realtime_active    = Helper::isAddOnActive('realtime-stats');
+        $realtime_button_class = $is_realtime_active ? 'wps-realtime-btn' : 'wps-realtime-btn disabled';
+        $realtime_button_title = $is_realtime_active ? 'Real-time stats are available! Click here to view.' : 'Real-Time add-on required to enable this feature';
+        $realtime_button_href  = $is_realtime_active ? Menus::admin_url('wp_statistics_realtime_stats') : WP_STATISTICS_SITE_URL . '/product/wp-statistics-realtime-stats/?utm_source=wp-statistics&utm_medium=link&utm_campaign=realtime';
+
+        $data['real_time_button'] = array(
+            'class' => esc_html__($realtime_button_class, 'wp-statistics'),
+            'title' => esc_html__($realtime_button_title, 'wp-statistics'),
+            'link'  => esc_url($realtime_button_href)
+        );
 
         // Get Visitors
         if (in_array('visitors', $component)) {
-            if (Option::get('visitors')) {
-                $data['visitors'] = array();
+            $data['visitors'] = array();
 
-                // Today
-                $data['visitors']['today'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo(0), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visitor('today', null, true))
-                );
+            // Today
+            $data['visitors']['today'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('today')),
+                'value' => number_format_i18n(wp_statistics_visitor('today', null, true))
+            );
 
-                // Yesterday
-                $data['visitors']['yesterday'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo(1), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visitor('yesterday', null, true))
-                );
+            // Yesterday
+            $data['visitors']['yesterday'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('yesterday')),
+                'value' => number_format_i18n(wp_statistics_visitor('yesterday', null, true))
+            );
 
-                // Last Week
-                $data['visitors']['last-week'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo(14), 'to' => TimeZone::getTimeAgo(7))),
-                    'value' => number_format_i18n(wp_statistics_visitor('last-week', null, true))
-                );
+            // This Week
+            $data['visitors']['this-week'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('this_week')),
+                'value' => number_format_i18n(wp_statistics_visitor('this-week', null, true))
+            );
 
-                // Week
-                $data['visitors']['week'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo(7), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visitor('week', null, true))
-                );
+            // Last Week
+            $data['visitors']['last-week'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('last_week')),
+                'value' => number_format_i18n(wp_statistics_visitor('last-week', null, true))
+            );
 
-                // Month
-                $data['visitors']['month'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo(30), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visitor('month', null, true))
-                );
+            // This Month
+            $data['visitors']['this-month'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('this_month')),
+                'value' => number_format_i18n(wp_statistics_visitor('this-month', null, true))
+            );
 
-                // 60 Days
-                $data['visitors']['60days'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo(60), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visitor('60days', null, true))
-                );
+            // Last Month
+            $data['visitors']['last-month'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('last_month')),
+                'value' => number_format_i18n(wp_statistics_visitor('last-month', null, true))
+            );
 
-                // 90 Days
-                $data['visitors']['90days'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo(90), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visitor('90days', null, true))
-                );
+            // 7 Days
+            $data['visitors']['7days'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('7days')),
+                'value' => number_format_i18n(wp_statistics_visitor('7days', null, true))
+            );
 
-                // Year
-                $data['visitors']['year'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo(365), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visitor('year', null, true))
-                );
+            // 30 Days
+            $data['visitors']['30days'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('30days')),
+                'value' => number_format_i18n(wp_statistics_visitor('30days', null, true))
+            );
 
-                // This Year
-                $data['visitors']['this-year'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getLocalDate('Y-m-d', strtotime(date('Y-01-01'))), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visitor('this-year', null, true))
-                );
+            // 90 Days
+            $data['visitors']['90days'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('90days')),
+                'value' => number_format_i18n(wp_statistics_visitor('90days', null, true))
+            );
 
-                // Last Year
-                $data['visitors']['last-year'] = array(
-                    'link'  => Menus::admin_url('visitors', array('from' => TimeZone::getTimeAgo((365 * 2)), 'to' => TimeZone::getTimeAgo(365))),
-                    'value' => number_format_i18n(wp_statistics_visitor('last-year', null, true))
-                );
+            // 6 Months
+            $data['visitors']['6months'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('6months')),
+                'value' => number_format_i18n(wp_statistics_visitor('6months', null, true))
+            );
 
-                // Total
-                $data['visitors']['total'] = array(
-                    'link'  => Menus::admin_url('visitors'),
-                    'value' => number_format_i18n(wp_statistics_visitor('total', null, true))
-                );
+            // This Year
+            $data['visitors']['this-year'] = array(
+                'link'  => Menus::admin_url('visitors', DateRange::get('this_year')),
+                'value' => number_format_i18n(wp_statistics_visitor('this-year', null, true))
+            );
 
-            }
+            // Total
+            $data['visitors']['total'] = array(
+                'link'  => Menus::admin_url('visitors'),
+                'value' => number_format_i18n(wp_statistics_visitor('total', null, true))
+            );
         }
 
-        // Get Visits
+        // Get Views
         if (in_array('visits', $component)) {
-            if (Option::get('visits')) {
-                $data['visits'] = array();
+            $data['visits'] = array();
 
-                // Today
-                $data['visits']['today'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo(0), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visit('today'))
-                );
+            // Today
+            $data['visits']['today'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('today'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('today'))
+            );
 
-                // Yesterday
-                $data['visits']['yesterday'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo(1), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visit('yesterday'))
-                );
+            // Yesterday
+            $data['visits']['yesterday'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('yesterday'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('yesterday'))
+            );
 
-                // Last Week
-                $data['visits']['last-week'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo(14), 'to' => TimeZone::getTimeAgo(7))),
-                    'value' => number_format_i18n(wp_statistics_visit('last-week'))
-                );
+            // This Week
+            $data['visits']['this-week'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('this_week'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('this-week'))
+            );
 
-                // Week
-                $data['visits']['week'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo(7), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visit('week'))
-                );
+            // Last Week
+            $data['visits']['last-week'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('last_week'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('last-week'))
+            );
 
-                // Month
-                $data['visits']['month'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo(30), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visit('month'))
-                );
+            // This Month
+            $data['visits']['this-month'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('this_month'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('this-month'))
+            );
 
-                // 60 Days
-                $data['visits']['60days'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo(60), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visit('60days'))
-                );
+            // Last Month
+            $data['visits']['last-month'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('last_month'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('last-month'))
+            );
 
-                // 90 Days
-                $data['visits']['90days'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo(90), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visit('90days'))
-                );
+            // 7 Days
+            $data['visits']['7days'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('7days'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('7days'))
+            );
 
-                // Year
-                $data['visits']['year'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo(365), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visit('year'))
-                );
+            // 30 Days
+            $data['visits']['30days'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('30days'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('30days'))
+            );
 
-                // This Year
-                $data['visits']['this-year'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getLocalDate('Y-m-d', strtotime(date('Y-01-01'))), 'to' => TimeZone::getCurrentDate("Y-m-d"))),
-                    'value' => number_format_i18n(wp_statistics_visit('this-year'))
-                );
+            // 90 Days
+            $data['visits']['90days'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('90days'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('90days'))
+            );
 
-                // Last Year
-                $data['visits']['last-year'] = array(
-                    'link'  => Menus::admin_url('hits', array('from' => TimeZone::getTimeAgo((365 * 2)), 'to' => TimeZone::getTimeAgo(365))),
-                    'value' => number_format_i18n(wp_statistics_visit('last-year'))
-                );
+            // 6 Months
+            $data['visits']['6months'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('6months'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('6months'))
+            );
 
-                // Total
-                $data['visits']['total'] = array(
-                    'link'  => Menus::admin_url('hits'),
-                    'value' => number_format_i18n(wp_statistics_visit('total'))
-                );
-            }
+            // This Year
+            $data['visits']['this-year'] = array(
+                'link'  => Menus::admin_url('visitors', array_merge(DateRange::get('this_year'), ['tab' => 'views'])),
+                'value' => number_format_i18n(wp_statistics_visit('this-year'))
+            );
+
+            // Total
+            $data['visits']['total'] = array(
+                'link'  => Menus::admin_url('visitors'),
+                'value' => number_format_i18n(wp_statistics_visit('total'))
+            );
         }
 
         // Get Search Engine Detail
@@ -223,7 +238,7 @@ class summary
 
                 // Push to List
                 $data['search-engine'][$key] = array(
-                    'name'      => __($value['name'], 'wp-statistics'),
+                    'name'      => sprintf(__('%s', 'wp-statistics'), $value['name']),
                     'logo'      => $value['logo_url'],
                     'today'     => number_format_i18n($today),
                     'yesterday' => number_format_i18n($yesterday)
@@ -255,6 +270,20 @@ class summary
         }
 
         return $data;
+    }
+
+    /**
+     * Summary Meta Box Lang
+     *
+     * @return array
+     */
+    public static function lang()
+    {
+        return array(
+            'search_engine'     => __('Overview of Search Engine Referrals', 'wp-statistics'),
+            'current_time_date' => __('Current Time and Date', 'wp-statistics'),
+            'adjustment'        => __('(Adjustment)', 'wp-statistics')
+        );
     }
 
 }

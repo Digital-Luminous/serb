@@ -2,6 +2,8 @@
 
 namespace WP_STATISTICS;
 
+use DateTimeZone;
+
 class TimeZone
 {
     /**
@@ -59,7 +61,7 @@ class TimeZone
      */
     public static function getLocalDate($format, $timestamp)
     {
-        return date($format, $timestamp + self::set_timezone());
+        return date($format, $timestamp + self::set_timezone()); // phpcs:ignore WordPress.DateTime.RestrictedFuncitons.date_date
     }
 
     /**
@@ -73,12 +75,12 @@ class TimeZone
     {
         if ($strtotime) {
             if ($relative) {
-                return date($format, strtotime("{$strtotime} day", $relative) + self::set_timezone());
+                return date($format, strtotime("{$strtotime} day", $relative) + self::set_timezone());  // phpcs:ignore WordPress.DateTime.RestrictedFuncitons.date_date
             } else {
-                return date($format, strtotime("{$strtotime} day") + self::set_timezone());
+                return date($format, strtotime("{$strtotime} day") + self::set_timezone());  // phpcs:ignore WordPress.DateTime.RestrictedFuncitons.date_date
             }
         } else {
-            return date($format, time() + self::set_timezone());
+            return date($format, time() + self::set_timezone());  // phpcs:ignore WordPress.DateTime.RestrictedFuncitons.date_date
         }
     }
 
@@ -95,12 +97,12 @@ class TimeZone
     {
         if ($strtotime) {
             if ($relative) {
-                return date($format, strtotime("{$strtotime} day", $relative));
+                return date($format, strtotime("{$strtotime} day", $relative));  // phpcs:ignore WordPress.DateTime.RestrictedFuncitons.date_date
             } else {
-                return date($format, strtotime("{$strtotime} day"));
+                return date($format, strtotime("{$strtotime} day"));  // phpcs:ignore WordPress.DateTime.RestrictedFuncitons.date_date
             }
         } else {
-            return date($format, time());
+            return date($format, time());  // phpcs:ignore WordPress.DateTime.RestrictedFuncitons.date_date
         }
     }
 
@@ -130,7 +132,11 @@ class TimeZone
      */
     public static function isValidDate($date)
     {
-        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date) and strtotime($date) != false) {
+        if (empty($date)) {
+            return false;
+        }
+
+        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date) && strtotime($date) !== false) {
             return true;
         }
         return false;
@@ -145,7 +151,7 @@ class TimeZone
      */
     public static function getTimeAgo($ago_days = 1, $format = 'Y-m-d')
     {
-        return date($format, strtotime("- " . $ago_days . " day", self::getCurrentTimestamp()));
+        return date($format, strtotime("- " . $ago_days . " day", self::getCurrentTimestamp()));  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
     }
 
     /**
@@ -179,7 +185,7 @@ class TimeZone
         $defaults = array(
             'from'   => '',
             'to'     => false,
-            'format' => "M j"
+            'format' => "j M"
         );
         $args     = wp_parse_args($args, $defaults);
         $list     = array();
@@ -188,7 +194,7 @@ class TimeZone
         $args['to'] = ($args['to'] === false ? self::getCurrentDate() : $args['to']);
 
         // Get List Of Day
-        $period = new \DatePeriod(new \DateTime($args['from']), new \DateInterval('P1D'), new \DateTime(date('Y-m-d', strtotime("+1 day", strtotime($args['to'])))));
+        $period = new \DatePeriod(new \DateTime($args['from']), new \DateInterval('P1D'), new \DateTime(date('Y-m-d', strtotime("+1 day", strtotime($args['to']))))); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
         foreach ($period as $key => $value) {
             $list[$value->format('Y-m-d')] = array(
                 'timestamp' => $value->format('U'),
@@ -202,46 +208,74 @@ class TimeZone
     public static function getDateFilters()
     {
         return [
-            'today'     => [
+            'today'      => [
                 'from' => self::getTimeAgo(0),
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            'yesterday' => [
+            'yesterday'  => [
                 'from' => self::getTimeAgo(1),
+                'to'   => self::getTimeAgo(1)
+            ],
+            'this_week' => [
+                'from' => date('Y-m-d', strtotime(Helper::getStartOfWeek() . ' this week')),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+                'to'   => date('Y-m-d', strtotime('next ' . Helper::getStartOfWeek()) - 1),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+            ],
+            'last_week' => [
+                'from' => date('Y-m-d', strtotime(Helper::getStartOfWeek() . ' last week')),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+                'to'   => date('Y-m-d', strtotime(Helper::getStartOfWeek() . ' this week') - 1),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+            ],
+            'this_month' => [
+                'from' => date('Y-m-d', strtotime('first day of this month')),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+                'to'   => date('Y-m-d', strtotime('last day of this month')),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+            ],
+            'last_month' => [
+                'from' => date('Y-m-d', strtotime('first day of previous month')),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+                'to'   => date('Y-m-d', strtotime('last day of previous month')),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+            ],
+            '2months_ago' => [
+                'from' => date('Y-m-d', strtotime('first day of -2 months')),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+                'to'   => date('Y-m-d', strtotime('last day of -2 months')),  // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
+            ],
+            '7days'      => [
+                'from' => self::getTimeAgo(6),
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            '7days'     => [
-                'from' => self::getTimeAgo(7),
+            '14days'     => [
+                'from' => self::getTimeAgo(13),
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            '14days'    => [
-                'from' => self::getTimeAgo(14),
+            '30days'     => [
+                'from' => self::getTimeAgo(29),
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            '30days'    => [
-                'from' => self::getTimeAgo(30),
+            '60days'     => [
+                'from' => self::getTimeAgo(59),
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            '60days'    => [
-                'from' => self::getTimeAgo(60),
+            '90days'     => [
+                'from' => self::getTimeAgo(89),
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            '90days'    => [
-                'from' => self::getTimeAgo(90),
+            '120days'    => [
+                'from' => self::getTimeAgo(119),
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            '120days'   => [
-                'from' => self::getTimeAgo(120),
+            '6months'    => [
+                'from' => date('Y-m-d', strtotime('-6 months')), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            '6months'   => [
-                'from' => self::getTimeAgo(180),
+            'year'       => [
+                'from' => date('Y-m-d', strtotime('-12 months')), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
-            'year'      => [
-                'from' => self::getTimeAgo(365),
+            'this_year'       => [
+                'from' => self::getCurrentDate("Y-01-01"),
                 'to'   => self::getCurrentDate("Y-m-d")
             ],
+            'last_year'       => [
+                'from' => self::getTimeAgo(365, "Y-01-01"),
+                'to'   => self::getTimeAgo(365, "Y-12-30")
+            ]
         ];
     }
 
@@ -254,6 +288,24 @@ class TimeZone
         }
 
         return $dateFilters['30days'];
+    }
+
+    /**
+     * Retrieve the country of a given timezone
+     * @param $timezone like: 'Europe/London'
+     * @return string
+     */
+    public static function getCountry($timezone)
+    {
+        $countryCode = false;
+        $timezones   = timezone_identifiers_list();
+
+        if (in_array($timezone, $timezones)) {
+            $location    = timezone_location_get(new DateTimeZone($timezone));
+            $countryCode = $location['country_code'];
+        }
+
+        return $countryCode;
     }
 
 }

@@ -4,20 +4,14 @@ body.toplevel_page_wps_overview_page {
     display: none !important;
   }
 
+  #wp-statistics-search-widget{
+    .inside,.wps-postbox-chart--data{
+      margin-top: 0!important;
+    }
+  }
 
   #side-sortables {
     .postbox {
-
-      .postbox-header {
-
-        @media screen and (min-width: 758px) and (max-width: 900px) {
-          padding: 4px 2px 4px 10px !important;
-        }
-
-        @media screen and (min-width: 900px) and (max-width: 1350px) {
-          padding: 4px 12px 4px 16px !important;
-        }
-      }
 
       .c-footer {
         @media screen and (min-width: 758px) and (max-width: 900px) {
@@ -83,45 +77,33 @@ body.toplevel_page_wps_overview_page {
   }
 }
 
-/* Overview ads */
-#wps_overview_ads_postbox .inside {
-  padding: 0 !important;
-  margin: 0;
-  line-height: 0;
-}
-
-#wps_overview_ads_postbox .inside a img {
-  width: 100%;
-  height: auto;
-}
-
-#wps_overview_ads_postbox .inside a:focus {
-  box-shadow: none;
-}
-
-#wps_overview_ads_postbox .inside .close-overview-ads {
-  position: absolute;
-  right: 0;
-  margin: 15px 20px;
-  opacity: 0;
-  transition: 1s all;
-}
-
-#wps_overview_ads_postbox .inside .close-overview-ads span.dashicons {
-  font-size: 21px;
-  color: #72777c;
-  cursor: pointer;
-}
-
-#wps_overview_ads_postbox .inside:hover .close-overview-ads {
-  opacity: 1;
-}
-
-#wps_overview_ads_postbox {
-  padding: 0;
-  overflow: hidden;
-}
-
 .toplevel_page_wps_overview_page #screen-meta-links {
-  margin-bottom: -30px;
+  position: absolute;
+  z-index: 2;
+  right: 0;
+}
+
+body.toplevel_page_wps_overview_page,
+#dashboard-widgets-wrap {
+
+  #wp-statistics-quickstats-widget , #wp-statistics-search-widget{
+    .o-wrap{
+      padding: 12px 24px !important;
+      padding-top: 0 !important;
+    }
+  }
+
+  .postbox-header:has(.wps-tooltip) {
+    h2.hndle {
+      display: block;
+      position: relative;
+
+      a.wps-tooltip {
+        display: inline-block;
+         position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
 }

@@ -273,12 +273,11 @@ class SupsysticTables_Tables_Model_Tables extends SupsysticTables_Core_BaseModel
 	public function sanitizeString($str) {
 			$allowedHtml = $this->getAllowedHtml();
 			if (!empty($str) && is_string($str)) {
-				$str = htmlspecialchars_decode((string)$str);
+                $str = htmlspecialchars_decode((string)$str, ENT_COMPAT);
 				$str = wp_kses($str, $allowedHtml);
 				$str = str_replace('"&#039;', "&#39;", $str);
 				$str = str_replace('&#039;"', "&#39;", $str);
-				$str = html_entity_decode($str);
-				//error_log('KSES: '.$str);
+                $str = html_entity_decode($str, ENT_COMPAT);
 			}
 			return $str;
 	}

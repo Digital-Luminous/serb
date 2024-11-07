@@ -4,16 +4,18 @@
  *
  * @package    wp2fa
  * @subpackage utils
- * @copyright  2023 WP White Security
+ * @copyright  2024 Melapress
  * @license    https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link       https://wordpress.org/plugins/wp-2fa/
  */
 
+declare(strict_types=1);
+
 namespace WP2FA\Utils;
 
 use WP2FA\Utils\Abstract_Migration;
-use \WP2FA\Utils\User_Utils as User_Utils;
-use WP2FA\Utils\Settings_Utils as Settings_Utils;
+use WP2FA\Utils\User_Utils;
+use WP2FA\Utils\Settings_Utils;
 
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
@@ -313,6 +315,38 @@ if ( ! class_exists( '\WP2FA\Utils\Migration' ) ) {
 			if ( \wp_next_scheduled( 'wp_2fa_check_grace_period_status' ) ) {
 				\wp_clear_scheduled_hook( 'wp_2fa_check_grace_period_status' );
 			}
+		}
+
+		/**
+		 * Migration for version upto 2.6.2
+		 *
+		 * @return void
+		 */
+		protected static function migrate_up_to_262() {
+
+			self::migrate_up_to_240();
+		}
+
+		/**
+		 * Migration for version upto 2.6.3
+		 *
+		 * @return void
+		 */
+		protected static function migrate_up_to_263() {
+
+			self::migrate_up_to_240();
+		}
+
+		/**
+		 * Migration for version upto 2.8.0
+		 *
+		 * @return void
+		 *
+		 * @since 2.8.0
+		 */
+		protected static function migrate_up_to_280() {
+
+			self::migrate_up_to_240();
 		}
 
 		/**

@@ -2,7 +2,8 @@
 
 namespace WP_STATISTICS\Api\v2;
 
-use WP_STATISTICS\Exclusion;
+use Exception;
+use WP_STATISTICS\Helper;
 use WP_STATISTICS\Hits;
 
 class Hit extends \WP_STATISTICS\RestAPI
@@ -36,8 +37,7 @@ class Hit extends \WP_STATISTICS\RestAPI
     public static function require_params_hit()
     {
         return array(
-            'track_all' => array('required' => true, 'type' => 'integer'),
-            'page_uri'  => array('required' => true, 'type' => 'string')
+            'page_uri' => array('required' => true, 'type' => 'string')
         );
     }
 
@@ -53,11 +53,11 @@ class Hit extends \WP_STATISTICS\RestAPI
         // Record WP Statistics when Cache is enable
         register_rest_route(self::$namespace, '/' . self::$endpoint, array(
             array(
-                'methods'             => \WP_REST_Server::READABLE,
+                'methods'             => \WP_REST_Server::CREATABLE,
                 'callback'            => array($this, 'hit_callback'),
                 'args'                => self::require_params_hit(),
                 'permission_callback' => function (\WP_REST_Request $request) {
-                    return true;
+                    return $this->checkSignature($request);
                 }
             )
         ));
@@ -66,19 +66,33 @@ class Hit extends \WP_STATISTICS\RestAPI
     /**
      * Record WP Statistics when Cache is enable
      *
-     * @param \WP_REST_Request $request
      * @return \WP_REST_Response
-     * @throws \Exception
+     * @throws Exception
      */
-    public function hit_callback(\WP_REST_Request $request)
+    public function hit_callback()
     {
-        // Start Record
-        Hits::record();
+        $statusCode = false;
 
-        $response = new \WP_REST_Response(array(
-            'status'  => true,
-            'message' => __('Visitor Hit recorded successfully.', 'wp-statistics'),
-        ), 200);
+        try {
+            Helper::validateHitRequest();
+            Hits::record();
+
+            $responseData['status'] = true;
+
+        } catch (Exception $e) {
+            $responseData['status'] = false;
+            $responseData['data']   = $e->getMessage();
+            $statusCode             = $e->getCode();
+        }
+
+        $response = rest_ensure_response($responseData);
+
+        /**
+         * Set the status code
+         */
+        if ($statusCode) {
+            $response->set_status($statusCode);
+        }
 
         /**
          * Set headers for the response
@@ -94,7 +108,6 @@ class Hit extends \WP_STATISTICS\RestAPI
             'Cache-Control' => 'no-cache',
         ));
 
-        // Return response
         return $response;
     }
 }

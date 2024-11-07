@@ -4,24 +4,21 @@
  *
  * @package    wp2fa
  * @subpackage settings
- * @copyright  2023 WP White Security
+ * @copyright  2024 Melapress
  * @license    https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link       https://wordpress.org/plugins/wp-2fa/
  */
 
 namespace WP2FA\Admin;
 
-use \WP2FA\WP2FA as WP2FA;
-use WP2FA\Utils\User_Utils;
-use WP2FA\Utils\Settings_Utils;
+use WP2FA\WP2FA;
 use WP2FA\Admin\SettingsPages\{
 	Settings_Page_Policies,
 	Settings_Page_General,
 	Settings_Page_Email
 };
-use WP2FA\Admin\Helpers\WP_Helper;
-use WP2FA\Admin\Helpers\User_Helper;
 use WP2FA\Admin\Controllers\Settings;
+use WP2FA\Utils\Settings_Utils;
 
 /**
  * Class for handling settings
@@ -35,20 +32,13 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 		const TOP_MENU_SLUG = 'wp-2fa-policies';
 
 		/**
-		 * Holds the status of the backup codes functionality
-		 *
-		 * @var bool[]
-		 */
-		private static $backup_codes_enabled = array();
-
-		/**
 		 * Create admin menu entry and settings page
 		 */
 		public static function create_settings_admin_menu() {
 			// Create admin menu item.
-			add_menu_page(
-				esc_html__( 'WP 2FA', 'wp-2fa' ),
-				esc_html__( 'WP 2FA', 'wp-2fa' ),
+			\add_menu_page(
+				\esc_html__( 'WP 2FA', 'wp-2fa' ),
+				\esc_html__( 'WP 2FA', 'wp-2fa' ),
 				'manage_options',
 				self::TOP_MENU_SLUG,
 				null,
@@ -56,50 +46,48 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 				81
 			);
 
-			$settings_policies    = new Settings_Page_Policies();
-
-			add_submenu_page(
+			\add_submenu_page(
 				self::TOP_MENU_SLUG,
-				esc_html__( '2FA Policies', 'wp-2fa' ),
-				esc_html__( '2FA Policies', 'wp-2fa' ),
+				\esc_html__( '2FA Policies', 'wp-2fa' ),
+				\esc_html__( '2FA Policies', 'wp-2fa' ),
 				'manage_options',
 				self::TOP_MENU_SLUG,
-				array( $settings_policies, 'render' ),
+				array( \WP2FA\Admin\SettingsPages\Settings_Page_Policies::class, 'render' ),
 				1
 			);
 
-			add_submenu_page(
+			\add_submenu_page(
 				self::TOP_MENU_SLUG,
-				esc_html__( 'WP 2FA Settings', 'wp-2fa' ),
-				esc_html__( 'Settings', 'wp-2fa' ),
+				\esc_html__( 'WP 2FA Settings', 'wp-2fa' ),
+				\esc_html__( 'Settings', 'wp-2fa' ),
 				'manage_options',
 				'wp-2fa-settings',
-				array( \WP2FA\Admin\Views\Settings_Page_Render::class, 'render' ),
+				array( \WP2FA\Admin\SettingsPages\Settings_Page_Render::class, 'render' ),
 				2
 			);
 
 			// Register our policy settings.
-			register_setting(
+			\register_setting(
 				WP_2FA_POLICY_SETTINGS_NAME,
 				WP_2FA_POLICY_SETTINGS_NAME,
-				array( $settings_policies, 'validate_and_sanitize' )
+				array( \WP2FA\Admin\SettingsPages\Settings_Page_Policies::class, 'validate_and_sanitize' )
 			);
 
 			// Register our white label settings.
-			register_setting(
+			\register_setting(
 				WP_2FA_WHITE_LABEL_SETTINGS_NAME,
 				WP_2FA_WHITE_LABEL_SETTINGS_NAME,
 				array( \WP2FA\Admin\SettingsPages\Settings_Page_White_Label::class, 'validate_and_sanitize' )
 			);
 
 			// Register our settings page.
-			register_setting(
+			\register_setting(
 				WP_2FA_SETTINGS_NAME,
 				WP_2FA_SETTINGS_NAME,
 				array( \WP2FA\Admin\SettingsPages\Settings_Page_General::class, 'validate_and_sanitize' )
 			);
 
-			register_setting(
+			\register_setting(
 				WP_2FA_EMAIL_SETTINGS_NAME,
 				WP_2FA_EMAIL_SETTINGS_NAME,
 				array( \WP2FA\Admin\SettingsPages\Settings_Page_Email::class, 'validate_and_sanitize' )
@@ -113,7 +101,9 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 			 *
 			 * @since 2.0.0
 			 */
-			do_action( WP_2FA_PREFIX . 'after_admin_menu_created', self::TOP_MENU_SLUG, false );
+			\do_action( WP_2FA_PREFIX . 'after_admin_menu_created', self::TOP_MENU_SLUG, false );
+
+			\add_action( WP_2FA_PREFIX . 'before_plugin_settings', array( __CLASS__, 'check_email' ) );
 		}
 
 		/**
@@ -121,9 +111,9 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 		 */
 		public static function create_settings_admin_menu_multisite() {
 			// Create admin menu item.
-			add_menu_page(
-				esc_html__( 'WP 2FA Settings', 'wp-2fa' ),
-				esc_html__( 'WP 2FA', 'wp-2fa' ),
+			\add_menu_page(
+				\esc_html__( 'WP 2FA Settings', 'wp-2fa' ),
+				\esc_html__( 'WP 2FA', 'wp-2fa' ),
 				'manage_options',
 				self::TOP_MENU_SLUG,
 				null,
@@ -131,25 +121,23 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 				81
 			);
 
-			$settings_policies = new Settings_Page_Policies();
-
-			add_submenu_page(
+			\add_submenu_page(
 				self::TOP_MENU_SLUG,
-				esc_html__( '2FA Policies', 'wp-2fa' ),
-				esc_html__( '2FA Policies', 'wp-2fa' ),
+				\esc_html__( '2FA Policies', 'wp-2fa' ),
+				\esc_html__( '2FA Policies', 'wp-2fa' ),
 				'manage_options',
 				self::TOP_MENU_SLUG,
-				array( $settings_policies, 'render' ),
+				array( \WP2FA\Admin\SettingsPages\Settings_Page_Policies::class, 'render' ),
 				1
 			);
 
-			add_submenu_page(
+			\add_submenu_page(
 				self::TOP_MENU_SLUG,
-				esc_html__( 'WP 2FA Settings', 'wp-2fa' ),
-				esc_html__( 'Settings', 'wp-2fa' ),
+				\esc_html__( 'WP 2FA Settings', 'wp-2fa' ),
+				\esc_html__( 'Settings', 'wp-2fa' ),
 				'manage_options',
 				'wp-2fa-settings',
-				array( \WP2FA\Admin\Views\Settings_Page_Render::class, 'render' ),
+				array( \WP2FA\Admin\SettingsPages\Settings_Page_Render::class, 'render' ),
 				2
 			);
 
@@ -161,175 +149,8 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 			 *
 			 * @since 2.0.0
 			 */
-			do_action( WP_2FA_PREFIX . 'after_admin_menu_created', self::TOP_MENU_SLUG, true );
+			\do_action( WP_2FA_PREFIX . 'after_admin_menu_created', self::TOP_MENU_SLUG, true );
 		}
-
-		/**
-		 * Get all users
-		 *
-		 * @SuppressWarnings(PHPMD.ExitExpression)
-		 */
-		public static function get_all_users() {
-			// Die if user does not have permission to view.
-			if ( ! current_user_can( 'manage_options' ) ) {
-				die( 'Access Denied.' );
-			}
-			// Filter $_GET array for security.
-			$get_array = filter_input_array( INPUT_GET );
-
-			// Die if nonce verification failed.
-			if ( ! wp_verify_nonce( sanitize_text_field( $get_array['wp_2fa_nonce'] ), 'wp-2fa-settings-nonce' ) ) {
-				die( esc_html__( 'Nonce verification failed.', 'wp-2fa' ) );
-			}
-
-			$users_args = array(
-				'fields' => array( 'ID', 'user_login' ),
-			);
-			if ( WP_Helper::is_multisite() ) {
-				$users_args['blog_id'] = 0;
-			}
-			$users_data = User_Utils::get_all_user_ids_and_login_names( 'query', $users_args );
-
-			// Create final array which we will fill in below.
-			$users = array();
-
-			foreach ( $users_data as $user ) {
-				if ( strpos( $user['user_login'], $get_array['term'] ) !== false ) {
-					array_push(
-						$users,
-						array(
-							'value' => $user['user_login'],
-							'label' => $user['user_login'],
-						)
-					);
-				}
-			}
-
-			echo wp_json_encode( $users );
-			exit;
-		}
-
-		/**
-		 * Get all network sites
-		 *
-		 * @SuppressWarnings(PHPMD.ExitExpression)
-		 */
-		public static function get_all_network_sites() {
-			// Die if user does not have permission to view.
-			if ( ! current_user_can( 'manage_options' ) ) {
-				die( 'Access Denied.' );
-			}
-			// Filter $_GET array for security.
-			$get_array = filter_input_array( INPUT_GET );
-			// Die if nonce verification failed.
-			if ( ! wp_verify_nonce( sanitize_text_field( $get_array['wp_2fa_nonce'] ), 'wp-2fa-settings-nonce' ) ) {
-				die( esc_html__( 'Nonce verification failed.', 'wp-2fa' ) );
-			}
-			// Fetch sites.
-			$sites_found = array();
-
-			foreach ( get_sites() as $site ) {
-				$subsite_id                  = get_object_vars( $site )['blog_id'];
-				$subsite_name                = get_blog_details( $subsite_id )->blogname;
-				$site_details                = '';
-				$site_details[ $subsite_id ] = $subsite_name;
-				if ( false !== stripos( $subsite_name, $get_array['term'] ) ) {
-					array_push(
-						$sites_found,
-						array(
-							'label' => $subsite_id,
-							'value' => $subsite_name,
-						)
-					);
-				}
-			}
-			echo wp_json_encode( $sites_found );
-			exit;
-		}
-
-		/**
-		 * Unlock users accounts if they have overrun grace period
-		 *
-		 * @param  int $user_id User ID.
-		 *
-		 * @SuppressWarnings(PHPMD.ExitExpression)
-		 */
-		public static function unlock_account( $user_id ) {
-			// Die if user does not have permission to view.
-			if ( ! current_user_can( 'manage_options' ) ) {
-				die( 'Access Denied.' );
-			}
-
-			$grace_period             = WP2FA::get_wp2fa_setting( 'grace-period' );
-			$grace_period_denominator = WP2FA::get_wp2fa_setting( 'grace-period-denominator' );
-			$create_a_string          = $grace_period . ' ' . $grace_period_denominator;
-			// Turn that string into a time.
-			$grace_expiry = strtotime( $create_a_string );
-
-			// Filter $_GET array for security.
-			$get_array = filter_input_array( INPUT_GET );
-			$nonce     = sanitize_text_field( $get_array['wp_2fa_nonce'] );
-
-			// Die if nonce verification failed.
-			if ( ! wp_verify_nonce( $nonce, 'wp-2fa-unlock-account-nonce' ) ) {
-				die( esc_html__( 'Nonce verification failed.', 'wp-2fa' ) );
-			}
-
-			if ( isset( $get_array['user_id'] ) ) {
-				global $wpdb;
-				$wpdb->query( // phpcs:ignore
-					$wpdb->prepare(
-						"
-			   DELETE FROM $wpdb->usermeta
-				 WHERE user_id = %d
-				 AND meta_key IN ( %s, %s )
-			   ",
-						array(
-							intval( $get_array['user_id'] ),
-							User_Helper::USER_GRACE_KEY,
-							WP_2FA_PREFIX . 'locked_account_notification',
-						)
-					)
-				);
-				User_Helper::set_user_expiry_date( $grace_expiry, intval( $get_array['user_id'] ) );
-				self::send_account_unlocked_email( intval( $get_array['user_id'] ) );
-				add_action( 'admin_notices', array( __CLASS__, 'user_unlocked_notice' ) );
-			}
-		}
-
-		/**
-		 * Remove user 2fa config
-		 *
-		 * @param  int $user_id User ID.
-		 *
-		 * @SuppressWarnings(PHPMD.ExitExpression)
-		 */
-		public static function remove_user_2fa( $user_id ) {
-			// Filter $_GET array for security.
-			$get_array = filter_input_array( INPUT_GET );
-			$nonce     = sanitize_text_field( $get_array['wp_2fa_nonce'] );
-
-			if ( ! wp_verify_nonce( $nonce, 'wp-2fa-remove-user-2fa-nonce' ) ) {
-				die( esc_html__( 'Nonce verification failed.', 'wp-2fa' ) );
-			}
-
-			if ( isset( $get_array['user_id'] ) ) {
-				$user_id = intval( $get_array['user_id'] );
-
-				if ( ! current_user_can( 'manage_options' ) && get_current_user_id() !== $user_id ) {
-					return;
-				}
-
-				User_Helper::remove_2fa_for_user( $user_id );
-
-				if ( isset( $get_array['admin_reset'] ) ) {
-					add_action( 'admin_notices', array( __CLASS__, 'admin_deleted_2fa_notice' ) );
-				} else {
-					add_action( 'admin_notices', array( __CLASS__, 'user_deleted_2fa_notice' ) );
-				}
-			}
-		}
-
 		/**
 		 * Send account unlocked notification via email.
 		 *
@@ -385,10 +206,10 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 		public static function add_plugin_action_links( $links ) {
 			// add link to the external free trial page in free version and also in premium version if license is not active.
 			if ( ! function_exists( 'wp2fa_freemius' ) || ! wp2fa_freemius()->has_active_valid_license() ) {
-				$trial_link = 'https://wp2fa.io/get-wp-2fa-premium-trial/?utm_source=plugin&utm_medium=referral&utm_campaign=WP2FA';
+				$trial_link = 'https://melapress.com/wordpress-2fa/pricing/?utm_source=plugin&utm_medium=link&utm_campaign=wp2fa';
 				$links      = array_merge(
 					array(
-						'<a style="font-weight:bold" href="' . $trial_link . '" target="_blank">' . __( 'Free 14-day Premium Trial', 'wp-2fa' ) . '</a>',
+						'<a style="font-weight:bold" href="' . $trial_link . '" target="_blank">' . __( 'Upgrade to Premium', 'wp-2fa' ) . '</a>',
 					),
 					$links
 				);
@@ -398,54 +219,12 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 			$url   = Settings::get_settings_page_link();
 			$links = array_merge(
 				array(
-					'<a href="' . esc_url( $url ) . '">' . esc_html__( 'Configure 2FA Settings', 'wp-2fa' ) . '</a>',
+					'<a href="' . \esc_url( $url ) . '">' . \esc_html__( 'Configure 2FA Settings', 'wp-2fa' ) . '</a>',
 				),
 				$links
 			);
 
 			return $links;
-		}
-
-		/**
-		 * User unlocked notice.
-		 */
-		public static function user_unlocked_notice() {
-			?>
-			<div class="notice notice-success is-dismissible">
-				<p><?php esc_html_e( 'User account successfully unlocked. User can login again.', 'wp-2fa' ); ?></p>
-				<button type="button" class="notice-dismiss">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
-				</button>
-			</div>
-			<?php
-		}
-
-		/**
-		 * User deleted 2FA settings notification
-		 */
-		public static function user_deleted_2fa_notice() {
-			?>
-			<div class="notice notice-success is-dismissible">
-				<p><?php esc_html_e( 'Your 2FA settings have been removed.', 'wp-2fa' ); ?></p>
-				<button type="button" class="notice-dismiss">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
-				</button>
-			</div>
-			<?php
-		}
-
-		/**
-		 * Admin deleted user 2FA settings notification
-		 */
-		public static function admin_deleted_2fa_notice() {
-			?>
-			<div class="notice notice-success is-dismissible">
-				<p><?php esc_html_e( 'User 2FA settings have been removed.', 'wp-2fa' ); ?></p>
-				<button type="button" class="notice-dismiss">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
-				</button>
-			</div>
-			<?php
 		}
 
 		/**
@@ -457,9 +236,7 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 		 */
 		public static function update_wp2fa_network_options() {
 
-			$settings_policies = new Settings_Page_Policies();
-
-			$settings_policies->update_wp2fa_network_options();
+			Settings_Page_Policies::update_wp2fa_network_options();
 
 			Settings_Page_General::update_wp2fa_network_options();
 
@@ -484,12 +261,12 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 		 * These are used instead of add_settings_error which in a network site. Used to show if settings have been updated or failed.
 		 */
 		public static function settings_saved_network_admin_notice() {
-			if ( isset( $_GET['wp_2fa_network_settings_updated'] ) && 'true' === $_GET['wp_2fa_network_settings_updated'] ) { // phpcs:ignore
+			if ( isset( $_GET['wp_2fa_network_settings_updated'] ) && 'true' === $_GET['wp_2fa_network_settings_updated'] ) {
 				?>
 			<div class="notice notice-success is-dismissible">
-				<p><?php esc_html_e( '2FA Settings Updated', 'wp-2fa' ); ?></p>
+				<p><?php \esc_html_e( '2FA Settings Updated', 'wp-2fa' ); ?></p>
 				<button type="button" class="notice-dismiss">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
+					<span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
 				</button>
 			</div>
 				<?php
@@ -499,17 +276,18 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 			<div class="notice notice-error is-dismissible">
 				<?php
 				if ( isset( $_GET['wp_2fa_network_settings_custom_error_message'] ) ) { // phpcs:ignore
+					$error = \sanitize_text_field( \wp_unslash( $_GET['wp_2fa_network_settings_custom_error_message'] ) );
 					?>
-					<p><?php echo \wp_unslash( $_GET['wp_2fa_network_settings_custom_error_message'] ); // phpcs:ignore ?></p>
+					<p><?php echo \esc_attr( \esc_url_raw( \urldecode_deep( $error ) ) ); ?></p>
 					<button type="button" class="notice-dismiss">
-						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
+						<span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
 					</button>
 					<?php
 				} else {
 					?>
-				<p><?php esc_html_e( 'Please ensure both custom email address and display name are provided.', 'wp-2fa' ); ?></p>
+				<p><?php \esc_html_e( 'Please ensure both custom email address and display name are provided.', 'wp-2fa' ); ?></p>
 				<button type="button" class="notice-dismiss">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
+					<span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
 				</button>
 					<?php
 				}
@@ -520,9 +298,19 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 			if ( isset( $_GET['wp_2fa_network_settings_error'] ) ) { // phpcs:ignore
 				?>
 			<div class="notice notice-error is-dismissible">
-				<p><?php echo \esc_attr( \esc_url_raw( \urldecode_deep( \wp_unslash( $_GET['wp_2fa_network_settings_error'] ) ) ) ); // phpcs:ignore ?></p>
+				<?php
+					$error = \sanitize_text_field( \wp_unslash( $_GET['wp_2fa_network_settings_error'] ) );
+
+				if ( true === \strpos( $error, 'http' ) ) {
+					?>
+				<p><?php echo \esc_attr( \esc_url_raw( \urldecode_deep( $error ) ) ); ?></p>
+					<?php
+				} else {
+					?>
+				<p><?php echo \esc_attr( ( $error ) ); ?></p>
+				<?php } ?>
 				<button type="button" class="notice-dismiss">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
+					<span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
 				</button>
 			</div>
 				<?php
@@ -537,7 +325,7 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 		 * @since 2.0.0
 		 */
 		public static function settings_saved_admin_notice() {
-			if ( isset( $_GET['page'] ) && 0 === strpos( $_GET['page'], 'wp-2fa-' ) ) {
+			if ( isset( $_GET['page'] ) && 0 === strpos( \sanitize_text_field( \wp_unslash( $_GET['page'] ) ), 'wp-2fa-' ) ) {
 				if ( isset( $_GET['settings-updated'] ) && 'true' === $_GET['settings-updated'] ) {
 					$wp_settings_errors = get_settings_errors();
 
@@ -547,7 +335,7 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 					<div class="notice notice-<?php echo \esc_attr( $error['type'] ); ?> is-dismissible">
 						<p><?php echo \esc_html( $error['message'] ); ?></p>
 						<button type="button" class="notice-dismiss">
-							<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
+							<span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
 						</button>
 					</div>
 							<?php
@@ -555,9 +343,9 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 					} else {
 						?>
 					<div class="notice notice-success is-dismissible">
-						<p><?php esc_html_e( '2FA Settings Updated', 'wp-2fa' ); ?></p>
+						<p><?php \esc_html_e( '2FA Settings Updated', 'wp-2fa' ); ?></p>
 						<button type="button" class="notice-dismiss">
-							<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
+							<span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
 						</button>
 					</div>
 						<?php
@@ -566,9 +354,9 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 				if ( isset( $_GET['settings-updated'] ) && 'false' === $_GET['settings-updated'] ) {
 					?>
 				<div class="notice notice-error is-dismissible">
-					<p><?php esc_html_e( 'Please ensure both custom email address and display name are provided.', 'wp-2fa' ); ?></p>
+					<p><?php \esc_html_e( 'Please ensure both custom email address and display name are provided.', 'wp-2fa' ); ?></p>
 					<button type="button" class="notice-dismiss">
-						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
+						<span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
 					</button>
 				</div>
 					<?php
@@ -576,9 +364,9 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 				if ( isset( $_GET['settings_error'] ) ) {
 					?>
 				<div class="notice notice-error is-dismissible">
-					<p><?php echo \esc_attr( \esc_url_raw( \urldecode_deep( \wp_unslash( $_GET['settings_error'] ) ) ) ); ?></p>
+					<p><?php echo \esc_attr( \esc_url_raw( \urldecode_deep( \sanitize_text_field( \wp_unslash( $_GET['settings_error'] ) ) ) ) ); ?></p>
 					<button type="button" class="notice-dismiss">
-						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
+						<span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'wp-2fa' ); ?></span>
 					</button>
 				</div>
 					<?php
@@ -621,12 +409,35 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 			if ( 'use-custom-email' === WP2FA::get_wp2fa_email_templates( 'email_from_setting' ) ) {
 				$headers .= 'From: ' . WP2FA::get_wp2fa_email_templates( 'custom_from_display_name' ) . ' <' . WP2FA::get_wp2fa_email_templates( 'custom_from_email_address' ) . '>' . "\r\n";
 			} else {
-				$headers .= 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>' . "\r\n";
+
+				$headers .= 'From: wp2fa <' . self::get_default_email_address() . '>' . "\r\n";
+				// $headers .= 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>' . "\r\n";
 			}
 
 			// Fire our email.
-			return wp_mail( $recipient_email, $subject, $message, $headers );
+			return wp_mail( $recipient_email, stripslashes_deep( html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' ) ), $message, $headers );
+		}
 
+		/**
+		 * Builds and returns the default email address used for the "from" email address when email is send
+		 *
+		 * @return string
+		 *
+		 * @since 2.6.4
+		 */
+		public static function get_default_email_address(): string {
+			$sitename   = wp_parse_url( network_home_url(), PHP_URL_HOST );
+			$from_email = 'wp2fa@';
+
+			if ( null !== $sitename ) {
+				if ( str_starts_with( $sitename, 'www.' ) ) {
+					$sitename = substr( $sitename, 4 );
+				}
+
+				$from_email .= $sitename;
+			}
+
+			return $from_email;
 		}
 
 		/**
@@ -665,28 +476,64 @@ if ( ! class_exists( '\WP2FA\Admin\Settings_Page' ) ) {
 		}
 
 		/**
-		 * Checks if the backup codes option is enabled for the role
+		 * Checks the email against the current domain and shows an error message if they do not match.
 		 *
-		 * @param string $role - The role name.
+		 * @return void
 		 *
-		 * @return bool
+		 * @since 2.6.0
 		 */
-		public static function are_backup_codes_enabled( $role = 'global' ) {
-
-			$role = ( is_null( $role ) || empty( $role ) ) ? 'global' : $role;
-
-			if ( ! isset( self::$backup_codes_enabled[ $role ] ) ) {
-				self::$backup_codes_enabled[ $role ] = false;
-
-				if ( 'global' === $role ) {
-					$setting_value = Settings::get_role_or_default_setting( 'backup_codes_enabled' );
-				} else {
-					$setting_value = Settings::get_role_or_default_setting( 'backup_codes_enabled', 'current', $role );
+		public static function check_email() {
+			$is_dismissed = (bool) Settings_Utils::get_option( 'dismiss_notice_mail_domain', false );
+			if ( ! $is_dismissed ) {
+				$admin_email = null;
+				if ( 'use-custom-email' === WP2FA::get_wp2fa_email_templates( 'email_from_setting' ) ) {
+					$admin_email = WP2FA::get_wp2fa_email_templates( 'custom_from_email_address' );
 				}
-				self::$backup_codes_enabled[ $role ] = Settings_Utils::string_to_bool( $setting_value );
+
+				if ( '' === trim( (string) $admin_email ) ) {
+					$email_settings_url = \esc_url(
+						add_query_arg(
+							array(
+								'page' => 'wp-2fa-settings',
+								'tab'  => 'email-settings',
+							),
+							network_admin_url( 'admin.php' )
+						)
+					);
+					?>
+					<div class="notice notice-error" style="padding-top: 10px; padding-bottom: 10px;">
+						<p class="description" ><?php \esc_html_e( 'By default, the plugin uses ', 'wp-2fa' ); ?> <b><?php echo \sanitize_email( self::get_default_email_address() ); ?></b> <?php \esc_html_e( 'as the "from address" when sending emails with the 2FA code for users to log in. Do you want to keep using this or change it?', 'wp-2fa' ); ?></p>
+						<p>
+							<a class="button button-primary" href="<?php echo \esc_url( $email_settings_url ); ?>"><?php \esc_html_e( 'Change it', 'wp-2fa' ); ?></a>
+							<a class="button button-secondary 2fa-email-notice" style="margin-left:20px" href="#">
+								<?php \esc_html_e( 'Keep using it', 'wp-2fa' ); ?>
+							</a>
+						</p>
+						
+						<?php wp_nonce_field( 'wp2fa_dismiss_notice_mail_domain', 'wp2fa_dismiss_notice_mail_domain', false ); ?>
+					</div>
+					<?php
+				} else {
+					Settings_Utils::update_option( 'dismiss_notice_mail_domain', true );
+				}
+			}
+		}
+
+		/**
+		 * Sets the email domain do not match setting as dismissed.
+		 *
+		 * @return void
+		 *
+		 * @since 2.6.0
+		 */
+		public static function dismiss_notice_mail_domain() {
+			// Verify nonce.
+			if ( isset( $_POST['nonce'] ) && \wp_verify_nonce( \sanitize_text_field( \wp_unslash( $_POST['nonce'] ) ), 'wp2fa_dismiss_notice_mail_domain' ) ) {
+				Settings_Utils::update_option( 'dismiss_notice_mail_domain', true );
+				die();
 			}
 
-			return self::$backup_codes_enabled[ $role ];
+			die( 'Nonce verification failed!' );
 		}
 	}
 }

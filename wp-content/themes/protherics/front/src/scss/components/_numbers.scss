@@ -4,6 +4,12 @@
     flex-wrap: wrap;
 }
 
+.c-numbers__wrap {
+    @include media(mobile, tablet) {
+        width: 84%;
+    }
+}
+
 .c-numbers .c-numbers__column {
     width: 50%;
 

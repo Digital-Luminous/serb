@@ -181,6 +181,11 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 }
 
 /**
+ * Custom shortcodes.
+ */
+require get_template_directory() . '/inc/shortcodes.php';
+
+/**
  * Custom scripts
  */
 require get_template_directory() . '/inc/scripts.php';

@@ -4,17 +4,16 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  padding: 32px 21px 0;
+  padding: 20px 24px 0;
 
   @media screen and (min-width: 450px) {
     flex-wrap: nowrap;
-    padding: 32px 32px 0;
   }
 }
 
 .c-footer__filter {
   position: relative;
-  z-index: 999;
+  z-index: 1;
 }
 
 .c-footer__more__link {
@@ -265,8 +264,6 @@
     border-bottom: 1px solid #aaa;
     font-weight: 500;
     font-size: 11px;
-    max-height: 28px;
-    height: 28px;
     background-color: #fff;
     color: #242A31;
 
@@ -326,6 +323,10 @@
     }
   }
 
+  .c-footer__filter.js-pages-date-range-picker {
+    overflow: hidden;
+  }
+
   .c-footer__filter__btn-group {
     svg {
       margin-right: 0;
@@ -336,4 +337,9 @@
   .wps-wrap input[type="text"].c-footer__filters__custom-date-input {
     right: 160px;
   }
+}
+
+.wps_page #wpfooter {
+  margin-left: 0;
+  position: absolute !important;
 }

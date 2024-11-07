@@ -400,7 +400,9 @@ class wfWAFStorageMySQL implements wfWAFStorageInterface {
 				}
 			}
 		} catch (wfWAFStorageEngineMySQLiException $e) {
-			error_log($e);
+			if (WFWAF_DEBUG) {
+				error_log($e);
+			}
 		}
 	}
 
@@ -570,6 +572,7 @@ class wfWAFStorageMySQL implements wfWAFStorageInterface {
 				'whitelistedIPs',
 				'howGetIPs',
 				'howGetIPs_trusted_proxies',
+				'howGetIPs_trusted_proxies_unified',
 				'other_WFNet',
 				'pluginABSPATH',
 				'serverIPs',

@@ -5,6 +5,10 @@
      class CPT_Compatibility
         {
          
+            /**
+            * Constructor
+            * 
+            */
             function __construct()
                 {
                     
@@ -13,13 +17,17 @@
                 }
                 
                 
-                
+            /**
+            * Initialisation function
+            *     
+            */
             function init()
                 {
                     
                     $CompatibilityFiles  =  array(
                                                     'the-events-calendar.php',
                                                     'LiteSpeed_Cache.php',
+                                                    'formidable.php'
                                                  
                                                     );
                     foreach( $CompatibilityFiles as $CompatibilityFile ) 

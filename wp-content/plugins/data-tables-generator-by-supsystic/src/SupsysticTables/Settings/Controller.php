@@ -27,7 +27,8 @@ class SupsysticTables_Settings_Controller extends SupsysticTables_Core_BaseContr
 	/**
 	 * @return RscDtgs_Http_Response
 	 */
-	public function getSettingsAction() {
+	public function getSettingsAction(RscDtgs_Http_Request $request) {
+		if (!$this->_checkNonce($request)) die();
 		$settings = get_option($this->getConfig()->get('db_prefix') . 'settings');
 		return $this->response(
 			RscDtgs_Http_Response::AJAX,

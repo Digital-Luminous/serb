@@ -37,7 +37,7 @@ if(typeof(SDT_DATA) == 'undefined') {
 
 				$.post(url, {
 						action: 'supsystic-tables',
-                  nonce: DTGS_NONCE,
+                        nonce: DTGS_NONCE,
 						route:  {
 							module: 'tables',
 							action: 'list'

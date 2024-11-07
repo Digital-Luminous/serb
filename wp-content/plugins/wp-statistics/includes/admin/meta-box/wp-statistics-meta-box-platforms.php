@@ -6,11 +6,12 @@ use WP_STATISTICS\DB;
 use WP_STATISTICS\Helper;
 use WP_STATISTICS\Menus;
 use WP_STATISTICS\TimeZone;
+use WP_STATISTICS\UserAgent;
 
 class platforms extends MetaBoxAbstract
 {
     /**
-     * Get Platforms Chart
+     * Get Operating Systems Chart
      *
      * @param array $arg
      * @return array
@@ -18,6 +19,15 @@ class platforms extends MetaBoxAbstract
      */
     public static function get($arg = array())
     {
+        /**
+         * Filters the args used from metabox for query stats
+         *
+         * @param array $args The args passed to query stats
+         * @since 14.2.1
+         *
+         */
+        $arg = apply_filters('wp_statistics_meta_box_platforms_args', $arg);
+
         global $wpdb;
 
         // Set Default Params
@@ -26,7 +36,7 @@ class platforms extends MetaBoxAbstract
             'from'   => '',
             'to'     => '',
             'order'  => '',
-            'number' => 10 // Get Max number of platform
+            'number' => 4 // Get Max number of platform
         );
         $args     = wp_parse_args($arg, $defaults);
 
@@ -42,17 +52,18 @@ class platforms extends MetaBoxAbstract
 
         // Set Default Value
         $total       = $count = 0;
-        $lists_value = $lists_name = array();
+        $lists_value = $lists_name = $lists_logos = array();
 
         $order_by = '';
         if ($args['order'] and in_array($args['order'], array('DESC', 'ASC', 'desc', 'asc'))) {
             $order_by = "ORDER BY `count` " . esc_sql($args['order']);
         }
 
-        $sql = $wpdb->prepare("SELECT platform, COUNT(*) as count FROM " . DB::table('visitor') . " WHERE platform != '" . _x('Unknown', 'Platform', 'wp-statistics') . "' AND `last_counter` BETWEEN %s AND %s GROUP BY platform {$order_by}", reset($days_time_list), end($days_time_list));
-
-        // Get List All Platforms
-        $list = $wpdb->get_results($sql, ARRAY_A);
+        // Get List All Operating Systems
+        $list = $wpdb->get_results(
+            $wpdb->prepare("SELECT platform, COUNT(*) as count FROM `" . DB::table('visitor') . "` WHERE `last_counter` BETWEEN %s AND %s GROUP BY platform {$order_by}", reset($days_time_list), end($days_time_list)),
+            ARRAY_A
+        );
 
         // Sort By Count
         Helper::SortByKeyValue($list, 'count');
@@ -62,31 +73,39 @@ class platforms extends MetaBoxAbstract
 
         // Push to array
         foreach ($platforms as $l) {
+            if (empty(trim($l['platform']))) continue;
 
-            if (trim($l['platform']) != "") {
+            // Sanitize Version name
+            $lists_name[] = sanitize_text_field($l['platform']);
 
-                // Sanitize Version name
-                $lists_name[] = sanitize_text_field($l['platform']);
+            $lists_logos[] = UserAgent::getPlatformLogo($l['platform']);
 
-                // Get List Count
-                $lists_value[] = (int)$l['count'];
+            // Get List Count
+            $lists_value[] = (int)$l['count'];
 
-                // Add to Total
-                $total += $l['count'];
-            }
+            // Add to Total
+            $total += $l['count'];
+        }
+
+        $others = array_slice($list, $args['number']);
+        if (!empty($others)) {
+            $lists_name[]   = __('Others', 'wp-statistics');
+            $lists_value[]  = array_sum(array_column($others, 'count'));
+            $total          += array_sum(array_column($others, 'count'));
         }
 
         // Set Title
         if (end($days_time_list) == TimeZone::getCurrentDate("Y-m-d")) {
-            $title = sprintf(__('%s Statistics in the last %s days', 'wp-statistics'), __('Platforms', 'wp-statistics'), self::$countDays);
+            $title = sprintf(__('Statistics for %1$s in the Past %2$s Days', 'wp-statistics'), __('Operating Systems', 'wp-statistics'), self::$countDays);
         } else {
-            $title = sprintf(__('%s Statistics from %s to %s', 'wp-statistics'), __('Platforms', 'wp-statistics'), $args['from'], $args['to']);
+            $title = sprintf(__('Statistics for %1$s Between %2$s and %3$s', 'wp-statistics'), __('Operating Systems', 'wp-statistics'), $args['from'], $args['to']);
         }
 
         // Prepare Response
         $response = array(
             'title'          => $title,
             'platform_name'  => $lists_name,
+            'platform_logos' => $lists_logos,
             'platform_value' => $lists_value,
             'info'           => array(
                 'visitor_page' => Menus::admin_url('visitors')

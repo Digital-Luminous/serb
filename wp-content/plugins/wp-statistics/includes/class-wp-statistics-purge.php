@@ -13,9 +13,11 @@ class Purge
         $historical_table = DB::table('historical');
 
         // If it's less than 30 days, don't do anything.
-        if ($purge_days > 30) {
+        if ($purge_days >= apply_filters('wp_statistics_schedule_db_maint_days', 30)) {
 
-            // Purge the visit data.
+            /**
+             * Purge the visit data.
+             */
             $table_name  = DB::table('visit');
             $date_string = TimeZone::getCurrentDate('Y-m-d', '-' . $purge_days);
 
@@ -38,17 +40,19 @@ class Purge
                     );
                     if (!$insert) {
                         if (!empty($wpdb->last_error)) {
-                            \WP_Statistics::log($wpdb->last_error);
+                            \WP_Statistics::log($wpdb->last_error, 'warning');
                         }
                     }
                 }
 
-                $result_string = sprintf(__('%s data older than %s days purged successfully.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
+                $result_string = sprintf(__('Data from %1$s Older Than %2$s Days Successfully Purged.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
             } else {
-                $result_string = sprintf(__('No records found to purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
+                $result_string = sprintf(__('No Records to Purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
             }
 
-            // Purge the visitors data.
+            /**
+             * Purge the visitors data.
+             */
             $table_name = DB::table('visitor');
 
             $result = $wpdb->query($wpdb->prepare("DELETE FROM {$table_name} WHERE `last_counter` < %s", $date_string));
@@ -68,38 +72,48 @@ class Purge
                     );
                     if (!$insert) {
                         if (!empty($wpdb->last_error)) {
-                            \WP_Statistics::log($wpdb->last_error);
+                            \WP_Statistics::log($wpdb->last_error, 'warning');
                         }
                     }
                 }
 
-                $result_string .= '<br>' . sprintf(__('%s data older than %s days purged successfully.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
+                // Delete relationship record
+                $table_name = DB::table('visitor_relationships');
+                $wpdb->query($wpdb->prepare("DELETE FROM {$table_name} WHERE `date` < %s", $date_string));
+
+                $result_string .= '<br>' . sprintf(__('Data from %1$s Older Than %2$s Days Successfully Purged.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
             } else {
-                $result_string .= '<br>' . sprintf(__('No records found to purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
+                $result_string .= '<br>' . sprintf(__('No Records to Purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
             }
 
-            // Purge the exclusions data.
+            /**
+             * Purge the exclusions data.
+             */
             $table_name = DB::table('exclusions');
 
             $result = $wpdb->query($wpdb->prepare("DELETE FROM {$table_name} WHERE `date` < %s", $date_string));
 
             if ($result) {
-                $result_string .= '<br>' . sprintf(__('%s data older than %s days purged successfully.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
+                $result_string .= '<br>' . sprintf(__('Data from %1$s Older Than %2$s Days Successfully Purged.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
             } else {
-                $result_string .= '<br>' . sprintf(__('No records found to purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
+                $result_string .= '<br>' . sprintf(__('No Records to Purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
             }
 
-            // Purge the search data.
+            /**
+             * Purge the search data.
+             */
             $table_name = DB::table('search');
             $result     = $wpdb->query($wpdb->prepare("DELETE FROM {$table_name} WHERE `last_counter` < %s", $date_string));
 
             if ($result) {
-                $result_string .= '<br>' . sprintf(__('%s data older than %s days purged successfully.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
+                $result_string .= '<br>' . sprintf(__('Data from %1$s Older Than %2$s Days Successfully Purged.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
             } else {
-                $result_string .= '<br>' . sprintf(__('No records found to purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
+                $result_string .= '<br>' . sprintf(__('No Records to Purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
             }
 
-            // Purge the pages data, this is more complex as we want to save the historical data per page.
+            /**
+             * Purge the pages data, this is more complex as we want to save the historical data per page.
+             */
             $table_name = DB::table('pages');
             $historical = 0;
 
@@ -145,30 +159,26 @@ class Purge
                         );
                         if (!$insert) {
                             if (!empty($wpdb->last_error)) {
-                                \WP_Statistics::log($wpdb->last_error);
+                                \WP_Statistics::log($wpdb->last_error, 'warning');
                             }
                         }
                     }
                 }
             }
 
-            // Now that we've done all of the required historical data storage, we can actually delete the data from the database.
+            /**
+             * Now that we've done all of the required historical data storage, we can actually delete the data from the database.
+             */
             $result = $wpdb->query($wpdb->prepare("DELETE FROM {$table_name} WHERE `date` < %s", $date_string));
 
             if ($result) {
-                $result_string .= '<br>' . sprintf(__('%s data older than %s days purged successfully.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
+                $result_string .= '<br>' . sprintf(__('Data from %1$s Older Than %2$s Days Successfully Purged.', 'wp-statistics'), '<code>' . $table_name . '</code>', '<code>' . $purge_days . '</code>');
             } else {
-                $result_string .= '<br>' . sprintf(__('No records found to purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
-            }
-
-            // Send Email
-            if (Option::get('prune_report') == true) {
-
-                Helper::send_mail(Option::getEmailNotification(), __('Database pruned on', 'wp-statistics') . ' ' . get_bloginfo('name'), $result_string, true,
-                    array("email_title" => __('Database pruned on', 'wp-statistics') . ' <a href="' . get_bloginfo('url') . '" target="_blank" style="text-decoration: underline; color: #999999; font-family: Nunito; font-size: 13px; font-weight: 400; line-height: 150%;">' . get_bloginfo('name') . '</a>'));
+                $result_string .= '<br>' . sprintf(__('No Records to Purge from %s!', 'wp-statistics'), '<code>' . $table_name . '</code>');
             }
 
             return $result_string;
+
         } else {
             return __('Please select a value over 30 days.', 'wp-statistics');
         }
@@ -214,21 +224,14 @@ class Purge
                 }
 
                 $result_string = sprintf(
-                    __('%s records purged successfully.', 'wp-statistics'),
+                    __('%s Records Successfully Purged.', 'wp-statistics'),
                     '<code>' . count($to_delete) . '</code>'
                 );
             } else {
-                $result_string = __('No visitors found to purge.', 'wp-statistics');
+                $result_string = __('No Visitor Records Found for Purging.', 'wp-statistics');
             }
         } else {
-            $result_string = __('Number of hits must be greater than or equal to 10!', 'wp-statistics');
-        }
-
-        // Send Email
-        if (Option::get('prune_report') == true) {
-
-            Helper::send_mail(Option::getEmailNotification(), __('Database pruned on', 'wp-statistics') . ' ' . get_bloginfo('name'), $result_string, true,
-                array("email_title" => __('Database pruned on', 'wp-statistics') . ' <a href="' . get_bloginfo('url') . '" target="_blank" style="text-decoration: underline; color: #999999; font-family: Nunito; font-size: 13px; font-weight: 400; line-height: 150%;">' . get_bloginfo('name') . '</a>'));
+            $result_string = __('Number of views must be greater than or equal to 10!', 'wp-statistics');
         }
 
         return $result_string;

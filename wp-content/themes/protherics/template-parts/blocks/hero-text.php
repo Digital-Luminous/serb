@@ -11,7 +11,7 @@
 			<?php if ( $img ) : ?>
 				<picture class="c-hero-text__media">
 					<source srcset="<?php echo esc_url( $img['url'] ); ?>" media="(min-width: 768px)" />
-					<img class="c-hero-text__image" src="<?php echo $mobile_bg['url'] ? esc_url( $mobile_bg['url'] ) : esc_url( $img['url'] ); ?>" alt="<?php echo esc_attr( $img['alt'] ); ?>">
+					<img class="c-hero-text__image" src="<?php echo isset($mobile_bg['url']) ? esc_url( $mobile_bg['url'] ) : esc_url( $img['url'] ); ?>" alt="<?php echo esc_attr( $img['alt'] ); ?>">
 				</picture>
 			<?php endif; ?>
 			<?php if ( $text ) : ?>

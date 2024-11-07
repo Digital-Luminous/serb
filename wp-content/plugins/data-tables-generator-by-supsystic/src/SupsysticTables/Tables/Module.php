@@ -444,8 +444,42 @@ class SupsysticTables_Tables_Module extends SupsysticTables_Core_BaseModule
 			$this->tableSearch = '';
 		}
 
+		$showLoveLink = '';
+		$settings = get_option('supsystic_tbl_settings');
+		if (empty($settings['remove_love_link']) || !$environment->isPro()) {
+			if (empty(get_option('supsystic_tables_love_link_title'))) {
+				$loveLinkTitles = array(
+					'WordPress Data Table Plugin',
+					'WordPress Tables Plugin',
+					'Wordpress Table Plugin',
+					'WordPress Data Table',
+					'WordPress Tables',
+					'WordPress Table',
+					'WP DataTables',
+					'WP Data Tables',
+					'Table Plugin',
+					'WP Table Builder',
+					'WordPress Responsive Table',
+				);
+				$randomTitle = array_rand($loveLinkTitles, 1);
+				$randomTitleVal = $loveLinkTitles[$randomTitle];
+				update_option('supsystic_tables_love_link_title', $randomTitleVal);
+			}
+			$linkTitle = get_option('supsystic_tables_love_link_title');
+			if (!empty($settings['add_love_link'])) {
+				$showLoveLink = $twig->render('@tables/lovelink/show.twig', array('linkTitle' => $linkTitle));
+			} else {
+				$showLoveLink = $twig->render('@tables/lovelink/showhidden.twig', array('linkTitle' => $linkTitle));
+			}
+		}
+		if ( ( !empty($settings['remove_love_link']) && $environment->isPro() ) || !$this->checkLoveLink()) {
+			$showLoveLink = '';
+		}
+
 		$renderData = $twig->render($this->getShortcodeTemplate(), array('table' => $table, 'is_feed' => is_feed()));
         $renderData = preg_replace('/\s+/iu', ' ', trim($renderData));
+
+		$renderData = $renderData . $showLoveLink;
 
         $tablesStyles = is_array($this->_tablesStyles) ? $this->_tablesStyles : array($this->_tablesStyles);
 		if(!$table->isSSP && !in_array($table->view_id, $tablesStyles)) {
@@ -464,6 +498,42 @@ class SupsysticTables_Tables_Module extends SupsysticTables_Core_BaseModule
     private function _getTblLink($id) {
         return "<a class='tblEditLink' href=".$this->getController()->generateUrl('tables', 'view', array( 'id' => $id, 'nonce' => wp_create_nonce('dtgs_nonce') ) )." style='display:inline-block;'>". $this->getEnvironment()->translate('Edit Table'). "</a>";
     }
+
+	public function _checkLoveLink() {
+		$apiUrl = 'https://supsystic.com/wp-admin/admin-ajax.php';
+		$reqUrl = $apiUrl . '?action=show_love_link';
+		$data = array(
+		   'body' => array(
+			  'key' => 'kJ#f3(FjkF9fasd124t5t589u9d4389r3r3R#2asdas3(#R03r#(r#t-4t5t589u9d4389r3r3R#$%lfdj',
+			  'site_url' => get_bloginfo('wpurl'),
+		   ),
+		);
+		$response = wp_remote_post($reqUrl, $data);
+		$responseData = json_decode(wp_remote_retrieve_body( $response ), TRUE );
+		if (!empty($responseData['data']['show'])) {
+		   update_option('supsystic_tables_show_love_link', true);
+		} else {
+		   update_option('supsystic_tables_show_love_link', false);
+		}
+	 }
+	 public function checkLoveLink() {
+		if (!empty(get_option('supsystic_tables_last_check_love_link'))) {
+		   $time = time();
+		   $prevSendTime = (int)get_option('supsystic_tables_last_check_love_link');
+		   if ($prevSendTime && ($time - $prevSendTime) > 24 * 60 * 60) {
+			  update_option('supsystic_tables_last_check_love_link', time());
+			  $this->_checkLoveLink();
+		   }
+		} else {
+		   $this->_checkLoveLink();
+		   update_option('supsystic_tables_last_check_love_link', time());
+		}
+		if (!empty(get_option('supsystic_tables_show_love_link'))) {
+		   return true;
+		}
+		return false;
+	 }
+  
 
 	public function getMirrorFooter($table) {
 		$footer = array();
@@ -1383,6 +1453,8 @@ class SupsysticTables_Tables_Module extends SupsysticTables_Core_BaseModule
 			$ui->createScript('supsystic-tables-ace-editor-js')
 				->setHookName($hookName)
 				->setModuleSource($this, 'js/ace/ace.js')
+				->setCachingAllowed(true)
+				->setVersion('1.2.5')
 		);
 
 		$ui->add(

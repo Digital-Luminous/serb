@@ -2,7 +2,11 @@
 
 namespace WP_STATISTICS;
 
-class optimization_page
+use WP_Statistics\Async\BackgroundProcessFactory;
+use WP_Statistics\Components\Singleton;
+use WP_Statistics\Service\Admin\NoticeHandler\Notice;
+
+class optimization_page extends Singleton
 {
 
     public function __construct()
@@ -24,7 +28,7 @@ class optimization_page
         $args['list_table'] = DB::table('all');
         $args['result']     = DB::getTableRows();
 
-        Admin_Template::get_template(array('layout/header', 'layout/tabs-optimization', 'layout/title-after', 'optimization', 'layout/footer'), $args);
+        Admin_Template::get_template(array('layout/header', 'layout/title-after', 'optimization', 'layout/footer'), $args);
     }
 
     public function processForms()
@@ -33,7 +37,7 @@ class optimization_page
 
         // Check Access Level
         if (Menus::in_page('optimization') and !User::Access('manage')) {
-            wp_die(__('You do not have sufficient permissions to access this page.'));
+            wp_die(__('You do not have sufficient permissions to access this page.')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped	
         }
 
         // Check Wp Nonce and Require Field
@@ -43,84 +47,22 @@ class optimization_page
 
         // Update All GEO IP Country
         if (isset($_POST['submit'], $_POST['populate-submit']) && intval($_POST['populate-submit']) == 1) {
-            $result = GeoIP::Update_GeoIP_Visitor();
+            // First download/update the GeoIP database
+            GeoIP::download('update');
+
+            // Update GeoIP data for visitors with incomplete information
+            BackgroundProcessFactory::batchUpdateIncompleteGeoIpForVisitors();
 
             // Show Notice
-            Helper::addAdminNotice($result['data'], ($result['status'] === false ? "error" : "success"));
+            Notice::addFlashNotice(__('GeoIP update for incomplete visitors initiated successfully.', 'wp-statistics'), 'success');
         }
 
         // Check Hash IP Update
         if (isset($_POST['submit'], $_POST['hash-ips-submit']) and intval($_POST['hash-ips-submit']) == 1) {
-            IP::Update_HashIP_Visitor();
+            $result = IP::Update_HashIP_Visitor();
 
             // Show Notice
-            Helper::addAdminNotice(__('IP Addresses replaced with hash values.', "wp-statistics"), "success");
-        }
-
-        // Re-install All DB Table
-        if (isset($_POST['submit'], $_POST['install-submit']) and intval($_POST['install-submit']) == 1) {
-            Install::create_table(false);
-
-            // Show Notice
-            Helper::addAdminNotice(__('Install routine complete.', "wp-statistics"), "success");
-        }
-
-        // Optimize Tables
-        if (isset($_POST['submit'], $_POST['optimize-database-submit']) and !empty($_POST['optimize-table'])) {
-            $tbl = trim(sanitize_text_field($_POST['optimize-table']));
-            if ($tbl == "all") {
-                $tables = array_filter(array_values(DB::table('all')));
-            } else {
-                $tables = array_filter(array(DB::table($tbl)));
-            }
-
-            if (!empty($tables)) {
-                $notice = '';
-                $okay   = true;
-
-                // Use wp-admin/maint/repair.php
-                foreach ($tables as $table) {
-                    $check = $wpdb->get_row("CHECK TABLE $table");
-
-                    if ('OK' === $check->Msg_text) {
-                        /* translators: %s: Table name. */
-                        $notice .= sprintf(__('The %s table is okay.', "wp-statistics"), "<code>$table</code>");
-                        $notice .= '<br />';
-                    } else {
-                        $notice .= sprintf(__('The %1$s table is not okay. It is reporting the following error: %2$s. WordPress will attempt to repair this table&hellip;', "wp-statistics"), "<code>$table</code>", "<code>$check->Msg_text</code>");
-                        $repair = $wpdb->get_row("REPAIR TABLE $table");
-
-                        $notice .= '<br />';
-                        if ('OK' === $repair->Msg_text) {
-                            $notice .= sprintf(__('Successfully repaired the %s table.', "wp-statistics"), "<code>$table</code>");
-                        } else {
-                            $notice           .= sprintf(__('Failed to repair the %1$s table. Error: %2$s', "wp-statistics"), "<code>$table</code>", "<code>$check->Msg_text</code>") . '<br />';
-                            $problems[$table] = $check->Msg_text;
-                            $okay             = false;
-                        }
-                    }
-
-                    if ($okay) {
-                        $check = $wpdb->get_row("ANALYZE TABLE $table");
-                        if ('Table is already up to date' === $check->Msg_text) {
-                            $notice .= sprintf(__('The %s table is already optimized.', "wp-statistics"), "<code>$table</code>");
-                            $notice .= '<br />';
-                        } else {
-                            $check = $wpdb->get_row("OPTIMIZE TABLE $table");
-                            if ('OK' === $check->Msg_text || 'Table is already up to date' === $check->Msg_text) {
-                                $notice .= sprintf(__('Successfully optimized the %s table.', 'wp-statistics'), "<code>$table</code>");
-                                $notice .= '<br />';
-                            } else {
-                                $notice .= sprintf(__('The %1$s table does not support optimize, doing recreate + analyze instead.'), "<code>$table</code>");
-                                $notice .= '<br />';
-                            }
-                        }
-                    }
-                }
-
-                // Show Notice
-                Helper::addAdminNotice($notice, "info");
-            }
+            Notice::addFlashNotice(sprintf(__('Successfully anonymized <b>%d</b> IP addresses using hash values.', 'wp-statistics'), $result), 'success');
         }
 
         // Update Historical Value
@@ -137,7 +79,7 @@ class optimization_page
                 }
             }
 
-            // Historical Visits
+            // Historical Views
             if (isset($_POST['wps_historical_visits'])) {
                 // Update DB
                 $result = $wpdb->update($historical_table, array('value' => sanitize_text_field($_POST['wps_historical_visits'])), array('category' => 'visits'));
@@ -148,9 +90,9 @@ class optimization_page
             }
 
             // Show Notice
-            Helper::addAdminNotice(__('Updated Historical Values.', "wp-statistics"), "success");
+            Notice::addFlashNotice(__('Historical Data Successfully Updated.', "wp-statistics"), "success");
         }
     }
 }
 
-new optimization_page;
+optimization_page::instance();

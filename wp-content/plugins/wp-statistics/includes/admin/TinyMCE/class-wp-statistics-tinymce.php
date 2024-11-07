@@ -32,23 +32,23 @@ class TinyMCE
 
         $strings = array(
             'insert'         => __('WP Statistics Shortcodes', 'wp-statistics'),
-            'stat'           => __('Stat', 'wp-statistics'),
+            'stat'           => __('Statistics', 'wp-statistics'),
             'usersonline'    => __('Online Users', 'wp-statistics'),
-            'visits'         => __('Visits', 'wp-statistics'),
+            'visits'         => __('Views', 'wp-statistics'),
             'visitors'       => __('Visitors', 'wp-statistics'),
-            'pagevisits'     => __('Page Visits', 'wp-statistics'),
+            'pagevisits'     => __('Number of Page Views', 'wp-statistics'),
             'searches'       => __('Searches', 'wp-statistics'),
-            'postcount'      => __('Post Count', 'wp-statistics'),
-            'pagecount'      => __('Page Count', 'wp-statistics'),
-            'commentcount'   => __('Comment Count', 'wp-statistics'),
-            'spamcount'      => __('Spam Count', 'wp-statistics'),
-            'usercount'      => __('User Count', 'wp-statistics'),
-            'postaverage'    => __('Post Average', 'wp-statistics'),
-            'commentaverage' => __('Comment Average', 'wp-statistics'),
-            'useraverage'    => __('User Average', 'wp-statistics'),
-            'lpd'            => __('Last Post Date', 'wp-statistics'),
+            'postcount'      => __('Total Number of Posts', 'wp-statistics'),
+            'pagecount'      => __('Total Number of Pages', 'wp-statistics'),
+            'commentcount'   => __('Total Number of Comments', 'wp-statistics'),
+            'spamcount'      => __('Total Count of Spam Comments', 'wp-statistics'),
+            'usercount'      => __('Total Number of Users', 'wp-statistics'),
+            'postaverage'    => __('Average Number of Posts', 'wp-statistics'),
+            'commentaverage' => __('Average Number of Comments', 'wp-statistics'),
+            'useraverage'    => __('Average Number of Users', 'wp-statistics'),
+            'lpd'            => __('Date of the Latest Post', 'wp-statistics'),
             'referrer'       => __('Referrer', 'wp-statistics'),
-            'help_stat'      => __('The statistics you want, see the next table for available options.', 'wp-statistics'),
+            'help_stat'      => __('Choose the Desired Statistics from the Following Options.', 'wp-statistics'),
             'time'           => __('Time', 'wp-statistics'),
             'se'             => __('Select item ...', 'wp-statistics'),
             'today'          => __('Today', 'wp-statistics'),
@@ -57,17 +57,17 @@ class TinyMCE
             'month'          => __('Month', 'wp-statistics'),
             'year'           => __('Year', 'wp-statistics'),
             'total'          => __('Total', 'wp-statistics'),
-            'help_time'      => __('Is the time frame (time periods) for the statistic', 'wp-statistics'),
+            'help_time'      => __('Select the Time Frame for the Statistics', 'wp-statistics'),
             'provider'       => __('Provider', 'wp-statistics'),
-            'help_provider'  => __('The search provider to get statistics on.', 'wp-statistics'),
-            'format'         => __('Format', 'wp-statistics'),
-            'help_format'    => __('The format to display numbers in: i18n, english, none.', 'wp-statistics'),
+            'help_provider'  => __('Select a Search Provider for Detailed Statistics.', 'wp-statistics'),
+            'format'         => __('Display Format', 'wp-statistics'),
+            'help_format'    => __('Choose Number Format: International (i18n), English, or None.', 'wp-statistics'),
             'id'             => __('ID', 'wp-statistics'),
-            'help_id'        => __('The post/page ID to get page statistics on.', 'wp-statistics'),
+            'help_id'        => __('Specify Post/Page ID for Detailed Page Statistics.', 'wp-statistics'),
         );
 
         $locale     = \_WP_Editors::$mce_locale;
-        $translated = 'tinyMCE.addI18n("' . $locale . '.wp_statistic_tinymce_plugin", ' . json_encode($strings) . ");\n";
+        $translated = 'tinyMCE.addI18n("' . $locale . '.wp_statistic_tinymce_plugin", ' . wp_json_encode($strings) . ");\n";
 
         return array('locale' => $locale, 'translate' => $translated);
     }
@@ -132,6 +132,11 @@ class TinyMCE
      */
     public function my_post_edit_page_footer()
     {
+        // Fix Avada builder messing up WP hooks
+        if (Helper::get_screen_id() !== 'widgets') {
+            return;
+        }
+
         echo '
         <script type="text/javascript">
         jQuery( document ).on( \'tinymce-editor-setup\', function( event, editor ) {
@@ -140,10 +145,7 @@ class TinyMCE
         ';
         $lang = TinyMCE::lang();
         echo $lang['translate']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo '
-        tinyMCEPreInit.load_ext("' . rtrim(WP_STATISTICS_URL, "/") . '", "' . $lang['locale'] . '");
-        </script>
-    ';
+        echo 'tinyMCEPreInit.load_ext("' . rtrim(WP_STATISTICS_URL, "/") . '", "' . esc_html($lang['locale']) . '"); </script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
     }
 }
 

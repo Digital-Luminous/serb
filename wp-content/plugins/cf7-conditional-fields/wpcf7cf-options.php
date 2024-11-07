@@ -51,6 +51,16 @@ function wpcf7cf_get_settings() {
     return $wpcf7cf_settings_glob;
 }
 
+function wpcf7cf_get_dismiss_notice_nonce() {
+    // We use the same nonce for all admin notices, because we don't care about users trying to hack themselves.
+    // This nonce is only intended to prevent CSRF attacks.
+    static $nonce = false;
+    if (!$nonce) {
+        $nonce = wp_create_nonce( 'wpcf7cf_dismiss_notice' );
+    }
+    return $nonce;
+}
+
 function wpcf7cf_set_options($settings) {
     global $wpcf7cf_settings_glob;
     $wpcf7cf_settings_glob = $settings;
@@ -87,7 +97,7 @@ function wpcf7cf_options_page() {
     <div class="wrap wpcf7cf-admin-wrap">
         <h2><?php _e( 'Conditional Fields for Contact Form 7 Settings', 'cf7-conditional-fields'); ?></h2>
         <?php if (!$settings['notice_dismissed']) { ?>
-        <div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="">
+        <div class="wpcf7cf-admin-notice notice notice-warning is-dismissible" data-notice-id="" data-nonce="<?php echo wpcf7cf_get_dismiss_notice_nonce() ?>">
             <div style="padding: 10px 0;">
                 <?php _e( '<strong>Notice</strong>: These are global settings for Conditional Fields for Contact Form 7.', 'cf7-conditional-fields'); ?>
                 <br><br>
@@ -171,6 +181,7 @@ function wpcf7cf_options_page() {
     <form method="post" id="reset-form" action="">
         <p class="submit">
             <input name="reset" class="button button-secondary" type="submit" value="<?php _e( 'Restore defaults', 'cf7-conditional-fields' ); ?>" >
+            <?php wp_nonce_field( 'wpcf7cf_reset_options' ); ?>
             <input type="hidden" name="action" value="reset" />
         </p>
     </form>
@@ -225,7 +236,7 @@ function wpcf7cf_input_field($slug, $args) {
 
         </th>
         <td>
-            <input type="text" data-default-value="<?php echo $default ?>" value="<?php echo $settings[$slug] ?>" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.']' ?>">
+            <input type="text" data-default-value="<?php echo $default ?>" value="<?php echo htmlspecialchars($settings[$slug]) ?>" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.']' ?>">
             <p class="description" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>-description">
                 <?php echo $description ?><?php if (!empty($default)) echo ' (' . __( 'Default:', 'cf7-conditional-fields' ) . ' '.$default.')' ?>
             </p>
@@ -261,7 +272,7 @@ function wpcf7cf_input_select($slug, $args) {
             <td>
                 <select id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>" data-default-value="<?php echo $default ?>" name="<?php echo WPCF7CF_OPTIONS.'['.$slug.']' ?>">
                     <?php foreach($select_options as $value => $text) { ?>
-                        <option value="<?php echo $value ?>" <?php echo $settings[$slug]==$value?'selected':'' ?>><?php echo $text ?></option>
+                        <option value="<?php echo htmlspecialchars( $value ) ?>" <?php echo $settings[$slug]==$value?'selected':'' ?>><?php echo $text ?></option>
                     <?php } ?>
                 </select>
                 <p class="description" id="<?php echo WPCF7CF_OPTIONS.'_'.$slug ?>-description">
@@ -275,7 +286,7 @@ function wpcf7cf_input_select($slug, $args) {
 add_action('admin_init', 'wpcf7cf_admin_init');
 function wpcf7cf_admin_init(){
 
-    if(isset($_POST['reset']) && current_user_can( 'wpcf7_edit_contact_forms' ) ) {
+    if(isset($_POST['reset']) && current_user_can( 'wpcf7_edit_contact_forms' ) && wp_verify_nonce( $_POST['_wpnonce'], 'wpcf7cf_reset_options' )) {
         wpcf7cf_reset_options();
     }
 
@@ -288,6 +299,12 @@ function wpcf7cf_options_sanitize($input) {
 
 add_action( 'wp_ajax_wpcf7cf_dismiss_notice', 'wpcf7cf_dismiss_notice' );
 function wpcf7cf_dismiss_notice() {
+
+    // check nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'wpcf7cf_dismiss_notice' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Nonce verification failed', 'cf7-conditional-fields' ) ) );
+    }
+
     $notice_id = sanitize_text_field($_POST['noticeId'] ?? '');
     $notice_suffix = $notice_id ? '_'.$notice_id : $notice_id;
 

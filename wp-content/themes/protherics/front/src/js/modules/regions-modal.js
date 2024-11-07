@@ -13,17 +13,22 @@ const state = {
   isOpen: 'is-open',
 };
 
+let params = new URLSearchParams(document.location.search);
+let name = params.get("r");
+
+let allRegionsList = prothericsObj.region_list;
+
 const cookieConfiguration = {
-  prothericsRegion: {
-    name: 'protherics_region',
-    expires: 0,
-    defaultValue: 'all',
-  },
-  prothericsRegionName: {
-    name: 'protherics_region_name',
-    expires: 0,
-    defaultValue: 'global',
-  },
+    prothericsRegion: {
+      name: 'protherics_region',
+      expires: 0,
+      defaultValue: prothericsObj.defaultRegion ? prothericsObj.defaultRegion : 'all',
+    },
+    prothericsRegionName: {
+      name: 'protherics_region_name',
+      expires: 0,
+      defaultValue: name ? name : prothericsObj.defaultRegion,
+    },
 };
 
 const RegionsModal = {
@@ -38,6 +43,16 @@ const RegionsModal = {
     RegionsModal.acceptModalBtn = document.querySelector(selector.acceptModalBtn);
     RegionsModal.openModalBtns = document.querySelectorAll(selector.openModalBtn);
     RegionsModal.regionName = document.querySelector(selector.regionName);
+
+    if(name) {
+      const [currentRegion] = allRegionsList.filter(region => region.region.toLowerCase() === name.toLowerCase());
+      const currentRegionId = currentRegion.regionId;
+
+      RegionsModal.regionName.textContent = name;
+      RegionsModal.saveCookie(name, 'prothericsRegionName');
+      RegionsModal.saveCookie(currentRegionId, 'prothericsRegion');
+    }
+
 
     const shouldContinue = !!RegionsModal.modal && !!RegionsModal.closeModalBtn && !!RegionsModal.acceptModalBtn;
 
@@ -75,7 +90,6 @@ const RegionsModal = {
 
     const regionSelect = document.querySelector(selector.regionSelect);
     const value = regionSelect.value;
-
     if (value) {
       if (isNaN(value)) {
         // is url - redirect

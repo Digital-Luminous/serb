@@ -8,6 +8,10 @@
     @include media(tablet) {
         padding-top: 15.5rem;
     }
+
+	@include media (0, tablet) {
+		padding-top: 14rem;
+	}
 }
 
 .l-body.is-privacy .l-page,

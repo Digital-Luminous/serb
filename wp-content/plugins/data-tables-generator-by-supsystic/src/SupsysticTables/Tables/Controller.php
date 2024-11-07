@@ -662,7 +662,8 @@ class SupsysticTables_Tables_Controller extends SupsysticTables_Core_BaseControl
 	 *
 	 * @return RscDtgs_Http_Response
 	 */
-	public function listAction() {
+	public function listAction(RscDtgs_Http_Request $request) {
+        if (!$this->_checkNonce($request)) die();
 		try{
 			$tables = $this->getModel('tables')->getAll(array(
 				'order' => 'ASC',

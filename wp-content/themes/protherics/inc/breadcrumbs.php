@@ -4,7 +4,7 @@ function protherics_breadcrumbs() {
     // Set variables for later use
     $here_text = __( '' );
     $home_link = home_url( '/' );
-    $home_text = __( 'Home', 'protherics' );
+    $home_text = get_the_title( get_option('page_on_front') ) ?? __( 'Home', 'protherics' );
     $link_before = '<li class="c-breadcrumbs__item">';
     $link_after = '</li>';
     $link_attr = ' class="c-breadcrumbs__link"';
