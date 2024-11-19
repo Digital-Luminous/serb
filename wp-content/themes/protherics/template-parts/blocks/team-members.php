@@ -53,6 +53,8 @@
 									<button class="c-team-member__action js-modal-trigger c-btn c-btn--arrowed c-btn--secondary" data-member-api-url="<?php echo $api_url . $post_id; ?>">
 										<?php _e( 'Read biography', 'protherics' ); ?>
 									</button>
+									<!-- Add condition either button above or link belove -->
+									<a href="mailto:example@example.com" class="c-team-member__action c-btn c-btn--secondary c-btn--arrowed">Email link</a>
 								</div>
 							</li>
 						<?php endwhile; ?>
