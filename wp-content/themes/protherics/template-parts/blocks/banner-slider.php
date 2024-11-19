@@ -58,6 +58,10 @@
 										<?php echo $item['author']; ?>
 									</p>
 								<?php endif; ?>
+								<!-- Add CTA field for quote banner -->
+								<div class="c-banner__action">
+									<a href="javascript:;" class="c-btn c-btn--secondary c-btn--arrowed">Quote CTA</a>
+								</div>
 							</div>
 						</li>
 					<?php endif; ?>
