@@ -58,10 +58,13 @@
 										<?php echo $item['author']; ?>
 									</p>
 								<?php endif; ?>
-								<!-- Add CTA field for quote banner -->
+								<?php if ( isset( $item['button'] ) && $item['button'] ) : ?>
 								<div class="c-banner__action">
-									<a href="javascript:;" class="c-btn c-btn--secondary c-btn--arrowed">Quote CTA</a>
+									<a href="<?php echo esc_url( $item['button']['url'] ); ?>" class="c-btn c-btn--secondary c-btn--arrowed" target="<?php echo esc_attr( $item['button']['target'] ); ?>">
+										<?php echo $item['button']['title']; ?>
+									</a>
 								</div>
+								<?php endif; ?>
 							</div>
 						</li>
 					<?php endif; ?>

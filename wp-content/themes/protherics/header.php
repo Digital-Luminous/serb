@@ -56,7 +56,7 @@ function OptanonWrapper() { }
 function OptanonWrapper() { }
 </script>
 <!-- OneTrust Cookies Consent Notice end for serb.fr -->
-    <?php } else { ?> <!-- serb.be -->
+    <?php } elseif (get_current_blog_id() === 5) { ?> <!-- serb.be -->
         <!-- Google tag (gtag.js) --> 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-X56J8F10C5"></script>
 <script>
@@ -73,10 +73,15 @@ function OptanonWrapper() { }
 function OptanonWrapper() { }
 </script>
 <!-- OneTrust Cookies Consent Notice end for serb.be -->
-    <?php } ?>
+    <?php } else { ?>
 
-
-	
+        	<!-- OneTrust Cookies Consent Notice start for veritonpharma.com -->
+			<script src=https://cdn.cookielaw.org/scripttemplates/otSDKStub.js data-language="en" type="text/javascript" charset="UTF-8" data-domain-script="640eb7b8-7323-4f42-a6fa-7f957d24c86a" ></script>
+<script type="text/javascript">
+function OptanonWrapper() { }
+</script>
+<!-- OneTrust Cookies Consent Notice end for veritonpharma.com -->
+	<?php } ?>
 </head>
 
 <body <?php body_class('l-body'); ?>>

@@ -6,6 +6,7 @@
             "key": "field_62a2ea8307b47",
             "label": "Timeline",
             "name": "timeline",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -19,12 +20,14 @@
             "min": 0,
             "max": 0,
             "layout": "block",
-            "button_label": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_62a2ea9807b48",
                     "label": "Color",
                     "name": "color",
+                    "aria-label": "",
                     "type": "radio",
                     "instructions": "",
                     "required": 0,
@@ -43,12 +46,14 @@
                     "default_value": "",
                     "layout": "horizontal",
                     "return_format": "value",
-                    "save_other_choice": 0
+                    "save_other_choice": 0,
+                    "parent_repeater": "field_62a2ea8307b47"
                 },
                 {
                     "key": "field_62a2eadd6925f",
                     "label": "Text",
                     "name": "text",
+                    "aria-label": "",
                     "type": "wysiwyg",
                     "instructions": "",
                     "required": 0,
@@ -62,12 +67,14 @@
                     "tabs": "all",
                     "toolbar": "full",
                     "media_upload": 1,
-                    "delay": 0
+                    "delay": 0,
+                    "parent_repeater": "field_62a2ea8307b47"
                 },
                 {
                     "key": "field_62a2eae369260",
                     "label": "Button",
                     "name": "button",
+                    "aria-label": "",
                     "type": "link",
                     "instructions": "",
                     "required": 0,
@@ -77,9 +84,27 @@
                         "class": "",
                         "id": ""
                     },
-                    "return_format": "array"
+                    "return_format": "array",
+                    "parent_repeater": "field_62a2ea8307b47"
                 }
             ]
+        },
+        {
+            "key": "field_673c8f2fc1154",
+            "label": "Timeline CTA",
+            "name": "timeline_cta",
+            "aria-label": "",
+            "type": "link",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "allow_in_bindings": 0
         }
     ],
     "location": [
@@ -100,5 +125,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1654844410
+    "modified": 1732022233
 }

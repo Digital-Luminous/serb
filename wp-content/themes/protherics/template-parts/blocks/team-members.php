@@ -33,7 +33,9 @@
 								$post_img_alt = get_post_meta( $post_img_id, '_wp_attachment_image_alt', true );
 
 								$post_job = get_field( 'job', $post_id );
-
+								$post_show_email = get_field( 'show_email', $post_id );
+								$post_email = get_field( 'email_acf', $post_id );
+								$post_email_button_text = get_field( 'email_button_text', $post_id );
 							?>
 							<li class="c-team-members-list__item">
 								<div class="c-team-member">
@@ -53,8 +55,11 @@
 									<button class="c-team-member__action js-modal-trigger c-btn c-btn--arrowed c-btn--secondary" data-member-api-url="<?php echo $api_url . $post_id; ?>">
 										<?php _e( 'Read biography', 'protherics' ); ?>
 									</button>
-									<!-- Add condition either button above or link belove -->
-									<a href="mailto:example@example.com" class="c-team-member__action c-btn c-btn--secondary c-btn--arrowed">Email link</a>
+									<?php if ( $post_show_email ) : ?>
+										<a href="mailto:<?php echo esc_url( $post_email ); ?>" class="c-team-member__action c-btn c-btn--secondary c-btn--arrowed">
+											<?php echo $post_email_button_text; ?>
+										</a>
+									<?php endif; ?>
 								</div>
 							</li>
 						<?php endwhile; ?>

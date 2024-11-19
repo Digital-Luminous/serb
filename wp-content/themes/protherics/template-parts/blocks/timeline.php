@@ -1,5 +1,6 @@
 <?php
     $timeline = get_field( 'timeline' );
+    $timeline_cta = get_field( 'timeline_cta' );
 ?>
 
 <section class="l-timeline s-regular-bottom">
@@ -31,10 +32,13 @@
 					<?php endforeach; ?>
 				</ul>
 			</div>
-			<!-- Add CTA field -->
+			<?php if ( isset( $timeline_cta ) && $timeline_cta ) : ?>
 			<div class="c-timeline__wrap">
-				<a href="javascript:;" class="c-btn c-btn--primary c-btn--arrowed c-timeline__cta">Learn more about serb’s history</a>
+				<a href="<?php echo esc_url( $timeline_cta['url'] ); ?>" class="c-btn c-btn--primary c-btn--arrowed c-timeline__cta" target="<?php echo esc_attr( $timeline_cta['target'] ); ?>">
+					<?php echo $timeline_cta['title']; ?>
+				</a>
 			</div>
+			<?php endif; ?>
         </div>
     <?php endif; ?>
 </section>

@@ -104,6 +104,18 @@ function protherics_acf_gutenberg_blocks() {
 
         acf_register_block(
             array(
+                'name' => 'hero-second',
+                'title' => __('Hero Veriton', 'protherics'),
+                'description' => __('Hero with title, subtitle and text sections', 'protherics'),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'image-flip-horizontal',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
                 'name' => 'text',
                 'title' => __( 'Text', 'protherics' ),
                 'description' => __( 'Text section', 'protherics' ),
@@ -167,6 +179,18 @@ function protherics_acf_gutenberg_blocks() {
                 'name' => 'table-insights',
                 'title' => __( 'Table insights', 'protherics' ),
                 'description' => __( 'Table section', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'image-flip-horizontal',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
+                'name' => 'table-block',
+                'title' => __('Table Veriton', 'protherics'),
+                'description' => __('Table section', 'protherics'),
                 'render_callback' => 'protherics_render_acf_block',
                 'category' => 'protherics-blocks',
                 'icon' => 'image-flip-horizontal',
@@ -312,6 +336,7 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
         $blocks = array(
             'acf/two-col',
             'acf/hero',
+            'acf/hero-second',
             'acf/img-text',
             'acf/latest-insights',
             'acf/latest-news-social',
@@ -321,6 +346,7 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
             'acf/banner-slider-light',
             'acf/team-members',
             'acf/table',
+            'acf/table-block',
             'acf/cta',
             'acf/icons-text',
             'acf/accordion-text',

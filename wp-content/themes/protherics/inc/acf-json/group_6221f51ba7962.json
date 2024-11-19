@@ -6,6 +6,7 @@
             "key": "field_6221f5348b951",
             "label": "Slides",
             "name": "slides",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -19,12 +20,14 @@
             "min": 0,
             "max": 0,
             "layout": "block",
-            "button_label": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_6239be0160835",
                     "label": "Type",
                     "name": "type",
+                    "aria-label": "",
                     "type": "radio",
                     "instructions": "",
                     "required": 0,
@@ -43,12 +46,14 @@
                     "default_value": "",
                     "layout": "vertical",
                     "return_format": "value",
-                    "save_other_choice": 0
+                    "save_other_choice": 0,
+                    "parent_repeater": "field_6221f5348b951"
                 },
                 {
                     "key": "field_6221f5908b953",
                     "label": "Small heading",
                     "name": "small_heading",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -70,12 +75,14 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "maxlength": "",
+                    "parent_repeater": "field_6221f5348b951"
                 },
                 {
                     "key": "field_6221f5a48b955",
                     "label": "Quote",
                     "name": "quote",
+                    "aria-label": "",
                     "type": "wysiwyg",
                     "instructions": "",
                     "required": 0,
@@ -97,12 +104,14 @@
                     "tabs": "all",
                     "toolbar": "full",
                     "media_upload": 1,
-                    "delay": 0
+                    "delay": 0,
+                    "parent_repeater": "field_6221f5348b951"
                 },
                 {
                     "key": "field_6239ca79412fc",
                     "label": "Title",
                     "name": "title",
+                    "aria-label": "",
                     "type": "wysiwyg",
                     "instructions": "",
                     "required": 0,
@@ -124,12 +133,14 @@
                     "tabs": "all",
                     "toolbar": "full",
                     "media_upload": 1,
-                    "delay": 0
+                    "delay": 0,
+                    "parent_repeater": "field_6221f5348b951"
                 },
                 {
                     "key": "field_6221f53f8b952",
                     "label": "Author",
                     "name": "author",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -151,12 +162,14 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "maxlength": "",
+                    "parent_repeater": "field_6221f5348b951"
                 },
                 {
                     "key": "field_6221f59f8b954",
                     "label": "Description",
                     "name": "description",
+                    "aria-label": "",
                     "type": "wysiwyg",
                     "instructions": "",
                     "required": 0,
@@ -178,30 +191,26 @@
                     "tabs": "all",
                     "toolbar": "full",
                     "media_upload": 1,
-                    "delay": 0
+                    "delay": 0,
+                    "parent_repeater": "field_6221f5348b951"
                 },
                 {
                     "key": "field_6221f5b18b956",
                     "label": "Button",
                     "name": "button",
+                    "aria-label": "",
                     "type": "link",
                     "instructions": "",
                     "required": 0,
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_6239be0160835",
-                                "operator": "==",
-                                "value": "banner"
-                            }
-                        ]
-                    ],
+                    "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
                         "class": "",
                         "id": ""
                     },
-                    "return_format": "array"
+                    "return_format": "array",
+                    "allow_in_bindings": 1,
+                    "parent_repeater": "field_6221f5348b951"
                 }
             ]
         }
@@ -224,5 +233,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1647954597
+    "modified": 1731940224
 }
