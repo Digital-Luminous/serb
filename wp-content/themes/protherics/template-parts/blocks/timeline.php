@@ -31,7 +31,7 @@
 					<?php endforeach; ?>
 				</ul>
 			</div>
-			<!-- Add CTA fields -->
+			<!-- Add CTA field -->
 			<div class="c-timeline__wrap">
 				<a href="javascript:;" class="c-btn c-btn--primary c-btn--arrowed c-timeline__cta">Learn more about serb’s history</a>
 			</div>
