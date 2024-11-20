@@ -20,8 +20,8 @@
 
 .c-table-block__row {
 	display: grid;
-    grid-template-columns: 0.25fr 0.6fr 0.27fr;
-	column-gap: 5.8rem;
+    grid-template-columns: 0.27fr 0.6fr 0.27fr;
+	column-gap: 4.8rem;
 	padding: 1.6rem 0;
 	border-bottom: 1px solid color(black-1);
 	@media only screen and (min-width: 767px) and (max-width: 1200px) {
@@ -38,8 +38,8 @@
 
 .c-table-block__row-headings {
 	display: grid;
-	grid-template-columns: 0.26fr 0.6fr 0.27fr;
-	column-gap: 4.4rem;
+	grid-template-columns: 0.27fr 0.6fr 0.27fr;
+	column-gap: 4rem;
 	padding: 1.6rem 0;
 	border-bottom: 1px solid color(black-1);
 	@media only screen and (min-width: 767px) and (max-width: 1200px) {
