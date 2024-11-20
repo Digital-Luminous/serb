@@ -9,12 +9,12 @@
 <section class="l-section hero-second s-regular-bottom">
 	<picture class="c-hero-second__bg">
 		<source srcset="<?php echo $theme_path . '/front/static/images/decor-banner-bg.jpg'; ?>" media="(min-width: 768px)">
-		<img decoding="async" class="c-hero-second__image" src="<?php echo $theme_path . '/front/static/images/decor-banner-bg-mobile.jpg'; ?>" alt="">
+		<img decoding="async" class="c-hero-second__image" src="<?php echo $theme_path . '/front/static/images/decor-banner-bg-mobile.jpg'; ?>" alt="<?php _e('Background image', 'protherics') ?>">
 	</picture>
 	<?php if (isset($img['url'])): ?>
 	<picture>
-		<source srcset="<?php echo esc_url( $img['url'] ); ?>" media="(max-width: 768px)">
-		<img class="c-hero-second__img" src="<?php echo isset($mobile_img['url']) ? esc_url( $mobile_img['url'] ) : esc_url( $img['url'] ); ?>" alt="">
+		<source srcset="<?php echo isset($mobile_img['url']) ? esc_url( $mobile_img['url'] ) : esc_url( $img['url'] ); ?>" media="(max-width: 768px)">
+		<img class="c-hero-second__img" src="<?php echo esc_url( $img['url'] ); ?>" alt="<?php echo esc_attr($img['alt']) ?>">
 	</picture>
 	<?php endif ?>
 	<div class="l-inner">
