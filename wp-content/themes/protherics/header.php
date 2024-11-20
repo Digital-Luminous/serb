@@ -76,7 +76,7 @@ function OptanonWrapper() { }
     <?php } else { ?>
 
         	<!-- OneTrust Cookies Consent Notice start for veritonpharma.com -->
-			<script src=https://cdn.cookielaw.org/scripttemplates/otSDKStub.js data-language="en" type="text/javascript" charset="UTF-8" data-domain-script="640eb7b8-7323-4f42-a6fa-7f957d24c86a" ></script>
+			<script src=https://cdn.cookielaw.org/scripttemplates/otSDKStub.js data-language="en" type="text/javascript" charset="UTF-8" data-domain-script="a913ebe4-c8e9-4021-acaa-fb1abe4848b8" ></script>
 <script type="text/javascript">
 function OptanonWrapper() { }
 </script>
@@ -84,7 +84,7 @@ function OptanonWrapper() { }
 	<?php } ?>
 </head>
 
-<body <?php body_class('l-body'); ?>>
+<body <?php body_class(['l-body', str_contains(get_site_url(), 'veriton') ? "veriton" : ""]); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="l-page">
 	<header class="l-header ui-bg--white-1-80">
