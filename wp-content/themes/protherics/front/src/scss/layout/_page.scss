@@ -24,10 +24,12 @@
 }
 
 .l-body.home .l-page {
-    @include media(desktop-small) {
-        position: relative;
+    &:not(.veriton) {
+        @include media(desktop-small) {
+            position: relative;
 
-        padding-top: 0;
+            padding-top: 0;
+        }
     }
 }
 
