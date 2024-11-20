@@ -3,9 +3,11 @@
 
     @include media(mobile) {
         margin: 0 1.7rem;
+        padding-bottom: 6rem;
     }
     @include media(desktop) {
         margin: 0 4rem;
+        padding-bottom: 10rem;
     }
 }
 
