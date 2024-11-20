@@ -1,19 +1,19 @@
 .l-table-block {
 	margin-bottom: 10.5rem;
-	@media only screen and (max-width: 992px) {
+	@include media(0, 992px) {
 		margin-bottom: 6rem;
 	}
 }
 
 .c-table-block__wrap {
-	@media only screen and (max-width: 767px) {
+	@include media(0, mobile) {
 		max-width: 32rem;
 		margin: 0 auto;
 	}
 }
 
 .c-table-block__container {
-	@media only screen and (max-width: 992px) {
+	@include media(0, 992px) {
 		border-top: 1px solid color(black-1);
 	}
 }
@@ -24,12 +24,12 @@
 	column-gap: 4.8rem;
 	padding: 1.6rem 0;
 	border-bottom: 1px solid color(black-1);
-	@media only screen and (min-width: 767px) and (max-width: 1200px) {
+	@include media(mobile,desktop-small) {
 		column-gap: 25px;
 		grid-template-columns: 0.3fr 0.4fr 0.3fr;
 	}
 
-	@media only screen and (max-width: 992px) {
+	@include media(0, 992px) {
 		column-gap: 25px;
 		grid-template-columns: 1fr;
 		padding: 22px 0;
@@ -42,11 +42,11 @@
 	column-gap: 4rem;
 	padding: 1.6rem 0;
 	border-bottom: 1px solid color(black-1);
-	@media only screen and (min-width: 767px) and (max-width: 1200px) {
+	@include media(mobile,desktop-small) {
 		column-gap: 2.5rem;
 		grid-template-columns: 0.3fr 0.4fr 0.3fr;
 	}
-	@media only screen and (max-width: 992px) {
+	@include media(0, 992px) {
 		column-gap: 2.5rem;
 		grid-template-columns: 1fr;
 		display: none;
@@ -65,13 +65,13 @@
 	line-height: 3rem;
 	color: color(color(black-1));
 	font-weight: 400;
-	@media only screen and (max-width: 992px) {
+	@include media(0, 992px) {
 		display: block;
 		&:not(:last-child) {
 			margin-bottom: 2rem;
 		}
 	}
-	@media only screen and (max-width: 767px) {
+	@include media(0, mobile) {
 		font-size: 1.6rem;
 		line-height: 2rem;
 	}
@@ -85,7 +85,7 @@
 .c-table-block__description {
 	margin-bottom: 12.5rem;
 	max-width: 78rem;
-	@media only screen and (max-width: 767px) {
+	@include media(0, mobile) {
 		margin-bottom: 5.6rem;
 	}
 }
