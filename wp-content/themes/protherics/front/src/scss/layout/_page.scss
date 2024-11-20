@@ -23,14 +23,12 @@
     }
 }
 
-.l-body.home .l-page {
-    &:not(.veriton) {
+.l-body.home:not(.veriton) .l-page {
         @include media(desktop-small) {
             position: relative;
 
             padding-top: 0;
         }
-    }
 }
 
 .l-body.home .l-page::before {
