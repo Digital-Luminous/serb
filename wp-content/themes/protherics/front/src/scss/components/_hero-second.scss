@@ -1,13 +1,11 @@
 .hero-second {
 	position: relative;
 	overflow: hidden;
-	@media only screen and (min-width: 1200px) {
+	padding-top: 3.6rem;
+	min-height: 73.5rem;
+	@include media(desktop-small) {
 		min-height: 80.1rem;
 		padding-top: 17.6rem;
-	}
-	@media only screen and (max-width: 1200px) {
-		padding-top: 3.6rem;
-		 min-height: 73.5rem;
 	}
 }
 
@@ -31,116 +29,113 @@
 }
 
 .c-hero-second__title {
+	font-size: 1.8rem;
+	line-height: 2.6rem;
+	padding: 0.7rem 1.9rem;
+	margin-bottom: 0.6rem;
+	background-color: color(purple-1);
 	color: color(white-1);
 	font-weight: 700;
-	padding: 1rem 1.6rem;
-	background-color: color(purple-1);
 	display: inline-block;
 	border-radius: 4050px;
-	margin-bottom: 1.6rem;
-	font-size: 4.4rem;
-	line-height: 4.8rem;
-	@media only screen and (min-width: 768px) and (max-width: 1200px) {
+	@include media(mobile) {
 		font-size: 3.2rem;
 		line-height: 4rem;
 	}
-	@media only screen and (max-width: 768px) {
-		font-size: 1.8rem;
-		line-height: 2.6rem;
-		padding: 0.7rem 1.9rem;
-		margin-bottom: 0.6rem;
+	@include media(desktop-small) {
+		padding: 1rem 1.6rem;
+		margin-bottom: 1.6rem;
+		font-size: 4.4rem;
+		line-height: 4.8rem;
 	}
 }
 
 .c-hero-second__subtitle {
-	color: color(white-1);
-	font-weight: 700;
-	padding: 1rem 1.6rem;
+	font-size: 1.8rem;
+	line-height: 2.6rem;
+	margin-left: 0;
+	padding: 0.7rem 1.9rem;
+	margin-bottom: 2.6rem;
 	background-color: color(dark-purple-1);
 	display: inline-block;
+	color: color(white-1);
+	font-weight: 700;
 	border-radius: 4050px;
-	margin-bottom: 12.7rem;
-	margin-left: 12.2rem;
-	font-size: 4.4rem;
-	line-height: 4.8rem;
-	@media only screen and (min-width: 768px) and (max-width: 1200px) {
+	@include media(mobile) {
 		font-size: 3.2rem;
 		line-height: 4rem;
 		margin-left: 0;
 		margin-bottom: 2.1rem;
 	}
-	@media only screen and (max-width: 768px) {
-		font-size: 1.8rem;
-		line-height: 2.6rem;
-		margin-left: 0;
-		padding: 0.7rem 1.9rem;
-		margin-bottom: 2.6rem;
+	@include media(desktop-small) {
+		padding: 1rem 1.6rem;
+		margin-bottom: 12.7rem;
+		margin-left: 12.2rem;
+		font-size: 4.4rem;
+		line-height: 4.8rem;
 	}
+
+
 }
 
 .c-hero-second__description {
+	font-size: 1.6rem;
+	line-height: 2.4rem;
+	margin-left: 2rem;
+	max-width: 30rem;
 	color: color(white-1);
-	max-width: 43.3rem;
-	letter-spacing: 0.04rem;
-	font-size: 2rem;
-	line-height: 2.8rem;
-	@media only screen and (min-width: 768px) and (max-width: 1200px) {
+	@include media(mobile) {
 		font-size: 1.8rem;
 		line-height: 2.4rem;
 	}
-	@media only screen and (max-width: 768px) {
-		font-size: 1.6rem;
-		line-height: 2.4rem;
-		margin-left: 2rem;
-		max-width: 30rem;
+	@include media(desktop-small) {
+		max-width: 43.3rem;
+		letter-spacing: 0.04rem;
+		font-size: 2rem;
+		line-height: 2.8rem;
 	}
 }
 
 .c-hero-second__picture {
-	width: 100%;
-    position: absolute;
-    right: 0;
-    top: 0;
-	width: 1037px;
+	width: 484px;
+	position: absolute;
 	height: 100%;
-	@media only screen and (min-width: 768px) and (max-width: 1200px) {
+	right: 0;
+	top: 0;
+	@include media(mobile) {
 		width: 850px;
 		height: 850px;
 	}
-	@media only screen and (max-width: 768px) {
-		width: 484px;
+	@include media(desktop-small) {
+		width: 100%;
+		width: 1037px;
 	}
 }
 
 .c-hero-second__img {
-	position: absolute;
-	z-index: 4;
-    right: -22.9%;
-    top: -50%;
-	width: 1037px;
-	height: 1037px;
+	top: unset;
 	object-fit: cover;
-	border-radius: 100%;
+	width: 484px;
+	height: 484px;
+	right: -44%;
+	bottom: -15%;
+	position: absolute;
+	object-fit: cover;
 	object-position: right;
-
-	@media only screen and (min-width: 1200px) {
-		top: 50%;
-		transform: translateY(-50%);
-	}
-
-	@media only screen and (min-width: 768px) and (max-width: 1200px) {
+	border-radius: 100%;
+	z-index: 4;
+	@include media(mobile) {
 		right: -26.6%;
 		top: -6%;
 		width: 850px;
 		height: 850px;
 	}
-
-	@media only screen and (max-width: 768px) {
-		top: unset;
-		object-fit: cover;
-		width: 484px;
-		height: 484px;
-        right: -44%;
-        bottom: -15%;
+	@include media(desktop-small) {
+		right: -22.9%;
+		top: -50%;
+		width: 1037px;
+		height: 1037px;
+		top: 50%;
+		transform: translateY(-50%);
 	}
 }
