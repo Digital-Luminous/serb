@@ -52,13 +52,15 @@
 											</p>
 										<?php endif; ?>
 									</div>
-									<button class="c-team-member__action js-modal-trigger c-btn c-btn--arrowed c-btn--secondary" data-member-api-url="<?php echo $api_url . $post_id; ?>">
-										<?php _e( 'Read biography', 'protherics' ); ?>
-									</button>
+									
 									<?php if ( $post_show_email ) : ?>
-										<a href="mailto:<?php echo esc_url( $post_email ); ?>" class="c-team-member__action c-btn c-btn--secondary c-btn--arrowed">
+										<a href="mailto:<?php echo $post_email; ?>" class="c-team-member__action c-btn c-btn--secondary c-btn--arrowed">
 											<?php echo $post_email_button_text; ?>
 										</a>
+									<?php else: ?>
+										<button class="c-team-member__action js-modal-trigger c-btn c-btn--arrowed c-btn--secondary" data-member-api-url="<?php echo $api_url . $post_id; ?>">
+											<?php _e( 'Read biography', 'protherics' ); ?>
+										</button>
 									<?php endif; ?>
 								</div>
 							</li>
