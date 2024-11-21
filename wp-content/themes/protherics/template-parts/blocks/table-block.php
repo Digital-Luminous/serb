@@ -20,7 +20,8 @@ $table = get_field('table');
 			<?php endif; ?>
 			<?php if (!empty($table)): ?>
 				<?php foreach ($table as $row): ?>
-					<?php if ($row): ?>
+					<?php $has_row = !empty($row['col_1']) || !empty($row['col_2']) || !empty($row['col_3']); ?>
+					<?php if ($has_row): ?>
 						<div class="c-table-block__row">
 							<span class="ctable-block__text"><?php echo $row['col_1']; ?></span>
 							<p class="ctable-block__text"><?php echo $row['col_2']; ?></p>
