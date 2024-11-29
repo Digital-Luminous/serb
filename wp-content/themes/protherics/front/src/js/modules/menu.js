@@ -29,8 +29,13 @@ const Menu = {
     const menuItem = menuLink.closest(selector.menuItem);
 
     Menu.handleCloseSearchBar();
-
-    menuItem.classList.toggle(state.isOpen);
+    if(menuItem.classList.contains(state.isOpen)) {
+      menuItem.classList.toggle(state.isOpen);
+    } else {
+      const active =  Menu.header.querySelector('.is-open')
+      if(active)  active.classList.remove(state.isOpen)
+      menuItem.classList.add(state.isOpen)
+    }
   },
   handleCloseSubmenu: (e) => {
     const closeButton = e.currentTarget;
