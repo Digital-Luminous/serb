@@ -19,7 +19,7 @@ const element = {
 };
 
 const params = {
-  timeout: 1,
+  timeout: 300, // Set in the live JS, never updated
 };
 
 const FormCustomSelects = {

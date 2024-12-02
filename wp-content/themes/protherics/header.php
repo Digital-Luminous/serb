@@ -148,7 +148,7 @@ function OptanonWrapper() { }
 						<div class="c-header__region">
 							<button class="c-header__current-region t-size-16 t-upper ui-font-weight--bold ui-color--purple-1 js-open-regions-modal js-region-name"></button>
 						</div>
-						<?php if ( is_main_site() ) : ?>
+						<?php if ( is_main_site() || str_contains(get_site_url(), 'veriton') ) : ?>
 							<div class="c-header__search-bar">
 								<div class="c-search-bar js-search-bar">
 									<button class="c-search-bar__search js-toggle-search" type="button" aria-label="Search button">

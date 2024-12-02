@@ -32,7 +32,7 @@ function custom_productlist_form_tag_handler( $tag ) {
 
     wp_reset_query();
 
-    if (get_current_blog_id() === 1) {
+    if (get_current_blog_id() === 1 || str_contains(get_site_url(), 'veriton')) {
         $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Type to search products', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
     } else if (get_current_blog_id() === 2) {
         $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Tapez pour rechercher des produits', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
