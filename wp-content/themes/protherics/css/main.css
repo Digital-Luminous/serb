@@ -26,3 +26,24 @@ p.c-hero-second__description {
     border-top: 1px solid;
     padding-top: 20px;
 }
+
+
+@media (min-width: 768px) and (max-width: 995px) {
+    .c-hero-second__img {
+        width: 650px;
+    }
+}
+
+@media (min-width: 1200px)  and (max-width: 1360px) {
+    .c-hero-second__img {
+        width: 950px;
+    }
+}
+
+
+@media (max-width: 350px) {
+    .c-hero-second__img {
+        width: 430px;
+        height: 430px;
+    }
+}
