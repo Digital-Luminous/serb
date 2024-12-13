@@ -20,7 +20,12 @@ function get_home_url_without_language() {
 function protherics_scripts() {
 	wp_enqueue_style( 'protherics-style', get_template_directory_uri() . '/front/static/css/main.css' );
 
+    /** temporary fixes are placed in this file */
+	wp_enqueue_style( 'protherics-style-additional', get_template_directory_uri() . '/css/main.css' );
+
 	wp_enqueue_script( 'protherics-script', get_template_directory_uri() . '/front/static/js/app.js', array( 'wp-i18n' ), filemtime( get_template_directory() . '/front/static/js/app.js' ), true );
+
+	wp_enqueue_script( 'protherics-responsive-table', get_template_directory_uri() . '/js/responsiveTable.js', array(), filemtime( get_template_directory_uri() . '/js/responsiveTable.js' ), true );
 
     $popup = get_field( 'regions_popup', 'option' );
     $default_region = $popup['region'];
