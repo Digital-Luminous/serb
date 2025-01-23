@@ -36,3 +36,45 @@
     align-items: center;
     justify-content: center;
 }
+
+.c-banners-slider__controls {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: z-index(base);
+  @include media(0, mobile) {
+      position: relative;
+  }
+}
+
+.c-banners-slider__play-stop {
+  all: unset;
+  position: relative;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  &::after {
+    position: absolute;
+    top: 0;
+    left: -8px;
+    width: 100%;
+    height: 100%;
+    display: block;
+    content: url('../images/icon-stop.svg');
+    color: color(white-1);
+  }
+
+  &.inactive::after {
+    content: url('../images/icon-play.svg');
+    left: -6px;
+  }
+}
+
+.c-banners-slider--alt .c-slider-pagination__bullet {
+  border-color: color(white-1);
+}

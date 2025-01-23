@@ -35,7 +35,7 @@ const slidersConfig = {
     pagination: true,
     speed: 600,
     autoplay: {
-      delay: 3000,
+      delay: 5000,
       disableOnInteraction: false,
     },
   },
@@ -66,6 +66,7 @@ const Slider = {
     $(selector.slider).each(function () {
       const sliderType = $(this).data('slider-type');
       const config = slidersConfig[sliderType];
+      const sliderToggleAutplay = $(this).find('.js-toggle-autoplay');
 
       if (!config) return;
 
@@ -110,6 +111,17 @@ const Slider = {
       sliderInstance.sliderType = sliderType;
 
       Slider.sliderInstances.push(sliderInstance);
+      if (sliderToggleAutplay.length > 0) {
+        sliderToggleAutplay.click(() => {
+          sliderToggleAutplay.toggleClass('inactive');
+
+          if (sliderToggleAutplay.hasClass('inactive')) {
+            sliderInstance.autoplay.stop();
+          } else {
+            sliderInstance.autoplay.start();
+          }
+        })
+      }
     });
   },
 

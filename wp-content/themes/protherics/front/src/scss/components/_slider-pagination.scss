@@ -26,9 +26,8 @@
     background-color: color(purple-1);
 }
 
-.c-slider-pagination--alt {
-    position: absolute;
-    bottom: 0;
+.c-slider-pagination.c-slider-pagination--alt {
+  width: auto;
 }
 
 .c-slider-pagination--alt .c-slider-pagination__bullet {
@@ -39,16 +38,4 @@
 .c-slider-pagination--alt .c-slider-pagination__bullet--active {
     border-color: color(white-1);
     background-color: color(white-1);
-}
-
-.c-banners-slider .c-slider-pagination--alt {
-    bottom: 2rem;
-    z-index: z-index(base);
-    @include media(0, mobile) {
-        position: relative;
-    }
-}
-
-.c-banners-slider--alt .c-slider-pagination__bullet {
-    border-color: color(white-1);
 }
