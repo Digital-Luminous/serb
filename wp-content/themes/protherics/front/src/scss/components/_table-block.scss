@@ -26,13 +26,21 @@
 	border-bottom: 1px solid color(black-1);
 	@include media(mobile,desktop-small) {
 		column-gap: 25px;
-		grid-template-columns: 0.3fr 0.4fr 0.3fr;
+		grid-template-columns: 0.3fr 0.4fr 0.27fr;
 	}
 
 	@include media(0, 992px) {
 		column-gap: 25px;
 		grid-template-columns: 1fr;
 		padding: 22px 0;
+	}
+}
+
+.c-table-block__row--large {
+  grid-template-columns: 0.27fr 0.6fr 0.14fr 0.13fr;
+
+  @include media(mobile,desktop-small) {
+		grid-template-columns: 0.3fr 0.4fr 0.15fr 0.15fr;
 	}
 }
 
@@ -44,12 +52,20 @@
 	border-bottom: 1px solid color(black-1);
 	@include media(mobile,desktop-small) {
 		column-gap: 2.5rem;
-		grid-template-columns: 0.3fr 0.4fr 0.3fr;
+		grid-template-columns: 0.3fr 0.4fr 0.27fr;
 	}
 	@include media(0, 992px) {
 		column-gap: 2.5rem;
 		grid-template-columns: 1fr;
 		display: none;
+	}
+}
+
+.c-table-block__row-headings--large {
+  grid-template-columns: 0.27fr 0.6fr 0.14fr 0.13fr;
+
+  @include media(mobile,desktop-small) {
+		grid-template-columns: 0.3fr 0.4fr 0.15fr 0.15fr;
 	}
 }
 
