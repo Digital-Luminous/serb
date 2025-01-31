@@ -5,7 +5,7 @@
 
 <?php if ( $slides ) : ?>
 	<div class="l-section s-regular-bottom">
-		<div class="c-banners-slider swiper js-slider" data-slider-type="banners">
+		<div class="c-banners-slider swiper <?php if(count($slides) > 1):?>js-slider <?php endif; ?>" data-slider-type="banners">
 			<picture class="c-banners-slider__decor">
 				<source srcset="<?php echo $theme_path . '/front/static/images/decor-banner-bg.jpg'; ?>" media="(min-width: 768px)" />
 				<img class="c-banners-slider__image" src="<?php echo $theme_path . '/front/static/images/decor-banner-bg-mobile.jpg'; ?>" alt=""/>
