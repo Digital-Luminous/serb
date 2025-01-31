@@ -34,6 +34,7 @@ const slidersConfig = {
     modules: [Pagination, Autoplay],
     pagination: true,
     speed: 600,
+    loop: true,
     autoplay: {
       delay: 5000,
       disableOnInteraction: false,

@@ -1995,6 +1995,7 @@ var slidersConfig = {
     modules: [swiper__WEBPACK_IMPORTED_MODULE_1__.Pagination, swiper__WEBPACK_IMPORTED_MODULE_1__.Autoplay],
     pagination: true,
     speed: 600,
+    loop: true,
     autoplay: {
       delay: 5000,
       disableOnInteraction: false
