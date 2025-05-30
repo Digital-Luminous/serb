@@ -6,6 +6,7 @@ function custom_add_form_tag_productlist() {
 }
 add_action( 'wpcf7_init', 'custom_add_form_tag_productlist' );
 
+
 function custom_productlist_form_tag_handler( $tag ) {
 
     $tag = new WPCF7_FormTag( $tag );
@@ -14,7 +15,7 @@ function custom_productlist_form_tag_handler( $tag ) {
         return '';
     }
 
-    $customlist = '';
+    $customlist = "";
 
     $query = new WP_Query(array(
         'post_type' => 'products',
@@ -30,19 +31,25 @@ function custom_productlist_form_tag_handler( $tag ) {
         $customlist .= sprintf( '<option value="%1$s">%2$s</option>', esc_html( $post_title ), esc_html( $post_title ) );
     }
 
+    $default_option = sprintf( '<option value="%1$s">%2$s</option>', 'Other' , 'Other' );
+
+    $formatted_custom_list = $default_option . " " . $customlist;
+
+    var_dump($formatted_custom_list);
+
     wp_reset_query();
 
     if (get_current_blog_id() === 1 || str_contains(get_site_url(), 'veriton')) {
-        $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Type to search products', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+        $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Type to search products', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $formatted_custom_list );
     } else if (get_current_blog_id() === 2) {
-        $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Tapez pour rechercher des produits', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+        $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Tapez pour rechercher des produits', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $formatted_custom_list );
     } else {
         $current_language = apply_filters( 'wpml_current_language', null );
 
         if ( $current_language === 'nl' ) {
-            $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Typ om naar producten te zoeken', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+            $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Typ om naar producten te zoeken', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $formatted_custom_list );
         } else {
-            $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Tapez pour rechercher des produits', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $customlist );
+            $customlist = sprintf( '<select class="c-form__hidden-select js-hidden-select wpcf7-form-control wpcf7-select wpcf7-validates-as-required" data-type="search" data-search-placeholder="' . __('Tapez pour rechercher des produits', 'protherics') . '" name="%1$s" id="%2$s" aria-required="true" aria-invalid="false"><option value="">' . __( '---', 'protherics' ) . '</option>%3$s</select>', $tag->name, $tag->name . '-options', $formatted_custom_list );
         }
     }
 
