@@ -32,13 +32,15 @@ function custom_productlist_form_tag_handler( $tag ) {
       )
     ));
 
+
+
     while ($query->have_posts()) {
         $query->the_post();
         $post_title = get_the_title();
         $customlist .= sprintf( '<option value="%1$s">%2$s</option>', esc_html( $post_title ), esc_html( $post_title ) );
     }
 
-    $default_option = sprintf( '<option value="%1$s">%2$s</option>', 'Other' , 'Other' );
+    $default_option = sprintf( '<option value="%1$s">%2$s</option>', __( 'Other', 'protherics' ) , __( 'Other', 'protherics' ));
 
     $formatted_custom_list = $default_option . " " . $customlist;
 
