@@ -19,7 +19,7 @@ const element = {
 };
 
 const params = {
-  timeout: 300, // Set in the live JS, never updated
+  timeout: 300,
 };
 
 const FormCustomSelects = {
@@ -44,6 +44,7 @@ const FormCustomSelects = {
             ...customSelectParams.classNames,
             containerOuter: className.selectContainerOuter,
           },
+          shouldSort:false,
         });
 
         FormCustomSelects.triggerDefaultSelect(customSelectEl, select);
@@ -64,10 +65,12 @@ const FormCustomSelects = {
         removeItemButton: true,
         allowHTML: true,
         searchPlaceholderValue: select.dataset.searchPlaceholder || 'Search...',
+        shouldSort:false,
       };
     } else {
       return {
         ...customSelectParams,
+        shouldSort:false,
       };
     }
   },

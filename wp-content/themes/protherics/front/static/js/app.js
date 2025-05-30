@@ -293,8 +293,7 @@ var element = {
   defaultSelects: document.querySelectorAll(selector.defaultSelect)
 };
 var params = {
-  timeout: 300 // Set in the live JS, never updated
-
+  timeout: 300
 };
 var FormCustomSelects = {
   customSelects: [],
@@ -312,7 +311,8 @@ var FormCustomSelects = {
         var customSelect = new (choices_js__WEBPACK_IMPORTED_MODULE_0___default())(customSelectEl, _objectSpread(_objectSpread({}, FormCustomSelects.getNormalSelectOptions(select)), {}, {
           classNames: _objectSpread(_objectSpread({}, _custom_select__WEBPACK_IMPORTED_MODULE_1__.params.classNames), {}, {
             containerOuter: className.selectContainerOuter
-          })
+          }),
+          shouldSort: false
         }));
         FormCustomSelects.triggerDefaultSelect(customSelectEl, select);
         FormCustomSelects.customSelects = [].concat(_toConsumableArray(FormCustomSelects.customSelects), [customSelect]);
@@ -332,10 +332,13 @@ var FormCustomSelects = {
       return {
         removeItemButton: true,
         allowHTML: true,
-        searchPlaceholderValue: select.dataset.searchPlaceholder || 'Search...'
+        searchPlaceholderValue: select.dataset.searchPlaceholder || 'Search...',
+        shouldSort: false
       };
     } else {
-      return _objectSpread({}, _custom_select__WEBPACK_IMPORTED_MODULE_1__.params);
+      return _objectSpread(_objectSpread({}, _custom_select__WEBPACK_IMPORTED_MODULE_1__.params), {}, {
+        shouldSort: false
+      });
     }
   },
   addEventListeners: function addEventListeners() {
