@@ -23,6 +23,13 @@ function custom_productlist_form_tag_handler( $tag ) {
         'posts_per_page' => -1,
         'orderby'       => 'title',
         'order'         => 'ASC',
+        'meta_query' => array(
+          array(
+              'key' => 'show_in_form_dropdown',
+              'value' => '1',
+              'compare' => '='
+          )
+      )
     ));
 
     while ($query->have_posts()) {
