@@ -35,8 +35,6 @@ function custom_productlist_form_tag_handler( $tag ) {
 
     $formatted_custom_list = $default_option . " " . $customlist;
 
-    var_dump($formatted_custom_list);
-
     wp_reset_query();
 
     if (get_current_blog_id() === 1 || str_contains(get_site_url(), 'veriton')) {
