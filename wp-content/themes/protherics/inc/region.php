@@ -129,6 +129,11 @@ class Protherics_Region {
 
 	}
 
+  public static function get_current_region_id() {
+    $cookie_name = 'protherics_region';
+    return isset($_COOKIE[$cookie_name]) ? intval($_COOKIE[$cookie_name]) : null;
+}
+
 }
 
 new Protherics_Region;
