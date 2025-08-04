@@ -27,6 +27,27 @@ const Tabs = {
       const response = await fetch(apiURL);
       Tabs.allNews = await response.json();
 
+      const cookieString = document.cookie;
+
+      const cookies = cookieString.replace(/^\*|\*$/g, '').split(';');
+
+      const regionCookie = cookies
+        .find(cookie => cookie.trim().startsWith('protherics_region='))
+        ?.split('=')[1];
+
+        for (const year in Tabs.allNews) {
+          Tabs.allNews[year] = Tabs.allNews[year].filter(news => {
+
+            if (news?.regions === null) return true;
+
+            if (!regionCookie) return true;
+
+            const regionId = parseInt(regionCookie);
+
+            return news.regions.includes(regionId);
+          });
+        }
+
       Tabs.renderNavList();
       Tabs.renderNewsList();
     } catch (error) {

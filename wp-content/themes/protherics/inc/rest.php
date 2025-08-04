@@ -85,6 +85,7 @@ function protherics_rest_api_news() {
                     'desc' => get_the_excerpt( $post_id ),
                     'link' => get_the_permalink( $post_id ),
                     'label' => __( 'Read release', 'protherics' ),
+                    'regions' => get_field( 'show_in_region', $post_id ),
                 );
             }
         }
