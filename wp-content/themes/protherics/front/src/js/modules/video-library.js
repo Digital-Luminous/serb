@@ -57,9 +57,7 @@ const VideoLibrary = {
         linkTitles.forEach(title => {
             const links = title.querySelectorAll('a');
             links.forEach(link => {
-                const src = link.closest(selector.videoSrc).getAttribute('data-video-src');
                 link.classList.add(selector.videoBtnSelector);
-                link.setAttribute('data-video-src', src);
             })
         })
     }
