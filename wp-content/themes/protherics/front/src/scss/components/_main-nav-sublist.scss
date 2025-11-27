@@ -60,3 +60,15 @@
         transform: translateX(0);
     }
 }
+
+.c-main-nav-sub__sublist {
+    margin-top: 10px;
+    width: 100%;
+    list-style: none;
+    a {
+        width: 100%;
+    }
+    @include media(0, tablet) {
+       padding-left: 50px;
+    }
+}

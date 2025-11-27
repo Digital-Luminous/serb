@@ -1,0 +1,214 @@
+.video-library {
+    @include media(tablet) {
+        height: 720px;
+    }
+    @include media(mobile, tablet) {
+        height: 590px;
+    }
+}
+
+.video-library__inner {
+    height: 100%;
+}
+
+.video-library__heading,
+.video-library__additional-title,
+.video-library__video-title,
+.video-library__additional-video-title {
+    color: color(purple-1);
+}
+
+.video-library__video-link {
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.video-library__heading {
+    @include media(mobile) {
+        margin-bottom: 40px;
+    }
+    @include media(0, mobile) {
+        margin-bottom: 15px;
+    }
+}
+
+.video-library__title {
+    @include media(mobile) {
+        margin-bottom: 26px;
+    }
+}
+
+.video-library__description {
+    @include media(0, mobile) {
+        line-height: 1.45;
+    }
+}
+
+.video-library__content {
+    display: flex;
+    justify-content: space-between;
+    @include media(tablet) {
+        height: calc(100% - 204px);
+    }
+    @include media(mobile, tablet) {
+        height: calc(100% - 174px);
+    }
+    @include media(mobile) {
+        gap: 20px;
+    }
+    @include media(0, mobile) {
+        flex-direction: column;
+        gap: 48px;
+    }
+}
+
+.video-library__video-holder {
+    @include media(mobile) {
+        width: 59.5%;
+    }
+}
+
+.video-library__video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    @include media(mobile) {
+        margin-bottom: 16px;
+    }
+    @include media(0, mobile) {
+        max-width: 93%;
+        margin-bottom: 4px;
+    }
+}
+
+.video-library__video,
+.video-library__additional-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include media(mobile) {
+        border-radius: 8px;
+    }
+    @include media(0, mobile) {
+        border-radius: 3px;
+    }
+}
+
+.video-library__video {
+    margin-bottom: 8px;
+}
+
+.video-library__video-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+
+.video-library__additional {
+    height: 100%;
+    @include media(mobile) {
+        width: 49.5%;
+        max-width: 407px;
+    }
+    @include media(0, mobile) {
+        width: calc(100% + 37px);
+        margin-left: -20px;
+        padding: 0;
+    }
+}
+
+.video-library__additional-inner {
+    overflow: auto;
+    @include media(mobile) {
+        height: calc(100% - 46px);
+        padding-right: 27px;
+    }
+    @include media(0, mobile) {
+        display: flex;
+        gap: 20px;
+        padding-inline: 20px;
+    }
+}
+
+.video-library__additional-title {
+    @include media(mobile) {
+        margin-bottom: 16px;
+    }
+    @include media(0, mobile) {
+        padding-inline: 20px;
+        margin-bottom: 18px;
+    }
+}
+
+.video-library__additional-video-holder {
+    &:not(:last-child) {
+        margin-bottom: 20px;
+    }
+    // @include media(tablet) {
+    //     width: 380px;
+    // }
+    // @include media(tablet, mobile) {
+    //     width: 320px;
+    // }
+    @include media(0, mobile) {
+        width: 220px;
+        flex-shrink: 0;
+        .video-library__video-wrapper {
+            margin-bottom: 8px;
+            max-width: none;
+        }
+    }
+}
+
+.video-library__additional-video-title {
+    max-width: 380px;
+    width: 100%;
+}
+
+.video-library__modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(color(black-1), 0.9);
+    z-index: 10;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-library__modal--show {
+    display: flex;
+}
+
+.video-library__modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.4s ease;
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+.video-library__modal-close-icon {
+    width: 100%;
+}
+
+.video-library__iframe {
+    width: 80%;
+    aspect-ratio: 16/9;
+}

@@ -44,6 +44,42 @@ function protherics_acf_gutenberg_blocks() {
 
         acf_register_block(
             array(
+                'name' => 'subpage-header',
+                'title' => __( 'Subpage Header', 'protherics' ),
+                'description' => __( 'Subpage Header section', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'welcome-widgets-menus',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
+                'name' => 'video-module',
+                'title' => __( 'Video Module', 'protherics' ),
+                'description' => __( 'Video Module', 'section', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'welcome-widgets-menus',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
+                'name' => 'quote-slider',
+                'title' => __( 'Quote slider', 'protherics' ),
+                'description' => __( 'Quote slider', 'section', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'welcome-widgets-menus',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
                 'name' => 'two-col',
                 'title' => __( 'Two columns', 'protherics' ),
                 'description' => __( 'Two colums section', 'protherics' ),
@@ -336,6 +372,9 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
         $blocks = array(
             'acf/two-col',
             'acf/hero',
+            'acf/subpage-header',
+            'acf/quote-slider',
+            'acf/video-module',
             'acf/hero-second',
             'acf/img-text',
             'acf/latest-insights',
