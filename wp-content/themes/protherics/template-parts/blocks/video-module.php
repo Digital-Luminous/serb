@@ -37,7 +37,7 @@ $allowed_tags = array(
 
         <div class="video-library__content">
 
-            <div class="video-library__video-holder">
+            <div class="video-library__video-holder js-video-src" data-video-src="<?php echo esc_url( $main_embed ); ?>">
                 <?php if ( $main_video_id ) : 
                     $main_thumb = 'https://i.ytimg.com/vi/' . $main_video_id . '/sddefault.jpg';
                     $main_embed = 'https://www.youtube.com/embed/' . $main_video_id;
@@ -50,15 +50,14 @@ $allowed_tags = array(
                                     width="100%" height="100%">
                             <?php endif; ?>
 
-                        <button class="video-library__video-btn js-video-library-btn"
-                                data-video-src="<?php echo esc_url( $main_embed ); ?>">
+                        <button class="video-library__video-btn js-video-library-btn">
                             <span class="sr-only">Play video</span>
                         </button>
                     </div>
                 <?php endif; ?>
 
                 <?php if ( $video_caption ) : ?>
-                    <h5 class="video-library__video-title t-size-16 t-size-24--desktop c-cms-content">
+                    <h5 class="video-library__video-title t-size-16 t-size-24--desktop c-cms-content js-video-title">
                         <span><?php echo wp_kses( $video_caption, $allowed_tags ); ?></span>
                     </h5>
                 <?php endif; ?>
@@ -82,14 +81,13 @@ $allowed_tags = array(
                             $thumb = 'https://i.ytimg.com/vi/' . $video_id . '/sddefault.jpg';
                             $embed = 'https://www.youtube.com/embed/' . $video_id;
                         ?>
-                            <div class="video-library__additional-video-holder">
+                            <div class="video-library__additional-video-holder js-video-src" data-video-src="<?php echo esc_url( $embed ); ?>">
                                 <div class="video-library__video-wrapper">
                                     <img class="video-library__additional-video"
                                          src="<?php echo esc_url( $thumb ); ?>"
                                          width="100%" height="100%" alt="">
 
-                                    <button class="video-library__video-btn js-video-library-btn"
-                                            data-video-src="<?php echo esc_url( $embed ); ?>">
+                                    <button class="video-library__video-btn js-video-library-btn">
                                         <span class="sr-only"><?php echo esc_html($btn_open_text); ?></span>
                                     </button>
                                 </div>

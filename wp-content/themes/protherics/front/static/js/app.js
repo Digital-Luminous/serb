@@ -35194,10 +35194,12 @@ __webpack_require__.r(__webpack_exports__);
 
 var selector = {
   videoLibrary: '.js-video-library',
-  videoBtn: '.js-video-library-btn',
+  videoBtnSelector: 'js-video-library-btn',
+  videoTitle: '.js-video-title',
   modal: '.js-video-library-modal',
   modalCloseBtn: '.js-video-library-close',
-  iframe: '.js-video-library-iframe'
+  iframe: '.js-video-library-iframe',
+  videoSrc: '.js-video-src'
 };
 var modalShowClass = 'video-library__modal--show';
 var VideoLibrary = {
@@ -35210,7 +35212,9 @@ var VideoLibrary = {
     var libraries = document.querySelectorAll(selector.videoLibrary);
     if (!libraries) return;
     libraries.forEach(function (lib) {
-      var btns = lib.querySelectorAll(selector.videoBtn);
+      _this.handleVideoLinks(lib);
+
+      var btns = lib.querySelectorAll(".".concat(selector.videoBtnSelector));
       var modal = lib.querySelector(selector.modal);
       var iframe = modal.querySelector(selector.iframe);
 
@@ -35222,7 +35226,8 @@ var VideoLibrary = {
   handleOpenEvent: function handleOpenEvent(btns, modal, iframe) {
     btns.forEach(function (btn) {
       btn.addEventListener('click', function (e) {
-        var src = e.target.getAttribute('data-video-src');
+        e.preventDefault();
+        var src = e.target.closest(selector.videoSrc).getAttribute('data-video-src');
         if (!src) return;
         modal.classList.add(modalShowClass);
         iframe.src = src;
@@ -35236,6 +35241,17 @@ var VideoLibrary = {
       modal.classList.remove(modalShowClass);
       iframe.src = '';
       (0,_utils__WEBPACK_IMPORTED_MODULE_0__.enableScroll)();
+    });
+  },
+  handleVideoLinks: function handleVideoLinks(lib) {
+    var linkTitles = lib.querySelectorAll(selector.videoTitle);
+    linkTitles.forEach(function (title) {
+      var links = title.querySelectorAll('a');
+      links.forEach(function (link) {
+        var src = link.closest(selector.videoSrc).getAttribute('data-video-src');
+        link.classList.add(selector.videoBtnSelector);
+        link.setAttribute('data-video-src', src);
+      });
     });
   }
 };
