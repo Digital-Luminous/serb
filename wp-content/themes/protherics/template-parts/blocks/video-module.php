@@ -18,7 +18,7 @@ $allowed_tags = array(
 );
 ?>
 
-<section class="video-library l-section s-regular-bottom js-video-library">
+<section class="video-library l-section s-regular-bottom s-regular-top js-video-library">
     <div class="video-library__inner l-inner">
 
         <div class="video-library__heading">
