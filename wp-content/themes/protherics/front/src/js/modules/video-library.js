@@ -58,6 +58,7 @@ const VideoLibrary = {
             const links = title.querySelectorAll('a');
             links.forEach(link => {
                 link.classList.add(selector.videoBtnSelector);
+                link.href = "";
             })
         })
     }

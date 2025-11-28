@@ -35249,6 +35249,7 @@ var VideoLibrary = {
       var links = title.querySelectorAll('a');
       links.forEach(function (link) {
         link.classList.add(selector.videoBtnSelector);
+        link.href = "";
       });
     });
   }

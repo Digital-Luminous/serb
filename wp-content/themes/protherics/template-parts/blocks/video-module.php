@@ -94,7 +94,7 @@ $allowed_tags = array(
                                 <?php
                                 if ( $caption ) :
                                 ?>
-                                    <h6 class="video-library__additional-video-title t-size-16 t-size-20--desktop c-cms-content">
+                                    <h6 class="video-library__additional-video-title t-size-16 t-size-20--desktop c-cms-content js-video-title">
                                         <?php echo wp_kses( $caption, $allowed_tags ); ?>
                                     </h6>
                                 <?php endif; ?>
