@@ -35,13 +35,13 @@ $allowed_tags = array(
             <?php endif; ?>
         </div>
 
-        <div class="video-library__content">
-
-            <div class="video-library__video-holder js-video-src" data-video-src="<?php echo esc_url( $main_embed ); ?>">
-                <?php if ( $main_video_id ) : 
-                    $main_thumb = 'https://i.ytimg.com/vi/' . $main_video_id . '/sddefault.jpg';
-                    $main_embed = 'https://www.youtube.com/embed/' . $main_video_id;
-                ?>
+        
+            <?php if ( $main_video_id ) : 
+                $main_thumb = 'https://i.ytimg.com/vi/' . $main_video_id . '/sddefault.jpg';
+                $main_embed = 'https://www.youtube.com/embed/' . $main_video_id;
+            ?>
+            <div class="video-library__content">
+                <div class="video-library__video-holder js-video-src" data-video-src="<?php echo esc_url( $main_embed ); ?>">
                     <div class="video-library__video-wrapper">
                             <?php if ( $placeholder && ! empty( $placeholder['url'] ) ) : ?>
                                 <img class="video-library__video"
@@ -60,8 +60,8 @@ $allowed_tags = array(
                     <h5 class="video-library__video-title t-size-16 t-size-24--desktop c-cms-content js-video-title">
                         <span><?php echo wp_kses( $video_caption, $allowed_tags ); ?></span>
                     </h5>
-                <?php endif; ?>
-            </div>
+                </div>
+            <?php endif; ?>
 
             <?php if ( have_rows( 'additional_videos' ) ) : ?>
                 <div class="video-library__additional">
