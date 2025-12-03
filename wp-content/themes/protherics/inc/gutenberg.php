@@ -68,6 +68,18 @@ function protherics_acf_gutenberg_blocks() {
 
         acf_register_block(
             array(
+                'name' => 'our-experts',
+                'title' => __( 'Our Experts', 'protherics' ),
+                'description' => __( 'Our Experts', 'section', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'welcome-widgets-menus',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
                 'name' => 'quote-slider',
                 'title' => __( 'Quote slider', 'protherics' ),
                 'description' => __( 'Quote slider', 'section', 'protherics' ),
@@ -375,6 +387,7 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
             'acf/subpage-header',
             'acf/quote-slider',
             'acf/video-module',
+            'acf/our-experts',
             'acf/hero-second',
             'acf/img-text',
             'acf/latest-insights',
