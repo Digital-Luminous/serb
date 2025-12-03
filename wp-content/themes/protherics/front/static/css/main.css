@@ -5702,14 +5702,13 @@ svg {
 }
 @media (min-width: 1024px) {
   .quote-carousel {
-    padding: 48px 90px;
+    padding-right: 90px;
     min-height: 536px;
   }
 }
 @media (min-width: 0) and (max-width: 1023px) {
   .quote-carousel {
     position: relative;
-    padding: 20px;
   }
 }
 
@@ -5745,7 +5744,7 @@ svg {
 @media (min-width: 1024px) {
   .quote-carousel__slide-image-holder {
     width: 40.679%;
-    height: 440px;
+    height: 536px;
   }
 }
 @media (min-width: 0) and (max-width: 1023px) {
@@ -5768,11 +5767,13 @@ svg {
 }
 @media (min-width: 1024px) {
   .quote-carousel__slide-content {
-    padding-bottom: 40px;
+    padding-bottom: 68px;
+    padding-top: 48px;
   }
 }
 @media (min-width: 0) and (max-width: 1023px) {
   .quote-carousel__slide-content {
+    padding: 20px;
     margin-bottom: 90px;
   }
 }
@@ -5806,13 +5807,13 @@ svg {
 }
 @media (min-width: 1024px) {
   .quote-carousel__controls {
-    bottom: 0;
+    bottom: 40px;
     left: calc(40.679% + 43px);
   }
 }
 @media (min-width: 0) and (max-width: 1023px) {
   .quote-carousel__controls {
-    left: -5px;
+    left: 15px;
     width: -moz-fit-content;
     width: fit-content;
   }

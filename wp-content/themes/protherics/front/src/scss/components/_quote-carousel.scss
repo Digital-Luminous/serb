@@ -1,12 +1,11 @@
 .quote-carousel {
     background: url('../images/decor-banner-bg.jpg') center center / cover no-repeat;
     @include media(tablet) {
-        padding: 48px 90px;
+        padding-right: 90px;
         min-height: 536px;
     }
     @include media(0, tablet) {
         position: relative;
-        padding: 20px;
     }
 }
 
@@ -36,7 +35,7 @@
     flex-shrink: 0;
     @include media(tablet) {
         width: 40.679%;
-        height: 440px;
+        height: 536px;
     }
     @include media(0, tablet) {
         width: 100%;
@@ -54,10 +53,12 @@
     color: color(white-1);
     width: 100%;
     @include media(tablet) {
-        padding-bottom: 40px;
+        padding-bottom: 68px;
+        padding-top: 48px;
     }
     @include media(0, tablet) {
-        margin-bottom: 90px;
+       padding: 20px;
+       margin-bottom: 90px;
     }
 }
 
@@ -86,11 +87,11 @@
         }
     }
     @include media(tablet) {
-        bottom: 0;
+        bottom: 40px;
         left: calc(40.679% + 43px)
     };
     @include media(0, tablet) {
-        left: -5px;
+        left: 15px;
         width: fit-content;
     }
 }
