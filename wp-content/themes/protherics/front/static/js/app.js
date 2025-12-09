@@ -34527,7 +34527,7 @@ var RegionsModal = {
     var shouldContinue = !!RegionsModal.modal && !!RegionsModal.closeModalBtn && !!RegionsModal.acceptModalBtn;
     if (!shouldContinue) return;
 
-    if (!RegionsModal.getCookie(['prothericsRegion'])) {
+    if (!RegionsModal.getCookie('prothericsRegion')) {
       RegionsModal.showModal();
     }
 
@@ -34556,44 +34556,97 @@ var RegionsModal = {
   },
   handleAcceptModal: function () {
     var _handleAcceptModal = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-      var cookieValue, regionNameCookie, regionSelect, value;
+      var cookieValue, regionNameCookie, regionSelect, value, selectedOption, urlDomain, redirectRegionId, optionText, redirectUrl, _selectedOption;
+
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              console.log('=== handleAcceptModal called ===');
               cookieValue = cookieConfiguration['prothericsRegion'].defaultValue;
               regionNameCookie = cookieConfiguration['prothericsRegionName'].defaultValue;
               regionSelect = document.querySelector(selector.regionSelect);
-              value = regionSelect.value;
+              value = regionSelect ? regionSelect.value : null;
+              console.log('Region select value:', value);
+              console.log('Region select element:', regionSelect);
 
               if (!value) {
-                _context.next = 12;
+                _context.next = 28;
                 break;
               }
 
               if (!isNaN(value)) {
-                _context.next = 10;
+                _context.next = 24;
                 break;
               }
 
               // is url - redirect
-              window.location = value;
+              console.log('Handling URL redirect:', value);
+              selectedOption = regionSelect.options[regionSelect.selectedIndex];
+              regionNameCookie = selectedOption ? selectedOption.text : regionNameCookie; // Determine region ID from URL AND selected option
+
+              urlDomain = new URL(value).hostname;
+              redirectRegionId = cookieValue; // Map domains to region IDs
+
+              if (urlDomain.includes('serb.fr')) {
+                redirectRegionId = 2000; // France
+              } else if (urlDomain.includes('serb.be')) {
+                redirectRegionId = 1999; // Belgium  
+              } else if (urlDomain.includes('serb.com') || urlDomain.includes('serb.local')) {
+                // For main domain, determine region from the selected option text
+                optionText = regionNameCookie.toLowerCase();
+
+                if (optionText.includes('us')) {
+                  redirectRegionId = 2001; // US
+                } else if (optionText.includes('global')) {
+                  redirectRegionId = 1998; // Global
+                } else {
+                  redirectRegionId = 2001; // Default to US
+                }
+              }
+
+              console.log('Setting cookies before redirect:', {
+                redirectRegionId: redirectRegionId,
+                regionNameCookie: regionNameCookie,
+                selectedOptionText: selectedOption ? selectedOption.text : 'none'
+              }); // Add URL parameters to pass the region info
+
+              redirectUrl = new URL(value);
+              redirectUrl.searchParams.set('region_id', redirectRegionId);
+              redirectUrl.searchParams.set('region_name', regionNameCookie);
+              console.log('Redirecting to:', redirectUrl.toString());
+              setTimeout(function () {
+                window.location.href = redirectUrl.toString();
+              }, 300);
               return _context.abrupt("return");
 
-            case 10:
-              // is region id
-              regionNameCookie = regionSelect.textContent;
-              cookieValue = value;
+            case 24:
+              // is region id - normal flow
+              _selectedOption = regionSelect.options[regionSelect.selectedIndex];
+              regionNameCookie = _selectedOption ? _selectedOption.text : regionNameCookie;
+              cookieValue = parseInt(value);
+              console.log('Selected region:', {
+                id: cookieValue,
+                name: regionNameCookie,
+                selectedIndex: regionSelect.selectedIndex,
+                selectedOption: _selectedOption
+              });
 
-            case 12:
+            case 28:
+              console.log('About to set cookies:', {
+                cookieValue: cookieValue,
+                regionNameCookie: regionNameCookie
+              });
               RegionsModal.saveCookie(cookieValue, 'prothericsRegion');
               RegionsModal.saveCookie(regionNameCookie, 'prothericsRegionName');
-              RegionsModal.setRegionAttribute();
-              RegionsModal.setRegionName();
-              RegionsModal.hideModal();
-              RegionsModal.refreshPage();
+              setTimeout(function () {
+                RegionsModal.setRegionAttribute();
+                RegionsModal.setRegionName();
+                RegionsModal.hideModal();
+                RegionsModal.refreshPage();
+              }, 200);
 
-            case 18:
+            case 32:
             case "end":
               return _context.stop();
           }
@@ -34607,6 +34660,28 @@ var RegionsModal = {
 
     return handleAcceptModal;
   }(),
+  // Add new method to set cookies for specific domains
+  saveCookieForDomain: function saveCookieForDomain(cookieVal, name, targetDomain) {
+    var config = {
+      path: '/',
+      sameSite: 'Lax'
+    }; // Extract the main domain from target domain
+
+    var domainParts = targetDomain.split('.');
+
+    if (domainParts.length > 2) {
+      var mainDomain = '.' + domainParts.slice(-2).join('.');
+      config.domain = mainDomain;
+      console.log('Setting cross-domain cookie for target domain:', mainDomain);
+    }
+
+    if (cookieConfiguration[name].expires) {
+      config.expires = cookieConfiguration[name].expires;
+    }
+
+    console.log('Setting cookie for target domain:', cookieConfiguration[name].name, '=', cookieVal, 'config:', config);
+    js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].set(cookieConfiguration[name].name, cookieVal, config);
+  },
   showModal: function showModal() {
     RegionsModal.modal.classList.add(state.isOpen);
   },
@@ -34614,19 +34689,46 @@ var RegionsModal = {
     RegionsModal.modal.classList.remove(state.isOpen);
   },
   getCookie: function getCookie(name) {
-    return js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get(cookieConfiguration[name].name);
+    // Fix: Handle both string and array inputs
+    var cookieName = Array.isArray(name) ? cookieConfiguration[name[0]].name : cookieConfiguration[name].name;
+    var value = js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get(cookieName);
+    console.log('Getting cookie:', cookieName, '=', value);
+    return value;
   },
   saveCookie: function saveCookie(cookieVal, name) {
-    var config = {};
+    var config = {
+      path: '/',
+      sameSite: 'Lax'
+    }; // Always set domain for cross-subdomain access (both local and production)
+
+    var hostname = window.location.hostname;
+    var domainParts = hostname.split('.');
+
+    if (domainParts.length > 2) {
+      var mainDomain = '.' + domainParts.slice(-2).join('.');
+      config.domain = mainDomain;
+      console.log('Setting cross-domain cookie with domain:', mainDomain);
+    }
 
     if (cookieConfiguration[name].expires) {
       config.expires = cookieConfiguration[name].expires;
     }
 
-    js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].set(cookieConfiguration[name].name, cookieVal, config);
+    console.log('Setting cookie:', cookieConfiguration[name].name, '=', cookieVal, 'config:', config);
+    js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].set(cookieConfiguration[name].name, cookieVal, config); // Verify cookie was set
+
+    var verification = js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get(cookieConfiguration[name].name);
+    console.log('Cookie verification:', cookieConfiguration[name].name, '=', verification);
+
+    if (verification != cookieVal.toString()) {
+      console.error('Cookie was not set correctly!', {
+        expected: cookieVal,
+        actual: verification
+      });
+    }
   },
   setRegionAttribute: function setRegionAttribute() {
-    var regionId = RegionsModal.getCookie(['prothericsRegion']);
+    var regionId = RegionsModal.getCookie('prothericsRegion');
 
     if (regionId && regionId !== cookieConfiguration.defaultValue) {
       document.querySelector('body').setAttribute('region-id', regionId);
@@ -34634,9 +34736,37 @@ var RegionsModal = {
   },
   setRegionName: function setRegionName() {
     if (!RegionsModal.regionName) return;
-    RegionsModal.regionName.textContent = RegionsModal.getCookie(['prothericsRegionName']) || cookieConfiguration['prothericsRegionName'].defaultValue;
+    RegionsModal.regionName.textContent = RegionsModal.getCookie('prothericsRegionName') || cookieConfiguration['prothericsRegionName'].defaultValue;
   },
   refreshPage: function refreshPage() {
+    var regionId = js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get('protherics_region');
+
+    var normalizePath = function normalizePath(path) {
+      return path.replace(/\/+$/, '');
+    };
+
+    var currentPath = normalizePath(window.location.pathname);
+    var usRegionId = 2001;
+    var usPrivacyUrl = '/privacy-policy-us';
+    var globalPrivacyUrl = '/privacy-policy';
+    console.log('refreshPage called', {
+      regionId: regionId,
+      currentPath: currentPath,
+      usPrivacyUrl: usPrivacyUrl,
+      globalPrivacyUrl: globalPrivacyUrl,
+      usRegionId: usRegionId
+    });
+
+    if (currentPath === usPrivacyUrl && regionId !== usRegionId) {
+      window.location.href = globalPrivacyUrl;
+      return;
+    }
+
+    if (currentPath === globalPrivacyUrl && regionId === usRegionId) {
+      window.location.href = usPrivacyUrl;
+      return;
+    }
+
     window.location.reload();
   }
 };
