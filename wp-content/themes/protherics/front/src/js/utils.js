@@ -3,6 +3,12 @@ const BREAKPOINTS = {
   phone: 767,
 }
 
+const body = document.querySelector('body');
+
+let topScroll = 0;
+let isScrollDisabled = false;
+const disabledScrollClass = 'scroll-disabled';
+
 const moveCursorToEnd = el => {
   if (typeof el.selectionStart === 'number') {
     el.selectionStart = el.selectionEnd = el.value.length
@@ -65,6 +71,22 @@ const debounceEvent = (callback, wait = 250) => {
   };
 };
 
+const disableScroll = () => {
+		if (!isScrollDisabled) {
+			topScroll = document.documentElement.scrollTop;
+			body.style.top = `-${topScroll}px`;
+			body.classList.add(disabledScrollClass);
+			isScrollDisabled = true;
+		}
+	};
+
+	const enableScroll = () => {
+		body.removeAttribute('style');
+		body.classList.remove(disabledScrollClass);
+		document.documentElement.scrollTop = topScroll;
+		isScrollDisabled = false;
+	};
+
 module.exports = {
   BREAKPOINTS,
   moveCursorToEnd,
@@ -74,5 +96,7 @@ module.exports = {
   isMobile,
   isExplorer,
   debounceEvent,
-  getScrollbarWidth
+  getScrollbarWidth,
+  enableScroll,
+  disableScroll
 }

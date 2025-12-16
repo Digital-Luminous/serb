@@ -153,6 +153,20 @@ function protherics_widgets_init() {
 }
 add_action( 'widgets_init', 'protherics_widgets_init' );
 
+function extract_youtube_id( $url ) {
+    if ( empty( $url ) ) {
+        return '';
+    }
+    if ( preg_match( '/^[a-zA-Z0-9_-]{11}$/', $url ) ) {
+        return $url;
+    }
+    preg_match(
+        '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i',
+        $url,
+        $matches
+    );
+    return $matches[1] ?? '';
+}
 /**
  * Implement the Custom Header feature.
  */

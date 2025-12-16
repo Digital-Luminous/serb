@@ -40,6 +40,11 @@ const slidersConfig = {
       disableOnInteraction: false,
     },
   },
+  quote: {
+    slidesPerView: 1,
+    modules: [Pagination],
+    pagination: true,
+  }
 };
 
 const Slider = {

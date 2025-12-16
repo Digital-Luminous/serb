@@ -1,0 +1,97 @@
+.quote-carousel {
+    background: url('../images/decor-banner-bg.jpg') center center / cover no-repeat;
+    @include media(tablet) {
+        padding-right: 90px;
+        min-height: 536px;
+    }
+    @include media(0, tablet) {
+        position: relative;
+    }
+}
+
+.quote-carousel__holder {
+    height: 100%;
+}
+
+.quote-carousel__wrapper {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.quote-carousel__slide {
+    display: flex;
+    justify-content: space-between;
+    @include media(tablet) {
+        gap: 48px;   
+    }
+    @include media(0, tablet) {
+        flex-direction: column;
+        gap: 24px;
+    }
+}
+
+.quote-carousel__slide-image-holder {
+    flex-shrink: 0;
+    @include media(tablet) {
+        width: 40.679%;
+        height: 536px;
+    }
+    @include media(0, tablet) {
+        width: 100%;
+        height: 312px;
+    }
+}
+
+.quote-carousel__slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.quote-carousel__slide-content {
+    color: color(white-1);
+    width: 100%;
+    @include media(tablet) {
+        padding-bottom: 68px;
+        padding-top: 48px;
+    }
+    @include media(0, tablet) {
+       padding: 20px;
+       margin-bottom: 90px;
+    }
+}
+
+.quote-carousel__slide-quote,
+.quote-carousel__slide-author {
+    font-weight: 600;
+}
+
+.quote-carousel__slide-quote {
+    @include media(tablet) {
+        margin-bottom: 12px;
+    }
+    @include media(0, tablet) {
+        margin-bottom: 5px;
+    }
+}
+
+.quote-carousel__controls {
+    transform: translateX(0);
+    .c-slider-pagination__bullet {
+        transition: 0.4s ease;
+        transition-property: background-color, border-color;
+        &:not(.c-slider-pagination__bullet--active):hover {
+            border-color: color(white-1);
+            background-color: color(white-1);
+        }
+    }
+    @include media(tablet) {
+        bottom: 40px;
+        left: calc(40.679% + 43px)
+    };
+    @include media(0, tablet) {
+        left: 15px;
+        width: fit-content;
+    }
+}
