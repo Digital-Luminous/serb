@@ -1848,7 +1848,9 @@ svg {
   transition-duration: 250ms;
   display: inline-flex;
   align-items: center;
-  padding: 2.1rem 2rem;
+  padding: 2.1rem 3rem;
+  font-weight: 600;
+  line-height: 1.8rem;
   cursor: pointer;
   transition-property: background-color;
   letter-spacing: 0.1rem;
@@ -2064,7 +2066,9 @@ svg {
   transition-duration: 250ms;
   display: inline-flex;
   align-items: center;
-  padding: 2.1rem 2rem;
+  padding: 2.1rem 3rem;
+  font-weight: 600;
+  line-height: 1.8rem;
   cursor: pointer;
   transition-property: background-color;
   letter-spacing: 0.1rem;
@@ -2192,11 +2196,14 @@ svg {
   transition-duration: 250ms;
   display: inline-flex;
   align-items: center;
-  padding: 2.1rem 2rem;
+  padding: 2.1rem 3rem;
+  font-weight: 600;
+  line-height: 1.8rem;
   cursor: pointer;
   transition-property: background-color;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
+  border-radius: 9rem;
 }
 
 .c-btn--wide {
@@ -2230,15 +2237,18 @@ svg {
 .c-btn--arrowed:after {
   transition-timing-function: ease-in-out;
   transition-duration: 250ms;
+  content: "";
+  display: inline-block;
+  flex-shrink: 0;
+  width: 3.4rem;
   height: 1.6rem;
   margin-left: 1.25rem;
-  line-height: 1;
-  content: url("../images/icon-arrow-right-colored.svg");
+  background: url("../images/icon-arrow-right-colored.svg") no-repeat center/contain;
   transition-property: transform;
 }
 
 .c-btn--primary.c-btn--arrowed::after {
-  content: url("../images/icon-arrow-right-white.svg");
+  background-image: url("../images/icon-arrow-right-white.svg");
 }
 
 .c-btn--arrowed:hover::after,
