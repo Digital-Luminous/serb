@@ -366,6 +366,18 @@ function protherics_acf_gutenberg_blocks() {
             )
         );
 
+        acf_register_block(
+            array(
+                'name' => 'hero-banner',
+                'title' => __( 'Hero Banner', 'protherics' ),
+                'description' => __( 'Hero banner section', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'image-flip-horizontal',
+                'keywords' => array(),
+            )
+        );
+
     }
 }
 add_action( 'acf/init', 'protherics_acf_gutenberg_blocks' );
@@ -422,6 +434,7 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
             'acf/three-columns',
             'acf/timeline',
             'acf/home-carousel',
+            'acf/hero-banner',
         );
     }
     return $blocks;
