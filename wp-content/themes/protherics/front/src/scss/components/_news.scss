@@ -28,7 +28,6 @@
 .c-news__social-media {
     position: relative;
     background-color: color(purple-1);
-    border-radius: 16px;
 
     &::before {
         @include filler;
