@@ -23,7 +23,7 @@ const slidersConfig = {
     modules: [Pagination],
     pagination: true,
     breakpoints: {
-      768: {
+      0: {
         disabled: true,
       },
     },
