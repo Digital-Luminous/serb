@@ -35,6 +35,12 @@ wp-config.php
 # htaccess
 /.htaccess
 
+# WP Engine mu-plugins (platform-managed, not part of the theme/site code)
+/wp-content/mu-plugins/
+
+# Orphaned old plugin build — replaced by folders-pro, no longer active
+/wp-content/plugins/folders/
+
 # All plugins
 #
 # Note: If you wish to whitelist plugins,
