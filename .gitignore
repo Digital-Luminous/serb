@@ -35,9 +35,6 @@ wp-config.php
 # htaccess
 /.htaccess
 
-# ACF Pro (premium plugin, updates independently of the repo)
-/wp-content/plugins/advanced-custom-fields-pro/
-
 # WP Engine mu-plugins (platform-managed, not part of the theme/site code)
 /wp-content/mu-plugins/
 
