@@ -7,7 +7,7 @@
     padding: 2rem 5rem 2rem 2rem;
 
     border: .1rem solid color(black-1);
-    border-radius: .4rem;
+    border-radius: border-radius(content);
     box-shadow: .4rem .4rem .8rem 0 color(dark-grey-1);
 
     @include media(mobile) {
