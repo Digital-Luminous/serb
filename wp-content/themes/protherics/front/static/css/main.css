@@ -5864,6 +5864,381 @@ svg {
   }
 }
 
+.c-home-carousel {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  height: 448px;
+}
+.c-home-carousel .c-cms-content,
+.c-home-carousel .c-cms-content * {
+  color: #FFF;
+}
+
+.c-home-carousel__stage {
+  position: relative;
+  display: grid;
+  background-color: #FFF;
+  height: 448px;
+}
+
+.c-home-carousel__panorama,
+.c-home-carousel__grid {
+  grid-area: 1/1;
+}
+
+.c-home-carousel__panorama {
+  position: relative;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 448px;
+  min-height: 448px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+  pointer-events: none;
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-home-carousel__panorama {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+.c-home-carousel__media {
+  display: none;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-home-carousel__media {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .c-home-carousel__media::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--bg-image);
+    background-repeat: no-repeat;
+    background-size: calc(var(--tile-count) * 100%) 100%;
+    background-position: calc(var(--tile-index) * 100% / max(1, var(--tile-count) - 1)) center;
+  }
+}
+
+.c-home-carousel__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 20px;
+  align-items: stretch;
+  grid-auto-rows: 448px;
+  min-width: 0;
+  background-color: transparent;
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-home-carousel__grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-rows: auto;
+  }
+}
+@media (min-width: 1024px) {
+  .c-home-carousel__grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.c-home-carousel__tile {
+  position: relative;
+  display: grid;
+  grid-template-areas: "stack";
+  grid-template-rows: 448px;
+  align-self: stretch;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  outline: none;
+  background-color: transparent;
+}
+@media (min-width: 1024px) {
+  .c-home-carousel__tile {
+    flex: 0 0 214px;
+    cursor: pointer;
+    transition-timing-function: ease-in-out;
+    transition-duration: 400ms;
+    transition-property: flex-grow, flex-shrink, flex-basis, max-width;
+  }
+  .c-home-carousel__tile.is-active {
+    flex: 1 1 214px;
+    max-width: 480px;
+  }
+}
+@media (min-width: 1250px) {
+  .c-home-carousel__tile.is-active {
+    flex: 0 0 480px;
+    max-width: 480px;
+  }
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-home-carousel__tile {
+    grid-template-rows: auto;
+    min-height: 448px;
+    cursor: default;
+  }
+}
+
+.c-home-carousel__surface {
+  grid-area: stack;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100%;
+}
+
+.c-home-carousel__tint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: #54178E66;
+  transition-timing-function: ease-in-out;
+  transition-duration: 400ms;
+  transition-property: background;
+}
+
+.c-home-carousel__tile.is-active .c-home-carousel__tint {
+  background: #54178E80;
+}
+
+.c-home-carousel__expanded {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 3.2rem 2.4rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-home-carousel__expanded {
+    position: relative;
+    inset: auto;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+.c-home-carousel__tile.is-active .c-home-carousel__expanded {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+@media (min-width: 1024px) {
+  .c-home-carousel.is-interactive .c-home-carousel__expanded {
+    transition: opacity 100ms ease, visibility 0s linear 100ms;
+  }
+  .c-home-carousel.is-interactive .c-home-carousel__tile.is-active .c-home-carousel__expanded {
+    transition: opacity 250ms ease 400ms, visibility 0s linear 400ms;
+  }
+  .c-home-carousel.is-interactive .c-home-carousel__label {
+    transition: opacity 50ms ease, visibility 0s linear 50ms;
+  }
+  .c-home-carousel.is-interactive .c-home-carousel__tile:not(.is-active) .c-home-carousel__label {
+    transition: opacity 250ms ease, visibility 0s linear 0s;
+  }
+  .c-home-carousel.is-interactive .c-home-carousel__tile.is-active .c-home-carousel__label {
+    transition: opacity 50ms ease, visibility 0s linear 50ms;
+  }
+}
+.c-home-carousel__heading {
+  margin: 0 0 1.6rem;
+  color: #FFF;
+  font-family: Montserrat, sans-serif;
+  font-weight: 700;
+  font-size: 3.2rem;
+  line-height: 4.4rem;
+  letter-spacing: 0;
+  padding-right: 2rem;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.c-home-carousel__text {
+  margin: 0;
+  color: #FFF;
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 3rem;
+  letter-spacing: 0;
+}
+.c-home-carousel__text,
+.c-home-carousel__text p {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+.c-home-carousel__text p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.c-home-carousel__actions {
+  margin-top: auto;
+  padding-top: 2.4rem;
+}
+.c-home-carousel__actions .c-btn--secondary:hover,
+.c-home-carousel__actions .c-btn--secondary:focus {
+  background-color: #FFF;
+}
+
+.c-home-carousel__label {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 1.2rem 2.4rem;
+  color: #FFF;
+  font-family: Montserrat, sans-serif;
+  font-weight: 700;
+  font-size: 3.2rem;
+  line-height: 3.6rem;
+  letter-spacing: 0;
+  text-align: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+@media (min-width: 1024px) {
+  .c-home-carousel__label {
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-home-carousel__label {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .c-home-carousel__tile:not(.is-active) .c-home-carousel__label {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (min-width: 1024px) {
+  .c-home-carousel__tile.is-active .c-home-carousel__label {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.c-home-carousel__clip-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-home-carousel {
+    height: auto;
+  }
+
+  .c-home-carousel__stage {
+    height: auto;
+    display: block;
+  }
+
+  .c-home-carousel__panorama,
+.c-home-carousel__grid {
+    grid-area: auto;
+  }
+
+  .c-home-carousel__grid {
+    display: grid;
+  }
+
+  .c-home-carousel__tile:nth-child(1) .c-home-carousel__tint {
+    background: url("../images/gradient-card-1.svg") center/cover no-repeat;
+  }
+
+  .c-home-carousel__tile:nth-child(2) .c-home-carousel__tint {
+    background: url("../images/gradient-card-2.svg") center/cover no-repeat;
+  }
+
+  .c-home-carousel__tile:nth-child(3) .c-home-carousel__tint {
+    background: url("../images/gradient-card-3.svg") center/cover no-repeat;
+  }
+
+  .c-home-carousel__tile:nth-child(4) .c-home-carousel__tint {
+    background: url("../images/gradient-card-4.svg") center/cover no-repeat;
+  }
+
+  .c-home-carousel__tile:nth-child(n+5) .c-home-carousel__tint {
+    background: url("../images/gradient-card-1.svg") center/cover no-repeat;
+  }
+
+  .c-home-carousel__heading {
+    font-size: 2.8rem;
+    line-height: 3.6rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .c-home-carousel__text {
+    font-size: 1.8rem;
+    line-height: 2.6rem;
+    margin-bottom: 4.6rem;
+  }
+  .c-home-carousel__text p {
+    -webkit-line-clamp: 7;
+  }
+
+  .c-home-carousel__expanded {
+    height: 100%;
+  }
+
+  .c-home-carousel__actions {
+    margin-top: auto;
+  }
+
+  .c-home-carousel__media {
+    display: none;
+  }
+}
+@media (min-width: 1200px) {
+  .c-home-carousel__expanded {
+    padding: 3.5rem 2.6rem 2.8rem;
+  }
+
+  .c-home-carousel__label {
+    padding-bottom: 2.4rem;
+  }
+}
 .l-table-block {
   margin-bottom: 10.5rem;
 }
@@ -6447,6 +6822,7 @@ svg {
 .c-insights-list__item.ui-bg--grey-1-50,
 .c-products-category,
 .c-products-list__item,
+.c-home-carousel__tile,
 .c-article-sidebar__box {
   border-radius: 16px;
 }
@@ -6459,6 +6835,7 @@ svg {
 .c-teasers-list__item.ui-bg--grey-1-50,
 .c-insights-list__item.ui-bg--grey-1-50,
 .c-products-category,
+.c-home-carousel__tile,
 .c-article-sidebar__box {
   overflow: hidden;
 }
@@ -6513,6 +6890,8 @@ svg {
 .c-hero-news img,
 .c-hero-second img,
 .c-hero-banner img,
+.c-home-carousel img,
+.c-home-carousel__panorama,
 .c-banner .c-cms-content img,
 .c-hero-text .c-cms-content img,
 .c-hero-news .c-cms-content img,

@@ -8,6 +8,7 @@
 .c-insights-list__item.ui-bg--grey-1-50,
 .c-products-category,
 .c-products-list__item,
+.c-home-carousel__tile,
 .c-article-sidebar__box {
     border-radius: border-radius(content);
 }
@@ -20,6 +21,7 @@
 .c-teasers-list__item.ui-bg--grey-1-50,
 .c-insights-list__item.ui-bg--grey-1-50,
 .c-products-category,
+.c-home-carousel__tile,
 .c-article-sidebar__box {
     overflow: hidden;
 }
@@ -79,6 +81,8 @@
 .c-hero-news img,
 .c-hero-second img,
 .c-hero-banner img,
+.c-home-carousel img,
+.c-home-carousel__panorama,
 .c-banner .c-cms-content img,
 .c-hero-text .c-cms-content img,
 .c-hero-news .c-cms-content img,

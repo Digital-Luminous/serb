@@ -19,3 +19,4 @@ import './modules/regions-modal';
 import './modules/twitter';
 import './modules/svg-injector';
 import './modules/video-library';
+import './modules/home-carousel';
