@@ -378,6 +378,42 @@ function protherics_acf_gutenberg_blocks() {
             )
         );
 
+        acf_register_block(
+            array(
+                'name' => 'about-page-banner',
+                'title' => __( 'About Page Banner', 'protherics' ),
+                'description' => __( 'Heading and description on the left, framed image on the right', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'image-flip-horizontal',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
+                'name' => 'image-text-slider',
+                'title' => __( 'Image Text Slider', 'protherics' ),
+                'description' => __( 'Slider with image on the left, title and body text on the right', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'image-flip-horizontal',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
+                'name' => 'our-values',
+                'title' => __( 'Our Values', 'protherics' ),
+                'description' => __( 'Heading, subheading, description, and up to 3 value cards', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'image-flip-horizontal',
+                'keywords' => array(),
+            )
+        );
+
     }
 }
 add_action( 'acf/init', 'protherics_acf_gutenberg_blocks' );
@@ -435,6 +471,9 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
             'acf/timeline',
             'acf/home-carousel',
             'acf/hero-banner',
+            'acf/about-page-banner',
+            'acf/image-text-slider',
+            'acf/our-values',
         );
     }
     return $blocks;
