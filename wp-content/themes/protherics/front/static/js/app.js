@@ -2280,6 +2280,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -2293,8 +2295,18 @@ var selector = {
   inner: '.l-inner',
   slider: '.js-slider',
   swiperSlide: '.swiper-slide',
-  paginationBullet: '.c-slider-pagination__bullet'
+  paginationBullet: '.c-slider-pagination__bullet',
+  imageTextFrame: '.c-image-text-slider__frame',
+  imageTextControls: '.c-image-text-slider__controls',
+  imageTextPrev: '.c-image-text-slider__arrow--prev',
+  imageTextNext: '.c-image-text-slider__arrow--next',
+  imageTextMediaSlider: '.js-image-text-slider-media'
 };
+
+var getImageTextFrame = function getImageTextFrame($slider) {
+  return $slider.closest(selector.imageTextFrame);
+};
+
 var sliderDefaultPagination = {
   clickable: true,
   type: 'bullets',
@@ -2329,7 +2341,37 @@ var slidersConfig = {
     slidesPerView: 1,
     modules: [swiper__WEBPACK_IMPORTED_MODULE_1__.Pagination],
     pagination: true
+  },
+  'image-text': {
+    watchOverflow: true,
+    slidesPerView: 1,
+    spaceBetween: 0,
+    speed: 600,
+    loop: false,
+    modules: [swiper__WEBPACK_IMPORTED_MODULE_1__.Pagination, swiper__WEBPACK_IMPORTED_MODULE_1__.Navigation, swiper__WEBPACK_IMPORTED_MODULE_1__.Autoplay, swiper__WEBPACK_IMPORTED_MODULE_1__.Controller],
+    pagination: true,
+    navigation: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false
+    },
+    breakpoints: {
+      0: {
+        spaceBetween: 17
+      },
+      1200: {
+        spaceBetween: 0
+      }
+    }
   }
+};
+var imageTextMediaConfig = {
+  slidesPerView: 1,
+  spaceBetween: 0,
+  speed: 600,
+  loop: false,
+  allowTouchMove: false,
+  modules: [swiper__WEBPACK_IMPORTED_MODULE_1__.Controller]
 };
 var Slider = {
   sliderInstances: [],
@@ -2340,9 +2382,17 @@ var Slider = {
   },
   initSliders: function initSliders() {
     Slider.sliderInstances.forEach(function (slider) {
-      var $wrapperEl = slider.$wrapperEl;
+      var $wrapperEl = slider.$wrapperEl,
+          sliderType = slider.sliderType,
+          mediaSwiper = slider.mediaSwiper;
       slider.destroy();
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()($wrapperEl).closest(selector.inner).find(selector.paginationBullet).remove();
+
+      if (mediaSwiper) {
+        mediaSwiper.destroy();
+      }
+
+      var $cleanupRoot = sliderType === 'image-text' ? getImageTextFrame(jquery__WEBPACK_IMPORTED_MODULE_0___default()($wrapperEl)) : jquery__WEBPACK_IMPORTED_MODULE_0___default()($wrapperEl).closest(selector.inner);
+      $cleanupRoot.find(selector.paginationBullet).remove();
     });
     Slider.sliderInstances = [];
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(selector.slider).each(function () {
@@ -2355,14 +2405,22 @@ var Slider = {
 
       if (pagination) {
         var paginationEl = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).find(selector.pagination)[0];
+
+        if (!paginationEl && sliderType === 'image-text') {
+          paginationEl = getImageTextFrame(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this)).find(selector.pagination)[0];
+        }
+
         config.pagination = _objectSpread(_objectSpread(_objectSpread({}, sliderDefaultPagination), pagination), {}, {
           el: paginationEl
         });
       }
 
       if (navigation) {
-        var navigationEl = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).closest(selector.inner).find(selector.navigation)[0];
-        config.navigation = _objectSpread(_objectSpread({}, Slider.getNavigationElements(navigationEl)), navigation);
+        var navigationEl = Slider.getNavigationRoot(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this), sliderType);
+
+        if (navigationEl) {
+          config.navigation = _objectSpread(_objectSpread({}, Slider.getNavigationElements(navigationEl, sliderType)), _typeof(navigation) === 'object' ? navigation : {});
+        }
       }
 
       var disabled = Slider.getIsSliderDisabled(config);
@@ -2379,6 +2437,11 @@ var Slider = {
 
       var sliderInstance = new swiper__WEBPACK_IMPORTED_MODULE_1__["default"](this, config);
       sliderInstance.sliderType = sliderType;
+
+      if (sliderType === 'image-text') {
+        Slider.initImageTextMediaSwiper(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this), sliderInstance);
+      }
+
       Slider.sliderInstances.push(sliderInstance);
 
       if (sliderToggleAutplay.length > 0) {
@@ -2394,7 +2457,34 @@ var Slider = {
       }
     });
   },
-  getNavigationElements: function getNavigationElements(navElement) {
+  getNavigationRoot: function getNavigationRoot($slider, sliderType) {
+    if (sliderType === 'image-text') {
+      return getImageTextFrame($slider).find(selector.imageTextControls)[0];
+    }
+
+    return $slider.closest(selector.inner).find(selector.navigation)[0];
+  },
+  initImageTextMediaSwiper: function initImageTextMediaSwiper($contentSlider, contentSwiper) {
+    var mediaSliderEl = getImageTextFrame($contentSlider).find(selector.imageTextMediaSlider)[0];
+
+    if (!mediaSliderEl) {
+      return;
+    }
+
+    var mediaSwiper = new swiper__WEBPACK_IMPORTED_MODULE_1__["default"](mediaSliderEl, imageTextMediaConfig);
+    contentSwiper.controller.control = mediaSwiper;
+    mediaSwiper.controller.control = contentSwiper;
+    contentSwiper.mediaSwiper = mediaSwiper;
+  },
+  getNavigationElements: function getNavigationElements(navElement, sliderType) {
+    if (sliderType === 'image-text') {
+      return {
+        nextEl: jquery__WEBPACK_IMPORTED_MODULE_0___default()(navElement).find(selector.imageTextNext)[0],
+        prevEl: jquery__WEBPACK_IMPORTED_MODULE_0___default()(navElement).find(selector.imageTextPrev)[0],
+        disabledClass: 'is-disabled'
+      };
+    }
+
     return {
       nextEl: jquery__WEBPACK_IMPORTED_MODULE_0___default()(navElement).find(selector.navNext)[0],
       prevEl: jquery__WEBPACK_IMPORTED_MODULE_0___default()(navElement).find(selector.navPrev)[0]
