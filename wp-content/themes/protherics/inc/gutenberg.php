@@ -414,6 +414,30 @@ function protherics_acf_gutenberg_blocks() {
             )
         );
 
+        acf_register_block(
+            array(
+                'name' => 'statistic',
+                'title' => __( 'Statistic', 'protherics' ),
+                'description' => __( 'Purple pill row with up to 6 animated count-up stats', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'chart-bar',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
+                'name' => 'join-us',
+                'title' => __( 'Join Us', 'protherics' ),
+                'description' => __( 'Text with a single link/button', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'groups',
+                'keywords' => array(),
+            )
+        );
+
     }
 }
 add_action( 'acf/init', 'protherics_acf_gutenberg_blocks' );
@@ -474,6 +498,8 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
             'acf/about-page-banner',
             'acf/image-text-slider',
             'acf/our-values',
+            'acf/statistic',
+            'acf/join-us',
         );
     }
     return $blocks;
