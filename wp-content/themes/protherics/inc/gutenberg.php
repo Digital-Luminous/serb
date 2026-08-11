@@ -438,6 +438,18 @@ function protherics_acf_gutenberg_blocks() {
             )
         );
 
+        acf_register_block(
+            array(
+                'name' => 'our-strategy',
+                'title' => __( 'Our Strategy', 'protherics' ),
+                'description' => __( 'Heading, subheading, and a 6-tile grid (purple highlight tiles + standard tiles)', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'grid-view',
+                'keywords' => array(),
+            )
+        );
+
     }
 }
 add_action( 'acf/init', 'protherics_acf_gutenberg_blocks' );
@@ -500,6 +512,7 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
             'acf/our-values',
             'acf/statistic',
             'acf/join-us',
+            'acf/our-strategy',
         );
     }
     return $blocks;
