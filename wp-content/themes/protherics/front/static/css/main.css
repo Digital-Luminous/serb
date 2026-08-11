@@ -6254,7 +6254,7 @@ svg {
   }
 
   .c-image-text-slider__slide-inner {
-    flex-direction: column-reverse;
+    flex-direction: column;
     padding: 0;
   }
 

@@ -203,7 +203,7 @@ $image-text-slider-frame-min-height: $image-text-slider-top-padding + $image-tex
 	}
 
 	.c-image-text-slider__slide-inner {
-		flex-direction: column-reverse;
+		flex-direction: column;
 		padding: 0;
 	}
 
