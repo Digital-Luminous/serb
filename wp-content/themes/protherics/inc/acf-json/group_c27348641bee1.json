@@ -48,7 +48,7 @@
             "name": "tiles",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "Up to 6 tiles. Purple tiles use only the Text field; standard tiles use Title + Body text.",
+            "instructions": "Up to 6 tiles. Check \"Purple tile\" to switch a tile to the purple/highlight style (Title + Bold only); leave unchecked for a standard tile (Title + Body text).",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -65,11 +65,11 @@
             "sub_fields": [
                 {
                     "key": "field_4093c0b72ae68",
-                    "label": "Tile type",
-                    "name": "tile_type",
+                    "label": "Purple tile",
+                    "name": "is_purple",
                     "aria-label": "",
-                    "type": "select",
-                    "instructions": "",
+                    "type": "true_false",
+                    "instructions": "Check to switch this tile to the purple/highlight style.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -77,22 +77,16 @@
                         "class": "",
                         "id": ""
                     },
-                    "choices": {
-                        "standard": "Standard (title + body)",
-                        "purple": "Purple / highlight (text only)"
-                    },
-                    "default_value": "standard",
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
-                    "return_format": "value",
-                    "ajax": 0,
-                    "placeholder": "",
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
                     "parent_repeater": "field_7f1710f19233a"
                 },
                 {
                     "key": "field_365b692877eeb",
-                    "label": "Text",
+                    "label": "Title",
                     "name": "text",
                     "aria-label": "",
                     "type": "textarea",
@@ -103,7 +97,7 @@
                             {
                                 "field": "field_4093c0b72ae68",
                                 "operator": "==",
-                                "value": "purple"
+                                "value": "1"
                             }
                         ]
                     ],
@@ -120,6 +114,35 @@
                     "parent_repeater": "field_7f1710f19233a"
                 },
                 {
+                    "key": "field_9623ea998f401",
+                    "label": "Bold text",
+                    "name": "bold",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_4093c0b72ae68",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "parent_repeater": "field_7f1710f19233a"
+                },
+                {
                     "key": "field_5501db8f854e1",
                     "label": "Title",
                     "name": "title",
@@ -131,8 +154,8 @@
                         [
                             {
                                 "field": "field_4093c0b72ae68",
-                                "operator": "==",
-                                "value": "standard"
+                                "operator": "!=",
+                                "value": "1"
                             }
                         ]
                     ],
@@ -160,8 +183,8 @@
                         [
                             {
                                 "field": "field_4093c0b72ae68",
-                                "operator": "==",
-                                "value": "standard"
+                                "operator": "!=",
+                                "value": "1"
                             }
                         ]
                     ],
@@ -198,5 +221,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1786550200
+    "modified": 1786550400
 }
