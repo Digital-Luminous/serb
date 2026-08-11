@@ -6259,9 +6259,22 @@ svg {
   }
 
   .c-image-text-slider__media--mobile {
-    aspect-ratio: 0.7164179104;
+    position: relative;
+    aspect-ratio: auto;
     width: 100%;
-    height: auto;
+  }
+  .c-image-text-slider__media--mobile::before {
+    display: block;
+    width: 100%;
+    padding-top: 139.5833333333%;
+    content: "";
+  }
+  .c-image-text-slider__media--mobile > * {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
 
   .c-image-text-slider__media--mobile .c-image-text-slider__image {
@@ -7043,6 +7056,69 @@ svg {
 @media (min-width: 1200px) {
   .c-statistic__title--below {
     line-height: 2.3rem;
+  }
+}
+
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-join-us__inner.l-inner {
+    padding-inline: 0;
+  }
+}
+
+.c-join-us__pill {
+  width: 100%;
+  padding: 4.8rem 4.5rem;
+  background-color: #F4F2EF;
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-join-us__pill {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3.5rem;
+    border-radius: 0;
+  }
+}
+@media (min-width: 1024px) {
+  .c-join-us__pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    padding: 4rem 9rem;
+    border-radius: 9999px;
+  }
+}
+
+.c-join-us__text {
+  margin: 0;
+  font-family: Montserrat, sans-serif;
+  font-weight: 700;
+  font-size: 3.2rem;
+  line-height: 3.6rem;
+  letter-spacing: 0;
+  color: #54178E;
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-join-us__text {
+    text-align: center;
+  }
+}
+@media (min-width: 1024px) {
+  .c-join-us__text {
+    flex: 1 1 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .c-join-us__action {
+    flex-shrink: 0;
+  }
+}
+@media (min-width: 0) and (max-width: 1023px) {
+  .c-join-us__action .c-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 

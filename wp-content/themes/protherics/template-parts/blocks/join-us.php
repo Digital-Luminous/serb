@@ -12,18 +12,22 @@
 
 <section class="c-join-us s-regular-bottom">
 	<div class="c-join-us__inner l-inner">
-		<?php if ( $has_text ) : ?>
-			<p class="c-join-us__text"><?php echo esc_html( $text ); ?></p>
-		<?php endif; ?>
+		<div class="c-join-us__pill">
+			<?php if ( $has_text ) : ?>
+				<p class="c-join-us__text"><?php echo esc_html( $text ); ?></p>
+			<?php endif; ?>
 
-		<?php if ( $has_link ) : ?>
-			<a
-				class="c-btn c-btn--primary c-join-us__link"
-				href="<?php echo esc_url( $link['url'] ); ?>"
-				target="<?php echo esc_attr( $link['target'] ); ?>"
-			>
-				<?php echo esc_html( $link['title'] ); ?>
-			</a>
-		<?php endif; ?>
+			<?php if ( $has_link ) : ?>
+				<div class="c-join-us__action">
+					<a
+						class="c-btn c-btn--primary c-btn--arrowed c-join-us__link"
+						href="<?php echo esc_url( $link['url'] ); ?>"
+						target="<?php echo esc_attr( $link['target'] ); ?>"
+					>
+						<?php echo esc_html( $link['title'] ); ?>
+					</a>
+				</div>
+			<?php endif; ?>
+		</div>
 	</div>
 </section>

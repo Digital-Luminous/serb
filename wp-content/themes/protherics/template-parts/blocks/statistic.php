@@ -21,8 +21,8 @@
 							<p class="c-statistic__title c-statistic__title--above"><?php echo esc_html( $title_above ); ?></p>
 						<?php endif; ?>
 						<?php if ( $number ) : ?>
-							<p class="c-statistic__number" data-statistic-number="<?php echo esc_attr( $number ); ?>">
-								<span data-statistic-number-value><?php echo esc_html( $number ); ?></span><?php if ( $show_plus ) : ?><span class="c-statistic__plus">+</span><?php endif; ?>
+							<p class="c-statistic__number" data-statistic-number="<?php echo esc_attr( $number ); ?>" aria-label="<?php echo esc_attr( $number ); ?>">
+								<span data-statistic-number-value>0</span><?php if ( $show_plus ) : ?><span class="c-statistic__plus">+</span><?php endif; ?>
 							</p>
 						<?php endif; ?>
 						<?php if ( $title_below ) : ?>
