@@ -47,6 +47,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_svg_injector__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./modules/svg-injector */ "./src/js/modules/svg-injector.js");
 /* harmony import */ var _modules_video_library__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./modules/video-library */ "./src/js/modules/video-library.js");
 /* harmony import */ var _modules_home_carousel__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./modules/home-carousel */ "./src/js/modules/home-carousel.js");
+/* harmony import */ var _modules_statistic__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./modules/statistic */ "./src/js/modules/statistic.js");
+/* harmony import */ var _modules_statistic__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(_modules_statistic__WEBPACK_IMPORTED_MODULE_22__);
+
 
 
 
@@ -2555,6 +2558,134 @@ var Slider = {
   }
 };
 Slider.init();
+
+/***/ },
+
+/***/ "./src/js/modules/statistic.js"
+/*!*************************************!*\
+  !*** ./src/js/modules/statistic.js ***!
+  \*************************************/
+() {
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var selector = {
+  statistic: '.c-statistic',
+  number: '[data-statistic-number]',
+  numberValue: '[data-statistic-number-value]'
+};
+var ANIMATION_DURATION = 2000;
+
+var parseStatisticNumber = function parseStatisticNumber(value) {
+  if (!value) return null;
+  var normalized = value.trim();
+  var match = normalized.replace(/,/g, '').match(/^([^0-9.-]*)(-?[0-9]+(?:\.[0-9]+)?)(.*)$/);
+  if (!match) return null;
+  var numericPart = match[2];
+  var target = parseFloat(numericPart);
+  if (Number.isNaN(target)) return null;
+  return {
+    prefix: match[1],
+    target: target,
+    suffix: match[3],
+    decimals: numericPart.includes('.') ? numericPart.split('.')[1].length : 0,
+    useGrouping: normalized.includes(',')
+  };
+};
+
+var formatStatisticNumber = function formatStatisticNumber(value, _ref) {
+  var decimals = _ref.decimals,
+      useGrouping = _ref.useGrouping;
+  var fixed = value.toFixed(decimals);
+  if (!useGrouping) return fixed;
+
+  var _fixed$split = fixed.split('.'),
+      _fixed$split2 = _slicedToArray(_fixed$split, 2),
+      integer = _fixed$split2[0],
+      fraction = _fixed$split2[1];
+
+  var grouped = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return fraction !== undefined ? "".concat(grouped, ".").concat(fraction) : grouped;
+};
+
+var Statistic = {
+  init: function init() {
+    var sections = document.querySelectorAll(selector.statistic);
+    if (!sections.length) return;
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    sections.forEach(function (section) {
+      var numbers = section.querySelectorAll(selector.number);
+      if (!numbers.length) return;
+      var items = Array.from(numbers).map(function (element) {
+        var rawValue = element.dataset.statisticNumber;
+        var valueElement = element.querySelector(selector.numberValue);
+        var config = parseStatisticNumber(rawValue);
+        if (!valueElement || !config) return null;
+
+        if (prefersReducedMotion) {
+          valueElement.textContent = rawValue;
+          return null;
+        }
+
+        valueElement.textContent = "".concat(config.prefix).concat(formatStatisticNumber(0, config)).concat(config.suffix);
+        return {
+          valueElement: valueElement,
+          config: config
+        };
+      }).filter(Boolean);
+      if (!items.length) return;
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          items.forEach(function (_ref2) {
+            var valueElement = _ref2.valueElement,
+                config = _ref2.config;
+            Statistic.animateNumber(valueElement, config);
+          });
+          observer.unobserve(entry.target);
+        });
+      }, {
+        threshold: 1
+      });
+      observer.observe(section);
+    });
+  },
+  animateNumber: function animateNumber(element, config) {
+    var start = performance.now();
+    var prefix = config.prefix,
+        target = config.target,
+        suffix = config.suffix,
+        decimals = config.decimals,
+        useGrouping = config.useGrouping;
+
+    var step = function step(now) {
+      var progress = Math.min((now - start) / ANIMATION_DURATION, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = eased * target;
+      element.textContent = "".concat(prefix).concat(formatStatisticNumber(current, {
+        decimals: decimals,
+        useGrouping: useGrouping
+      })).concat(suffix);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+
+    requestAnimationFrame(step);
+  }
+};
+Statistic.init();
 
 /***/ },
 
