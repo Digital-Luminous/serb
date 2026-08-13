@@ -944,6 +944,15 @@ svg {
   }
 }
 
+.l-image-text {
+  overflow: hidden;
+}
+@media (min-width: 1400px) {
+  .l-image-text {
+    border-radius: 16px;
+  }
+}
+
 .l-image-text.l-section--with-bg {
   margin-bottom: 15rem;
 }
@@ -2928,6 +2937,15 @@ svg {
 
 .c-pagination__item.c-pagination__item--next {
   margin-left: 2rem;
+}
+
+.l-latest-insights .l-section--with-bg {
+  overflow: hidden;
+}
+@media (min-width: 1400px) {
+  .l-latest-insights .l-section--with-bg {
+    border-radius: 16px;
+  }
 }
 
 .c-latest-insights__header {
