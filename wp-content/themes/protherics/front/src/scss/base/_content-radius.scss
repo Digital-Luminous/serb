@@ -10,7 +10,8 @@
 .c-products-list__item,
 .c-home-carousel__tile,
 .c-our-strategy__tile,
-.c-article-sidebar__box {
+.c-article-sidebar__box,
+.dataTables_wrapper {
     border-radius: border-radius(content);
 }
 
@@ -24,7 +25,8 @@
 .c-products-category,
 .c-home-carousel__tile,
 .c-our-strategy__tile,
-.c-article-sidebar__box {
+.c-article-sidebar__box,
+.dataTables_wrapper {
     overflow: hidden;
 }
 
@@ -93,4 +95,22 @@
 .c-gate-modal .c-cms-content img,
 .c-cookies .c-cms-content img {
     border-radius: 0;
+}
+
+@include media(desktop) {
+    .quote-carousel {
+        overflow: hidden;
+
+        border-radius: border-radius(content);
+    }
+
+    .quote-carousel__slide-image-holder {
+        overflow: hidden;
+
+        border-radius: border-radius(content);
+    }
+
+    .quote-carousel img {
+        border-radius: border-radius(content);
+    }
 }

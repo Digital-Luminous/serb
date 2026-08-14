@@ -7849,7 +7849,8 @@ svg {
 .c-products-list__item,
 .c-home-carousel__tile,
 .c-our-strategy__tile,
-.c-article-sidebar__box {
+.c-article-sidebar__box,
+.dataTables_wrapper {
   border-radius: 16px;
 }
 
@@ -7863,7 +7864,8 @@ svg {
 .c-products-category,
 .c-home-carousel__tile,
 .c-our-strategy__tile,
-.c-article-sidebar__box {
+.c-article-sidebar__box,
+.dataTables_wrapper {
   overflow: hidden;
 }
 
@@ -7929,6 +7931,21 @@ svg {
   border-radius: 0;
 }
 
+@media (min-width: 1400px) {
+  .quote-carousel {
+    overflow: hidden;
+    border-radius: 16px;
+  }
+
+  .quote-carousel__slide-image-holder {
+    overflow: hidden;
+    border-radius: 16px;
+  }
+
+  .quote-carousel img {
+    border-radius: 16px;
+  }
+}
 .wpcf7-radio [type=radio] {
   position: absolute;
   left: -999rem;
