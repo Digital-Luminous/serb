@@ -6,6 +6,11 @@
 		overflow: visible;
 	}
 
+	@include media(desktop-small) {
+		margin-top: 15.5rem;
+		margin-bottom: 52px;
+	}
+
 	@include media(mobile, desktop-small) {
 		min-height: 52rem;
 	}
