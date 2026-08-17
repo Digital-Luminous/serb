@@ -266,7 +266,7 @@
 		content: '';
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(to right, color(white-1) 0%, transparent 35%);
+		background: linear-gradient(to right, color(white-1) 10%, transparent 35%);
 		pointer-events: none;
 		z-index: 1;
 
@@ -282,12 +282,12 @@
 	display: block;
 	width: 100%;
 	height: auto;
+	object-fit: cover;
 
 	@include media(mobile) {
 		width: 100%;
 		height: auto;
 		max-height: none;
-		object-fit: contain;
 		object-position: right center;
 	}
 
@@ -306,7 +306,7 @@
 	@include media(0, mobile) {
 		width: 100%;
 		height: auto;
-		object-fit: contain;
+		object-fit: cover;
 		object-position: center bottom;
 		display: block;
 	}
