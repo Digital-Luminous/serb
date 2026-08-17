@@ -56,7 +56,7 @@
 	$body_limit   = 205;
 ?>
 
-<section class="c-home-carousel s-medium-bottom">
+<section class="c-home-carousel s-regular-bottom">
 	<div class="c-home-carousel__inner l-inner">
 		<div
 			class="c-home-carousel__stage"
