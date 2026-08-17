@@ -24,7 +24,7 @@
 	}
 ?>
 
-<section class="c-hero-banner s-regular-bottom">
+<section class="c-hero-banner s-medium-bottom">
 	<div class="c-hero-banner__inner l-inner">
 		<?php if ( $has_titles || $has_text ) : ?>
 			<div class="c-hero-banner__content">
