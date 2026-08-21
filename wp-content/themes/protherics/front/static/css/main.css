@@ -1865,41 +1865,36 @@ svg {
   letter-spacing: 0.1rem;
   text-transform: uppercase;
   position: relative;
-  display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
-  padding: 1.7rem 1rem 1.7rem 1.5rem;
+  width: 100%;
   border: 1px solid #3C1976;
-}
-@media (min-width: 0) and (max-width: 1023px) {
-  .c-main-nav-sublist__link {
-    text-transform: uppercase;
-  }
+  border-radius: 9rem;
+  color: #FFF;
+  background-color: #54178E;
 }
 @media (min-width: 1024px) {
   .c-main-nav-sublist__link {
     width: 28rem;
-    padding: 1.6rem 1rem 1.6rem 1.5rem;
-    background-color: #54178E;
   }
 }
 .c-main-nav-sublist__link::after {
   transition-timing-function: ease-in-out;
   transition-duration: 250ms;
-  display: block;
+  content: "";
+  display: inline-block;
+  flex-shrink: 0;
+  width: 3.4rem;
   height: 1.6rem;
-  margin: 0.5rem;
-  padding-left: 1rem;
-  content: url("../images/icon-arrow-right-white.svg");
-  transform: translateX(-1rem);
+  margin-left: 1.25rem;
+  background: url("../images/icon-arrow-right-white.svg") no-repeat center/contain;
+  transition-property: transform;
 }
-
-.c-main-nav-sublist__link:hover {
+.c-main-nav-sublist__link:hover, .c-main-nav-sublist__link:focus {
   border-color: #54178E;
   background-color: #3C1976;
 }
-.c-main-nav-sublist__link:hover::after {
-  transform: translateX(0);
+.c-main-nav-sublist__link:hover::after, .c-main-nav-sublist__link:focus::after {
+  transform: translateX(1rem);
 }
 
 .c-main-nav-sub__sublist {
