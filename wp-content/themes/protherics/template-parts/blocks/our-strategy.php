@@ -29,7 +29,7 @@
 	$purple_limit_last  = 190;
 ?>
 
-<section class="c-our-strategy s-regular-bottom">
+<section class="c-our-strategy s-regular-bottom" id="our-strategy">
 	<div class="c-our-strategy__inner l-inner">
 		<?php if ( $has_heading ) : ?>
 			<div class="c-our-strategy__header">
