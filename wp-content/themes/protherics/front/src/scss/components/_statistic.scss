@@ -43,7 +43,6 @@ $statistic-grid-col-gap-mobile: 1.5rem;
 
 	@include media(tablet) {
 		display: flex;
-		align-items: center;
 		justify-content: space-between;
 		border-radius: 9999px;
 	}

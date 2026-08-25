@@ -5693,13 +5693,14 @@ svg {
     line-height: 4.4rem;
     letter-spacing: 0;
     color: #FFF;
-    background-color: #3C1976;
+    background-color: #54178E;
     white-space: nowrap;
     position: relative;
     z-index: 3;
   }
   .c-hero-banner__pill-line--line-2 {
     margin-left: 2rem;
+    background-color: #3C1976;
   }
 }
 @media (min-width: 1200px) {
@@ -5751,9 +5752,14 @@ svg {
     line-height: 4.4rem;
     letter-spacing: 0;
     color: #FFF;
-    background-color: #3C1976;
+    background-color: #54178E;
     position: relative;
     z-index: 3;
+  }
+}
+@media (min-width: 0) and (max-width: 767px) {
+  .c-hero-banner__pill-line--line-2 .c-hero-banner__pill {
+    background-color: #3C1976;
   }
 }
 
@@ -6973,7 +6979,6 @@ svg {
 @media (min-width: 1024px) {
   .c-statistic__pill {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     border-radius: 9999px;
   }

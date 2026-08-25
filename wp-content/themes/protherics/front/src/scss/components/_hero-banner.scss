@@ -158,13 +158,14 @@
 		line-height: 4.4rem;
 		letter-spacing: 0;
 		color: color(white-1);
-		background-color: color(dark-purple-1);
+		background-color: color(purple-1);
 		white-space: nowrap;
 		position: relative;
 		z-index: 3;
 
 		&--line-2 {
 			margin-left: 2rem;
+			background-color: color(dark-purple-1);
 		}
 	}
 
@@ -216,9 +217,15 @@
 		line-height: 4.4rem;
 		letter-spacing: 0;
 		color: color(white-1);
-		background-color: color(dark-purple-1);
+		background-color: color(purple-1);
 		position: relative;
 		z-index: 3;
+	}
+
+	.c-hero-banner__pill-line--line-2 & {
+		@include media(0, mobile) {
+			background-color: color(dark-purple-1);
+		}
 	}
 }
 
