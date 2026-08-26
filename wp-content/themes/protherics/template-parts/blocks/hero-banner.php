@@ -1,8 +1,9 @@
 <?php
-	$title_line_1     = get_field( 'title_line_1' );
-	$title_line_2     = get_field( 'title_line_2' );
-	$text             = get_field( 'text' );
-	$background_image = get_field( 'background_image' );
+	$title_line_1            = get_field( 'title_line_1' );
+	$title_line_2            = get_field( 'title_line_2' );
+	$text                    = get_field( 'text' );
+	$background_image        = get_field( 'background_image' );
+	$mobile_background_image = get_field( 'mobile_background_image' );
 
 	$title_lines = array(
 		array(
@@ -15,9 +16,10 @@
 		),
 	);
 
-	$has_titles = ! empty( $title_line_1 ) || ! empty( $title_line_2 );
-	$has_image  = ! empty( $background_image['url'] );
-	$has_text   = ! empty( $text );
+	$has_titles       = ! empty( $title_line_1 ) || ! empty( $title_line_2 );
+	$has_image        = ! empty( $background_image['url'] );
+	$has_mobile_image = ! empty( $mobile_background_image['url'] );
+	$has_text         = ! empty( $text );
 
 	if ( ! $has_titles && ! $has_text && ! $has_image ) {
 		return;
@@ -59,11 +61,16 @@
 
 	<?php if ( $has_image ) : ?>
 		<div class="c-hero-banner__media">
-			<img
-				class="c-hero-banner__image"
-				src="<?php echo esc_url( $background_image['url'] ); ?>"
-				alt="<?php echo esc_attr( $background_image['alt'] ); ?>"
-			>
+			<picture>
+				<?php if ( $has_mobile_image ) : ?>
+					<source srcset="<?php echo esc_url( $mobile_background_image['url'] ); ?>" media="(max-width: 768px)">
+				<?php endif; ?>
+				<img
+					class="c-hero-banner__image"
+					src="<?php echo esc_url( $background_image['url'] ); ?>"
+					alt="<?php echo esc_attr( $background_image['alt'] ); ?>"
+				>
+			</picture>
 		</div>
 	<?php endif; ?>
 </section>

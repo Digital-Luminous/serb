@@ -1,11 +1,13 @@
 <?php
-	$heading     = get_field( 'heading' );
-	$description = get_field( 'description' );
-	$image       = get_field( 'image' );
+	$heading      = get_field( 'heading' );
+	$description  = get_field( 'description' );
+	$image        = get_field( 'image' );
+	$mobile_image = get_field( 'mobile_image' );
 
-	$has_heading     = ! empty( $heading );
-	$has_description = ! empty( $description );
-	$has_image       = ! empty( $image['url'] );
+	$has_heading      = ! empty( $heading );
+	$has_description  = ! empty( $description );
+	$has_image        = ! empty( $image['url'] );
+	$has_mobile_image = ! empty( $mobile_image['url'] );
 
 	if ( ! $has_heading && ! $has_description && ! $has_image ) {
 		return;
@@ -31,11 +33,16 @@
 
 	<?php if ( $has_image ) : ?>
 		<div class="c-about-page-banner__media">
-			<img
-				class="c-about-page-banner__image"
-				src="<?php echo esc_url( $image['url'] ); ?>"
-				alt="<?php echo esc_attr( $image['alt'] ); ?>"
-			>
+			<picture>
+				<?php if ( $has_mobile_image ) : ?>
+					<source srcset="<?php echo esc_url( $mobile_image['url'] ); ?>" media="(max-width: 768px)">
+				<?php endif; ?>
+				<img
+					class="c-about-page-banner__image"
+					src="<?php echo esc_url( $image['url'] ); ?>"
+					alt="<?php echo esc_attr( $image['alt'] ); ?>"
+				>
+			</picture>
 		</div>
 	<?php endif; ?>
 </section>
