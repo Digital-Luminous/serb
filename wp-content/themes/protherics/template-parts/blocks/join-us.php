@@ -2,6 +2,11 @@
 	$text = get_field( 'text' );
 	$link = get_field( 'link' );
 
+	if ( is_string( $text ) ) {
+		$text = preg_replace( '/[\s\x{00A0}\x{2028}\x{2029}\x{200B}]+/u', ' ', $text );
+		$text = trim( $text );
+	}
+
 	$has_text = ! empty( $text );
 	$has_link = ! empty( $link['url'] ) && ! empty( $link['title'] );
 
