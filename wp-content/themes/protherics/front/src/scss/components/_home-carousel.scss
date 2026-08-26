@@ -236,7 +236,9 @@ $home-carousel-desktop-breakpoint: tablet;
 	letter-spacing: 0;
 	padding-right: 2rem;
 
-	@include line-clamp(3);
+	@include media($home-carousel-desktop-breakpoint) {
+		@include line-clamp(3);
+	}
 }
 
 .c-home-carousel__text {

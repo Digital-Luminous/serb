@@ -65,6 +65,12 @@ $our-strategy-tile-title-margin-bottom: 3.6rem;
 	height: 339px;
 	max-height: $our-strategy-tile-max-height;
 	overflow: hidden;
+
+	@include media(0, mobile) {
+		height: auto;
+		min-height: $our-strategy-tile-max-height;
+		max-height: none;
+	}
 }
 
 .c-our-strategy__tile--purple {
@@ -89,7 +95,9 @@ $our-strategy-tile-title-margin-bottom: 3.6rem;
 	letter-spacing: 0;
 	color: color(white-1);
 
-	@include line-clamp(6);
+	@include media(mobile) {
+		@include line-clamp(6);
+	}
 }
 
 .c-our-strategy__tile-text--bold {
@@ -107,7 +115,9 @@ $our-strategy-tile-title-margin-bottom: 3.6rem;
 	letter-spacing: 0;
 	color: color(purple-1);
 
-	@include line-clamp(2);
+	@include media(mobile) {
+		@include line-clamp(2);
+	}
 }
 
 .c-our-strategy__tile-title:not(:last-child) {
@@ -123,5 +133,7 @@ $our-strategy-tile-title-margin-bottom: 3.6rem;
 	letter-spacing: 0;
 	color: color(black-2);
 
-	@include line-clamp(6);
+	@include media(mobile) {
+		@include line-clamp(6);
+	}
 }

@@ -82,11 +82,6 @@ $our-values-cards-side-padding-desktop: 2.6rem;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-
-	@include media(0, mobile) {
-		align-items: center;
-		text-align: center;
-	}
 }
 
 .c-our-values__card-icon {

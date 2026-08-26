@@ -106,25 +106,25 @@ $image-text-slider-frame-min-height: $image-text-slider-top-padding + $image-tex
 
 .c-image-text-slider__title {
 	margin: 0;
-	overflow: hidden;
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 2;
 	font-family: font(main);
 	font-weight: font-weight(bold);
 	color: color(purple-1);
 	letter-spacing: 0;
+
+	@include media(mobile) {
+		@include line-clamp(2);
+	}
 }
 
 .c-image-text-slider__text {
-	overflow: hidden;
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 6;
 	color: color(black-2);
 	font-family: font(main);
 	font-weight: font-weight(normal);
 	letter-spacing: 0;
+
+	@include media(mobile) {
+		@include line-clamp(6);
+	}
 
 	p {
 		margin: 0;
