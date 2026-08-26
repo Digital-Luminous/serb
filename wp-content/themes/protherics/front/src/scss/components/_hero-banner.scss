@@ -288,6 +288,22 @@
 	}
 }
 
+.c-hero-banner__picture {
+	display: block;
+	width: 100%;
+	height: 100%;
+
+	@include media(mobile) {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	@include media(mobile, desktop-small) {
+		align-items: stretch;
+	}
+}
+
 .c-hero-banner__image {
 	position: relative;
 	z-index: 0;

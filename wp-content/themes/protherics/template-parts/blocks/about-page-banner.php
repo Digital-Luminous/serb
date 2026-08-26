@@ -33,9 +33,9 @@
 
 	<?php if ( $has_image ) : ?>
 		<div class="c-about-page-banner__media">
-			<picture>
+			<picture class="c-about-page-banner__picture">
 				<?php if ( $has_mobile_image ) : ?>
-					<source srcset="<?php echo esc_url( $mobile_image['url'] ); ?>" media="(max-width: 768px)">
+					<source srcset="<?php echo esc_url( $mobile_image['url'] ); ?>" media="(max-width: 767px)">
 				<?php endif; ?>
 				<img
 					class="c-about-page-banner__image"

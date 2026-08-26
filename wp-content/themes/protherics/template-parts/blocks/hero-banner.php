@@ -61,9 +61,9 @@
 
 	<?php if ( $has_image ) : ?>
 		<div class="c-hero-banner__media">
-			<picture>
+			<picture class="c-hero-banner__picture">
 				<?php if ( $has_mobile_image ) : ?>
-					<source srcset="<?php echo esc_url( $mobile_background_image['url'] ); ?>" media="(max-width: 768px)">
+					<source srcset="<?php echo esc_url( $mobile_background_image['url'] ); ?>" media="(max-width: 767px)">
 				<?php endif; ?>
 				<img
 					class="c-hero-banner__image"
