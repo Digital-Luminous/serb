@@ -3,6 +3,27 @@
     "title": "Block: About Page Banner",
     "fields": [
         {
+            "key": "field_6a9154b8e1efd",
+            "label": "Page Title",
+            "name": "page_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_976c340be1975",
             "label": "Heading",
             "name": "heading",
@@ -68,12 +89,12 @@
             "mime_types": ""
         },
         {
-            "key": "field_df8250311dca4",
-            "label": "Mobile image",
-            "name": "mobile_image",
+            "key": "field_6a914de522442",
+            "label": "Enable breadcrumbs",
+            "name": "enable_breadcrumbs",
             "aria-label": "",
-            "type": "image",
-            "instructions": "Optional. Shown instead of the image above on mobile screens.",
+            "type": "true_false",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -81,16 +102,12 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array",
-            "preview_size": "medium",
-            "library": "all",
-            "min_width": "",
-            "min_height": "",
-            "min_size": "",
-            "max_width": "",
-            "max_height": "",
-            "max_size": "",
-            "mime_types": ""
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -111,5 +128,8 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1770307200
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1787909733
 }

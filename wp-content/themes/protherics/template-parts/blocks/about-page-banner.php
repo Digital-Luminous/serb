@@ -1,4 +1,5 @@
 <?php
+	$page_title   = get_field( 'page_title' );
 	$heading      = get_field( 'heading' );
 	$description  = get_field( 'description' );
 	$image        = get_field( 'image' );
@@ -8,16 +9,22 @@
 	$has_description  = ! empty( $description );
 	$has_image        = ! empty( $image['url'] );
 	$has_mobile_image = ! empty( $mobile_image['url'] );
+	$has_page_title   = ! empty( $page_title );
+	$breadcrumbs = get_field( 'enable_breadcrumbs' );
 
 	if ( ! $has_heading && ! $has_description && ! $has_image ) {
 		return;
 	}
 ?>
 
-<section class="c-about-page-banner s-regular-bottom">
+<section class="c-about-page-banner<?php echo $breadcrumbs ? '' : ' s-regular-bottom'; ?>">
 	<div class="c-about-page-banner__inner l-inner">
-		<?php if ( $has_heading || $has_description ) : ?>
+		<?php if ( $has_page_title || $has_heading || $has_description ) : ?>
 			<div class="c-about-page-banner__content">
+				<?php if ( $has_page_title ) : ?>
+					<p class="c-about-page-banner__title"><?php echo esc_html( $page_title ); ?></p>
+				<?php endif; ?>
+
 				<?php if ( $has_heading ) : ?>
 					<h2 class="c-about-page-banner__heading"><?php echo esc_html( $heading ); ?></h2>
 				<?php endif; ?>
@@ -46,3 +53,9 @@
 		</div>
 	<?php endif; ?>
 </section>
+
+<?php
+if ( $breadcrumbs ) {
+	echo protherics_breadcrumbs();
+}
+?>

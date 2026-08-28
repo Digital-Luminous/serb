@@ -59,42 +59,74 @@
 	}
 }
 
+.c-about-page-banner__title {
+	display: inline-block;
+	max-width: 100%;
+	margin: 0 0 2.4rem;
+	padding: 1.2rem 2.4rem;
+	border-radius: 4050px;
+	font-family: font(main);
+	font-weight: font-weight(bold);
+	font-size: font-size(size-32);
+	line-height: 3.6rem;
+	letter-spacing: 0;
+	color: #F5F2EF;
+	background-color: color(purple-1);
+	overflow-wrap: anywhere;
+
+	@include media(mobile) {
+		margin-bottom: 3.2rem;
+		padding: 1.6rem 3.2rem;
+		font-size: font-size(size-40);
+		line-height: 4.4rem;
+	}
+
+	@include media(desktop-small) {
+		margin-bottom: 4.5rem;
+		padding: 2rem 4rem;
+		font-size: font-size(size-52);
+		line-height: 6rem;
+	}
+}
+
 .c-about-page-banner__heading {
 	margin: 0;
 	font-family: font(main);
 	font-weight: font-weight(bold);
-	font-size: font-size(size-40);
-	line-height: 4.4rem;
+	font-size: font-size(size-24);
+	line-height: 3rem;
 	letter-spacing: 0;
 	color: color(purple-1);
 
+	@include media(mobile) {
+		font-size: font-size(size-28);
+		line-height: 3.4rem;
+	}
+
 	@include media(desktop-small) {
-		font-size: font-size(size-44);
-		line-height: 4.8rem;
+		font-size: font-size(size-32);
+		line-height: 3.8rem;
 	}
 }
 
 .c-about-page-banner__description {
+	margin-top: 2rem;
+	max-width: none;
 	color: color(black-2);
 	font-family: font(main);
 	font-weight: font-weight(normal);
+	font-size: font-size(size-16);
+	line-height: 2.4rem;
 	letter-spacing: 0;
 
-	@include media(0, mobile) {
-		margin-top: 2rem;
-		max-width: none;
+	@include media(mobile) {
 		font-size: font-size(size-18);
 		line-height: 2.6rem;
 	}
 
-	@include media(mobile) {
-		margin-top: 2rem;
+	@include media(desktop-small) {
 		font-size: font-size(size-20);
 		line-height: 3rem;
-	}
-
-	@include media(desktop-small) {
-		max-width: none;
 	}
 
 	&,
@@ -107,12 +139,20 @@
 	@include media(0, mobile) {
 		&,
 		* {
+			font-size: font-size(size-16);
+			line-height: 2.4rem;
+		}
+	}
+
+	@include media(mobile) {
+		&,
+		* {
 			font-size: font-size(size-18);
 			line-height: 2.6rem;
 		}
 	}
 
-	@include media(mobile) {
+	@include media(desktop-small) {
 		&,
 		* {
 			font-size: font-size(size-20);
