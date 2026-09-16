@@ -31,7 +31,7 @@
 						<div class="c-banner__select ui-color--black-1">
 							<form action="#" class="c-regions-form">
 								<select class="js-select js-regions-select">
-									<option value=""><?php _e( 'Region', 'protherics' ); ?></option>
+									<option value="1998"><?php _e( 'Region', 'protherics' ); ?></option>
 									<?php foreach ( $regions_list as $region_element ) : ?>
 										<?php
 											$region_id = $region_element['region'] ?? false;

@@ -7,6 +7,31 @@
  * @package protherics
  */
 
+$cookie_name = 'protherics_region';
+$region_cookie = isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : '';
+
+// Get the actual post ID for this request
+global $post;
+$post_id = isset($post->ID) ? $post->ID : get_the_ID();
+$allowed_regions = get_field('show_in_region', $post_id);
+
+// If allowed_regions is set and region_cookie is set and NOT allowed, redirect to 404
+if (!empty($allowed_regions) && $region_cookie) {
+    // Make sure both are integers for comparison (ACF returns array of ints or strings)
+    $allowed_regions_int = array_map('intval', (array)$allowed_regions);
+    $region_cookie_int = intval($region_cookie);
+
+    if (!in_array($region_cookie_int, $allowed_regions_int)) {
+        // REGION NOT ALLOWED - SEND 404
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        include get_query_template('404');
+        exit;
+    }
+}
+
 get_header();
 $news_url = get_field( 'news_archive_url', 'option' );
 $news_desc = get_field( 'description_footer' );

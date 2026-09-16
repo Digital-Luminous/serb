@@ -6,69 +6,58 @@ class Protherics_Region {
 	private $popup_is_enable;
 	private $all_regions;
 
-
-	public function __construct() {
-
-		$this->popup_is_enable = get_field( 'regions_enable_popup', 'option' );
-		// get all regions
-		$temp_region = new WP_Query( array(
-			'post_type'      => 'region',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-		) );
-		$this->all_regions = $temp_region->posts ?? array();
-
-		if ( $this->popup_is_enable ) {
-			add_action( 'wp_head', array( $this, 'add_style' ) );
-			add_action( 'wp_body_open', array( $this, 'add_script' ) );
-			add_action( 'wp_footer', array( $this, 'modal_contetnt' ) );
-			add_filter( 'nav_menu_item_classes', array( $this, 'nav_menu_item_classes' ), 10, 3 );
-
-			add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
-      add_action( 'template_redirect', array( $this, 'restrict_single_post_access' ) );
-		}
-
-	}
-
-
-  public function restrict_single_post_access() {
-    if ( ! is_singular( array( 'news', 'insights' ) ) ) {
-        error_log('🛑 Not a singular news or insights post.');
-        return;
-    }
-
-    $region_cookie = $_COOKIE[ $this->cookie_name ] ?? '';
-    error_log('🔍 Region cookie value: ' . print_r($region_cookie, true));
-
-    // Allow if region is not set or global
-    if ( ! $region_cookie || $region_cookie === 'all' || $region_cookie === 'global' ) {
-        error_log('✅ Access allowed because region cookie is empty or global.');
-        return;
-    }
-
-    $post_id = get_the_ID();
-    $allowed_regions = get_field( 'show_in_region', $post_id );
-    // var_dump($allowed_regions);
-    error_log('📄 Post ID: ' . $post_id);
-    error_log('📍 Allowed regions for post: ' . print_r($allowed_regions, true));
-
-    if ( empty( $allowed_regions ) ) {
-        error_log('✅ No regions set for post. Access allowed.');
-        return;
-    }
-
-    if ( ! in_array( intval( $region_cookie ), $allowed_regions ) ) {
-        error_log('❌ Region ' . $region_cookie . ' not allowed. Sending 404.');
-        global $wp_query;
-        $wp_query->set_404();
-        status_header( 404 );
-        nocache_headers();
-        include get_query_template( '404' );
+  public function __construct() {
+    // Handle region parameters from redirect - ADD THIS FIRST
+    if (isset($_GET['region_id']) && isset($_GET['region_name'])) {
+        $region_id = sanitize_text_field($_GET['region_id']);
+        $region_name = sanitize_text_field($_GET['region_name']);
+        
+        // Set cookies on the new domain
+        setcookie($this->cookie_name, $region_id, [
+            'expires' => 0, // Session cookie
+            'path' => '/',
+            'domain' => $this->get_cookie_domain(),
+            'secure' => is_ssl(),
+            'httponly' => false,
+            'samesite' => 'Lax'
+        ]);
+        
+        setcookie('protherics_region_name', $region_name, [
+            'expires' => 0,
+            'path' => '/',
+            'domain' => $this->get_cookie_domain(),
+            'secure' => is_ssl(),
+            'httponly' => false,
+            'samesite' => 'Lax'
+        ]);
+        
+        // Redirect to clean URL without parameters
+        $clean_url = remove_query_arg(['region_id', 'region_name']);
+        wp_redirect($clean_url);
         exit;
     }
 
-    error_log('✅ Region ' . $region_cookie . ' is allowed.');
-  }
+    if (function_exists('wpe_param_set')) {
+       wpe_param_set('no_cache', 1);
+   }
+
+   $this->popup_is_enable = get_field( 'regions_enable_popup', 'option' );
+   // get all regions
+   $temp_region = new WP_Query( array(
+       'post_type'      => 'region',
+       'posts_per_page' => -1,
+       'fields'         => 'ids',
+   ) );
+   $this->all_regions = $temp_region->posts ?? array();
+
+   if ( $this->popup_is_enable ) {
+       add_action( 'wp_head', array( $this, 'add_style' ) );
+       add_action( 'wp_body_open', array( $this, 'add_script' ) );
+       add_action( 'wp_footer', array( $this, 'modal_contetnt' ) );
+       add_filter( 'nav_menu_item_classes', array( $this, 'nav_menu_item_classes' ), 10, 3 );
+       add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+   }
+}
 
 	function pre_get_posts( $query ) {
 
@@ -173,6 +162,17 @@ class Protherics_Region {
     $cookie_name = 'protherics_region';
     return isset($_COOKIE[$cookie_name]) ? intval($_COOKIE[$cookie_name]) : null;
 }
+
+  private function get_cookie_domain() {
+    $host = $_SERVER['HTTP_HOST'];
+    $parts = explode('.', $host);
+    
+    if (count($parts) > 2) {
+        return '.' . implode('.', array_slice($parts, -2));
+    }
+    
+    return $host;
+  }
 
 }
 
