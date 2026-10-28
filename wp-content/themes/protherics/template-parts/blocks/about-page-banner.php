@@ -16,7 +16,11 @@
 		return;
 	}
 ?>
-
+<?php
+if ( $breadcrumbs ) {
+	echo protherics_breadcrumbs();
+}
+?>
 <section class="c-about-page-banner<?php echo $breadcrumbs ? '' : ' s-regular-bottom'; ?>">
 	<div class="c-about-page-banner__inner l-inner">
 		<?php if ( $has_page_title || $has_heading || $has_description ) : ?>
@@ -54,8 +58,3 @@
 	<?php endif; ?>
 </section>
 
-<?php
-if ( $breadcrumbs ) {
-	echo protherics_breadcrumbs();
-}
-?>

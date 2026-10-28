@@ -151,7 +151,7 @@ function protherics_breadcrumbs() {
         $breadcrumb_trail .= $before . get_the_title( $queried_object ) . $after;
     }
     $breadcrumb_output_link = '';
-    $breadcrumb_output_link .= '<section class="l-section l-breadcrumbs s-regular-bottom">';
+    $breadcrumb_output_link .= '<section class="l-section l-breadcrumbs">';
     $breadcrumb_output_link .= '<div class="l-inner">';
     $breadcrumb_output_link .= '<ul class="c-breadcrumbs t-size-14 t-size-16--desktop ui-color--black-1">';
 
