@@ -1,0 +1,38 @@
+<?php
+	$text = get_field( 'text' );
+	$link = get_field( 'link' );
+
+	if ( is_string( $text ) ) {
+		$text = preg_replace( '/[\s\x{00A0}\x{2028}\x{2029}\x{200B}]+/u', ' ', $text );
+		$text = trim( $text );
+	}
+
+	$has_text = ! empty( $text );
+	$has_link = ! empty( $link['url'] ) && ! empty( $link['title'] );
+
+	if ( ! $has_text && ! $has_link ) {
+		return;
+	}
+?>
+
+<section class="c-join-us s-regular-bottom">
+	<div class="c-join-us__inner l-inner">
+		<div class="c-join-us__pill">
+			<?php if ( $has_text ) : ?>
+				<p class="c-join-us__text"><?php echo esc_html( $text ); ?></p>
+			<?php endif; ?>
+
+			<?php if ( $has_link ) : ?>
+				<div class="c-join-us__action">
+					<a
+						class="c-btn c-btn--primary c-btn--arrowed c-join-us__link"
+						href="<?php echo esc_url( $link['url'] ); ?>"
+						target="<?php echo esc_attr( $link['target'] ); ?>"
+					>
+						<?php echo esc_html( $link['title'] ); ?>
+					</a>
+				</div>
+			<?php endif; ?>
+		</div>
+	</div>
+</section>

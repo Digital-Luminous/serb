@@ -115,12 +115,21 @@
     'components/close-button',
     'components/gate-modal',
     'components/hero-second',
+    'components/hero-banner',
+    'components/about-page-banner',
+    'components/image-text-slider',
+    'components/home-carousel',
+    'components/our-values',
+    'components/statistic',
+    'components/join-us',
+    'components/our-strategy',
     'components/table-block',
     'components/subpage-hero',
     'components/quote-carousel',
     'components/video-library';
 
-
+// Content radius
+@import 'base/content-radius';
 
 // Overrides
 @import 'overrides/contact-form'

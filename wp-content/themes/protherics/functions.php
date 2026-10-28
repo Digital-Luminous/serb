@@ -258,3 +258,11 @@ require get_template_directory() . '/inc/cf7.php';
  * Hide in region class
  */
 require get_template_directory() . '/inc/region.php';
+
+add_action('init', function () {
+    add_rewrite_rule(
+        '^news/(insights|press-releases)/?$',
+        'index.php?pagename=news/$matches[1]',
+        'top'
+    );
+});

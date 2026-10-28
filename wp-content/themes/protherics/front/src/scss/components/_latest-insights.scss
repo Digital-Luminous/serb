@@ -1,3 +1,11 @@
+.l-latest-insights .l-section--with-bg {
+    overflow: hidden;
+
+    @include media(desktop) {
+        border-radius: border-radius(content);
+    }
+}
+
 .c-latest-insights__header {
     padding: 2.5rem 0;
 

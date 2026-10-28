@@ -4,7 +4,11 @@
 	$breadcrumbs = get_field( 'enable_breadcrumbs' );
 	$mobile_bg   = get_field( 'mobile_background' );
 ?>
-
+<?php
+if ( $breadcrumbs ) {
+	echo protherics_breadcrumbs();
+}
+?>
 <section class="l-section l-hero-text">
 	<div class="l-inner">
 		<div class="c-hero-text">
@@ -25,8 +29,4 @@
 	</div>
 </section>
 
-<?php
-if ( $breadcrumbs ) {
-	echo protherics_breadcrumbs();
-}
-?>
+

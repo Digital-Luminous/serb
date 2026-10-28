@@ -102,7 +102,7 @@ class Protherics_Walker_Nav_Menu extends Walker_Nav_Menu {
             $output .= '<li class="c-main-nav-sublist__item ' . implode( ' ', $classes ) . '">';
 
             // Link drugog nivoa (uvek postoji, čak i ako ima children)
-            $output .= '<a href="' . $permalink . '" class="c-main-nav-sublist__link ui-color--white-1">';
+            $output .= '<a href="' . $permalink . '" class="c-main-nav-sublist__link">';
             $output .= $title;
             $output .= '</a>';
             // PAŽNJA: ovde NAMERNO ne zatvaramo </li>
@@ -113,7 +113,7 @@ class Protherics_Walker_Nav_Menu extends Walker_Nav_Menu {
         } else if ( $depth == 2 ) {
 
             $output .= '<li class="c-main-nav-sub-sublist__item ' . implode( ' ', $classes ) . '">';
-            $output .= '<a href="' . $permalink . '" class="c-main-nav-sublist__link ui-color--white-1">';
+            $output .= '<a href="' . $permalink . '" class="c-main-nav-sublist__link">';
             $output .= $title;
             $output .= '</a>';
             $output .= '</li>';
