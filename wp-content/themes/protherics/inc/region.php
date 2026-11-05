@@ -82,20 +82,27 @@ class Protherics_Region {
 			)
 		) {
 
-			$region_id = $_COOKIE[ $this->cookie_name ] ?? '';
+			$region_id = absint( $_COOKIE[ $this->cookie_name ] ?? 0 );
 
 			if ( $region_id ) {
 
+				// Show posts for the visitor's region and posts with no region set.
+				// IDs are matched with quotes ("1998") because ACF stores them as a serialized array.
 				$query->set( 'meta_query', array(
 					'relation'      => 'OR',
 					array(
 						'key'       => 'show_in_region',
-						'value'     => $region_id,
+						'value'     => '"' . $region_id . '"',
 						'compare'   => 'LIKE',
 					),
 					array(
 						'key'       => 'show_in_region',
 						'compare'   => 'NOT EXISTS',
+					),
+					array(
+						'key'       => 'show_in_region',
+						'value'     => '',
+						'compare'   => '=',
 					),
 				) );
 

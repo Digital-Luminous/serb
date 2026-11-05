@@ -163,6 +163,32 @@ function protherics_register_cpt_news() {
 }
 add_action( 'init', 'protherics_register_cpt_news', 0 );
 
+/**
+ * News articles live at /news/<slug>/, which also catches child pages of the "News" page
+ * (e.g. /news/insights/, /news/press-releases/) and makes them 404.
+ * If a page exists at that path, show the page instead.
+ */
+function protherics_news_child_pages( $query_vars ) {
+	if ( empty( $query_vars['news'] ) || is_admin() ) {
+		return $query_vars;
+	}
+
+	$path = 'news/' . $query_vars['news'];
+
+	if ( ! get_page_by_path( $path ) ) {
+		return $query_vars;
+	}
+
+	$page_vars = array( 'pagename' => $path );
+
+	if ( ! empty( $query_vars['page'] ) ) {
+		$page_vars['page'] = $query_vars['page'];
+	}
+
+	return $page_vars;
+}
+add_filter( 'request', 'protherics_news_child_pages' );
+
 function protherics_register_cpt_locations() {
     $labels = array(
         'name'                  => _x( 'Locations', 'protherics' ),
