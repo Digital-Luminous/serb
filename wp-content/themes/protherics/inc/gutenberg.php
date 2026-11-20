@@ -320,6 +320,18 @@ function protherics_acf_gutenberg_blocks() {
 
         acf_register_block(
             array(
+                'name' => 'location-map',
+                'title' => __( 'Location map', 'protherics' ),
+                'description' => __( 'Location map section', 'protherics' ),
+                'render_callback' => 'protherics_render_acf_block',
+                'category' => 'protherics-blocks',
+                'icon' => 'location-alt',
+                'keywords' => array(),
+            )
+        );
+
+        acf_register_block(
+            array(
                 'name' => 'products',
                 'title' => __( 'Products', 'protherics' ),
                 'description' => __( 'Products section', 'protherics' ),
@@ -429,6 +441,7 @@ function protherics_allowed_block_types( $allowed_blocks, $post ) {
             'acf/timeline-news',
             'acf/insights-listing',
             'acf/locations',
+            'acf/location-map',
             'acf/products',
             'core/shortcode',
             'acf/three-columns',
