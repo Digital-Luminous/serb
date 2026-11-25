@@ -1312,7 +1312,7 @@
                     "aria-label": "",
                     "type": "text",
                     "instructions": "Display name, for example Office or Manufacture.",
-                    "required": 0,
+                    "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -1334,7 +1334,7 @@
                     "aria-label": "",
                     "type": "image",
                     "instructions": "SVG marker icon.",
-                    "required": 0,
+                    "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",

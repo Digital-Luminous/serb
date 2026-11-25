@@ -1,0 +1,196 @@
+// Fills the standard .l-inner wrap, so it follows the same side padding as the other blocks.
+.c-location-map {
+    width: 100%;
+}
+
+.c-location-map__legend {
+    @include list-reset;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 4.5rem;
+    padding-left: 0.7rem;
+
+    margin-bottom: 3rem;
+}
+
+.c-location-map__legend-item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: .6rem;
+}
+
+.c-location-map__legend-icon {
+    display: block;
+    flex-shrink: 0;
+
+    width: 3.3rem;
+    height: 4rem;
+}
+
+.c-location-map__legend-label {
+    font-family: font(main);
+    font-weight: font-weight(bold);
+    font-size: font-size(size-16);
+    line-height: 1;
+    letter-spacing: 0;
+
+    white-space: nowrap;
+}
+
+.c-location-map__canvas {
+    width: 100%;
+    height: 50rem;
+
+    background-color: color(grey-1);
+
+    @include media(mobile) {
+        height: 60rem;
+    }
+
+    .gm-style-iw-c {
+        padding: 0 !important;
+        overflow: visible !important;
+
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    .gm-style-iw-d {
+        overflow: visible !important;
+
+        max-height: none !important;
+    }
+
+    .gm-ui-hover-effect {
+        display: none !important;
+    }
+
+    // Replace Google's small rotated square with a 34×25 pointer.
+    .gm-style-iw-tc {
+        height: 2.5rem !important;
+
+        filter: none !important;
+
+        &::after {
+            top: 0 !important;
+            left: 50% !important;
+
+            width: 0 !important;
+            height: 0 !important;
+
+            transform: translateX(-50%) !important;
+
+            background: transparent !important;
+            box-shadow: none !important;
+
+            border-style: solid !important;
+            border-width: 2.5rem 1.7rem 0 !important;
+            border-color: color(white-1) transparent transparent !important;
+        }
+    }
+}
+
+.c-location-map__popup {
+    position: relative;
+
+    width: 25rem;
+    min-height: 18.7rem;
+    padding: 1.6rem;
+
+    overflow: hidden;
+
+    color: color(black-1);
+    background-color: color(white-1);
+    box-shadow: .4rem .4rem .8rem 0 color(dark-grey-1);
+}
+
+.c-location-map__popup-title {
+    margin-bottom: .5rem;
+    padding-right: 1.6rem;
+
+    font-family: font(main);
+    font-weight: font-weight(bold);
+    font-size: font-size(size-18);
+    line-height: 1.8rem;
+    letter-spacing: 0;
+}
+
+.c-location-map__popup-content {
+    margin-bottom: 1.4rem;
+
+    font-family: font(main);
+    font-weight: font-weight(normal);
+    font-size: font-size(size-14);
+    line-height: 1.25;
+    letter-spacing: 0;
+
+    p {
+        margin: 0;
+
+        font-weight: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
+}
+
+// Pill button, built on c-btn c-btn--primary c-btn--arrowed c-btn--small.
+.c-location-map__popup-cta {
+    align-items: center;
+
+    height: 3.2rem;
+    padding: 0 1.4rem;
+
+    font-family: font(main);
+    font-weight: font-weight(bold);
+    font-style: normal;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    letter-spacing: .1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+
+    border-radius: 1.6rem;
+
+    // Longer arrow, drawn as a background so its size is set here.
+    &.c-btn--arrowed::after {
+        flex-shrink: 0;
+
+        width: 3.2rem;
+        height: 1.6rem;
+        margin-left: 1.5em;
+
+        content: '';
+
+        background: url('../images/icon-arrow-right-white.svg') center / contain no-repeat;
+    }
+
+    &.c-btn--arrowed:hover::after,
+    &.c-btn--arrowed:focus::after {
+        transform: translateX(.5rem);
+    }
+}
+
+.c-location-map__popup-close {
+    @include button-reset;
+    @include transition;
+
+    position: absolute;
+    top: .6rem;
+    right: .6rem;
+
+    width: 1.6rem;
+    height: 1.6rem;
+
+    cursor: pointer;
+    transition-property: opacity;
+
+    background: url('../images/icon-close.svg') center / 1.6rem 1.6rem no-repeat;
+
+    &:hover,
+    &:focus {
+        opacity: .7;
+    }
+}
