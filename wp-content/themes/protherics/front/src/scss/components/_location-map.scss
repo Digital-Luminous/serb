@@ -1,3 +1,12 @@
+.l-location-map {
+    margin-top: 2rem;
+
+    // Tablet and mobile, below 1024px.
+    @include media(0, tablet) {
+        margin-top: 4rem;
+    }
+}
+
 // Fills the standard .l-inner wrap, so it follows the same side padding as the other blocks.
 .c-location-map {
     width: 100%;
