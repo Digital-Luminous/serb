@@ -1,5 +1,7 @@
 .c-btn {
     @include button;
+
+    border-radius: border-radius(button);
 }
 
 .c-btn--wide {
@@ -34,18 +36,23 @@
     &:after {
         @include transition();
 
+        content: '';
+        display: inline-block;
+        flex-shrink: 0;
+
+        width: 3.4rem;
         height: 1.6rem;
+
         margin-left: 1.25rem;
 
-        line-height: 1;
+        background: url('../images/icon-arrow-right-colored.svg') no-repeat center / contain;
 
-        content: url('../images/icon-arrow-right-colored.svg');
         transition-property: transform;
     }
 }
 
 .c-btn--primary.c-btn--arrowed::after {
-    content: url('../images/icon-arrow-right-white.svg');
+    background-image: url('../images/icon-arrow-right-white.svg');
 }
 
 .c-btn--arrowed:hover::after,

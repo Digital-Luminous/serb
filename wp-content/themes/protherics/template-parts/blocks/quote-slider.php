@@ -42,12 +42,6 @@ if ( ! empty( $quotes ) && is_array( $quotes ) ) :
 
                 <?php endforeach; ?>
             </ul>
-
-            <?php if ( count( $quotes ) > 1 ) : ?>
-                <div class="quote-carousel__controls c-banners-slider__controls">
-                    <div class="c-slider-pagination c-slider-pagination--alt js-slider-pagination"></div>
-                </div>
-            <?php endif; ?>
         </div>
     </section>
 <?php endif; ?>

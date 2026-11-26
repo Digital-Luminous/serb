@@ -4,7 +4,8 @@ function protherics_breadcrumbs() {
     // Set variables for later use
     $here_text = __( '' );
     $home_link = home_url( '/' );
-    $home_text = get_the_title( get_option('page_on_front') ) ?? __( 'Home', 'protherics' );
+    //$home_text = get_the_title( get_option('page_on_front') ) ?? __( 'Home', 'protherics' );
+    $home_text = __( 'Home', 'protherics' );
     $link_before = '<li class="c-breadcrumbs__item">';
     $link_after = '</li>';
     $link_attr = ' class="c-breadcrumbs__link"';
@@ -150,7 +151,7 @@ function protherics_breadcrumbs() {
         $breadcrumb_trail .= $before . get_the_title( $queried_object ) . $after;
     }
     $breadcrumb_output_link = '';
-    $breadcrumb_output_link .= '<section class="l-section l-breadcrumbs s-regular-bottom">';
+    $breadcrumb_output_link .= '<section class="l-section l-breadcrumbs">';
     $breadcrumb_output_link .= '<div class="l-inner">';
     $breadcrumb_output_link .= '<ul class="c-breadcrumbs t-size-14 t-size-16--desktop ui-color--black-1">';
 

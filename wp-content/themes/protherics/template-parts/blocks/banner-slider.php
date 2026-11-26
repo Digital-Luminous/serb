@@ -70,12 +70,6 @@
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</ul>
-			<?php if ( count( $slides ) > 1 ) : ?>
-        <div class="c-banners-slider__controls">
-          <div class="c-slider-pagination c-slider-pagination--alt js-slider-pagination"></div>
-          <button class="c-banners-slider__play-stop js-toggle-autoplay"></button>
-        </div>
-			<?php endif; ?>
 		</div>
 	</div>
 <?php endif; ?>

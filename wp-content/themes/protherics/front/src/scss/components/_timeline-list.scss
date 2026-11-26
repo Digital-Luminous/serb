@@ -42,9 +42,10 @@
 }
 
 .c-timeline-list__item::before {
-    right: 50%;
-    left: 0;
+    right: auto;
+    left: border-radius(content);
 
+    width: calc(50% - #{border-radius(content)});
     height: .2rem;
 
     background-color: color(purple-1);
@@ -55,8 +56,10 @@
 }
 
 .c-timeline-list__item:nth-child(even)::before {
-    right: 0;
+    right: auto;
     left: 50%;
+
+    width: calc(50% - #{border-radius(content)});
 }
 
 .c-timeline-list__item:last-child .c-timeline-box::before {

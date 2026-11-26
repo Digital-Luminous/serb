@@ -26,6 +26,7 @@ $theme_path = get_template_directory_uri();
 				$date    = get_the_date( 'd F Y' );
 				$cta = get_field( 'cta', $post_id );
 			?>
+			<?php echo protherics_breadcrumbs(); ?>
 			<section class="l-sec l-hero-news">
 				<div class="l-inner">
 					<div class="c-hero-news">
@@ -47,7 +48,7 @@ $theme_path = get_template_directory_uri();
 				</div>
 			</section>
 
-			<?php echo protherics_breadcrumbs(); ?>
+			
 
 			<section class="l-sec s-regular-bottom">
 				<div class="l-inner">

@@ -1,4 +1,6 @@
 .c-banners-slider {
+    position: relative;
+
     color: color(white-1);
 
     @include media(mobile) {

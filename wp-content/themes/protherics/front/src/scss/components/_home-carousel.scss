@@ -1,0 +1,401 @@
+$home-carousel-tile-min-height: 448px;
+$home-carousel-expanded-width: 480px;
+$home-carousel-collapsed-width: 214px;
+$home-carousel-gap: 20px;
+$home-carousel-fluid-max-width: 1250px;
+$home-carousel-transition-duration: 400ms;
+$home-carousel-content-show-duration: 250ms;
+$home-carousel-content-hide-duration: 100ms;
+$home-carousel-label-show-duration: 250ms;
+$home-carousel-label-hide-duration: 50ms;
+$home-carousel-desktop-breakpoint: tablet;
+
+.c-home-carousel {
+	position: relative;
+	z-index: 1;
+	isolation: isolate;
+	height: $home-carousel-tile-min-height;
+
+	.c-cms-content,
+	.c-cms-content * {
+		color: color(white-1);
+	}
+}
+
+.c-home-carousel__stage {
+	position: relative;
+	display: grid;
+	background-color: color(white-1);
+	height: $home-carousel-tile-min-height;
+}
+
+.c-home-carousel__panorama,
+.c-home-carousel__grid {
+	grid-area: 1 / 1;
+}
+
+.c-home-carousel__panorama {
+	position: relative;
+	z-index: 0;
+	display: block;
+	width: 100%;
+	height: $home-carousel-tile-min-height;
+	min-height: $home-carousel-tile-min-height;
+	object-fit: cover;
+	object-position: center;
+	pointer-events: none;
+
+	@include media(0, $home-carousel-desktop-breakpoint) {
+		display: none;
+		visibility: hidden;
+	}
+}
+
+.c-home-carousel__media {
+	display: none;
+	overflow: hidden;
+	border-radius: inherit;
+	pointer-events: none;
+
+	@include media(0, $home-carousel-desktop-breakpoint) {
+		display: block;
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background-image: var(--bg-image);
+			background-repeat: no-repeat;
+			background-size: calc(var(--tile-count) * 100%) 100%;
+			background-position: calc(var(--tile-index) * 100% / max(1, var(--tile-count) - 1)) center;
+		}
+	}
+}
+
+.c-home-carousel__grid {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	gap: $home-carousel-gap;
+	align-items: stretch;
+	grid-auto-rows: $home-carousel-tile-min-height;
+	min-width: 0;
+	background-color: transparent;
+
+	@include media(0, $home-carousel-desktop-breakpoint) {
+		grid-template-columns: minmax(0, 1fr) !important;
+		grid-auto-rows: auto;
+	}
+
+	@include media($home-carousel-desktop-breakpoint) {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		width: 100%;
+		max-width: 100%;
+	}
+}
+
+.c-home-carousel__tile {
+	position: relative;
+	display: grid;
+	grid-template-areas: 'stack';
+	grid-template-rows: $home-carousel-tile-min-height;
+	align-self: stretch;
+	min-width: 0;
+	overflow: hidden;
+	border-radius: border-radius(content);
+	outline: none;
+	background-color: transparent;
+
+	@include media($home-carousel-desktop-breakpoint) {
+		flex: 0 0 $home-carousel-collapsed-width;
+		cursor: pointer;
+
+		@include transition($home-carousel-transition-duration);
+
+		transition-property: flex-grow, flex-shrink, flex-basis, max-width;
+
+		&.is-active {
+			flex: 1 1 $home-carousel-collapsed-width;
+			max-width: $home-carousel-expanded-width;
+		}
+	}
+
+	@include media($home-carousel-fluid-max-width) {
+		&.is-active {
+			flex: 0 0 $home-carousel-expanded-width;
+			max-width: $home-carousel-expanded-width;
+		}
+	}
+
+	@include media(0, $home-carousel-desktop-breakpoint) {
+		grid-template-rows: auto;
+		min-height: $home-carousel-tile-min-height;
+		cursor: default;
+	}
+}
+
+.c-home-carousel__surface {
+	grid-area: stack;
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 100%;
+}
+
+.c-home-carousel__tint {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	border-radius: inherit;
+	background: #54178E66;
+
+	@include transition($home-carousel-transition-duration);
+
+	transition-property: background;
+}
+
+.c-home-carousel__tile.is-active .c-home-carousel__tint {
+	background: #54178E80;
+}
+
+.c-home-carousel__expanded {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	padding: 3.2rem 2.4rem;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+
+	@include media(0, $home-carousel-desktop-breakpoint) {
+		position: relative;
+		inset: auto;
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+	}
+}
+
+.c-home-carousel__tile.is-active .c-home-carousel__expanded {
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+@include media($home-carousel-desktop-breakpoint) {
+	.c-home-carousel.is-interactive {
+		.c-home-carousel__expanded {
+			transition:
+				opacity $home-carousel-content-hide-duration ease,
+				visibility 0s linear $home-carousel-content-hide-duration;
+		}
+
+		.c-home-carousel__tile.is-active .c-home-carousel__expanded {
+			transition:
+				opacity $home-carousel-content-show-duration ease $home-carousel-transition-duration,
+				visibility 0s linear $home-carousel-transition-duration;
+		}
+
+		.c-home-carousel__label {
+			transition:
+				opacity $home-carousel-label-hide-duration ease,
+				visibility 0s linear $home-carousel-label-hide-duration;
+		}
+
+		.c-home-carousel__tile:not(.is-active) .c-home-carousel__label {
+			transition:
+				opacity $home-carousel-label-show-duration ease,
+				visibility 0s linear 0s;
+		}
+
+		.c-home-carousel__tile.is-active .c-home-carousel__label {
+			transition:
+				opacity $home-carousel-label-hide-duration ease,
+				visibility 0s linear $home-carousel-label-hide-duration;
+		}
+	}
+}
+
+.c-home-carousel__heading {
+	margin: 0 0 1.6rem;
+	color: color(white-1);
+	font-family: font(main);
+	font-weight: font-weight(bold);
+	font-size: font-size(size-32);
+	line-height: font-size(size-44);
+	letter-spacing: 0;
+	padding-right: 2rem;
+
+	@include media($home-carousel-desktop-breakpoint) {
+		@include line-clamp(3);
+	}
+}
+
+.c-home-carousel__text {
+	margin: 0;
+	color: color(white-1);
+	font-family: font(main);
+	font-weight: font-weight(normal);
+	font-size: font-size(size-20);
+	line-height: 3rem;
+	letter-spacing: 0;
+
+	&,
+	p {
+		margin: 0;
+		color: inherit;
+		font: inherit;
+	}
+
+	p {
+		@include line-clamp(5);
+	}
+}
+
+.c-home-carousel__actions {
+	margin-top: auto;
+	padding-top: 2.4rem;
+
+	.c-btn--secondary:hover,
+	.c-btn--secondary:focus {
+		background-color: color(white-1);
+	}
+}
+
+.c-home-carousel__label {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	display: none;
+	align-items: flex-end;
+	justify-content: center;
+	padding: 0 1.2rem 2.4rem;
+	color: color(white-1);
+	font-family: font(main);
+	font-weight: font-weight(bold);
+	font-size: font-size(size-32);
+	line-height: font-size(size-36);
+	letter-spacing: 0;
+	text-align: center;
+	pointer-events: none;
+	overflow: hidden;
+
+	@include media($home-carousel-desktop-breakpoint) {
+		display: flex;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	@include media(0, $home-carousel-desktop-breakpoint) {
+		display: none !important;
+	}
+}
+
+.c-home-carousel__tile:not(.is-active) .c-home-carousel__label {
+	@include media($home-carousel-desktop-breakpoint) {
+		opacity: 1;
+		visibility: visible;
+	}
+}
+
+.c-home-carousel__tile.is-active .c-home-carousel__label {
+	@include media($home-carousel-desktop-breakpoint) {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+
+.c-home-carousel__clip-svg {
+	position: absolute;
+	width: 0;
+	height: 0;
+	overflow: hidden;
+}
+
+@include media(0, $home-carousel-desktop-breakpoint) {
+	.c-home-carousel {
+		height: auto;
+	}
+
+	.c-home-carousel__stage {
+		height: auto;
+		display: block;
+	}
+
+	.c-home-carousel__panorama,
+	.c-home-carousel__grid {
+		grid-area: auto;
+	}
+
+	.c-home-carousel__grid {
+		display: grid;
+	}
+
+	.c-home-carousel__tile:nth-child(1) .c-home-carousel__tint {
+		background: url('../images/gradient-card-1.svg') center / cover no-repeat;
+	}
+
+	.c-home-carousel__tile:nth-child(2) .c-home-carousel__tint {
+		background: url('../images/gradient-card-2.svg') center / cover no-repeat;
+	}
+
+	.c-home-carousel__tile:nth-child(3) .c-home-carousel__tint {
+		background: url('../images/gradient-card-3.svg') center / cover no-repeat;
+	}
+
+	.c-home-carousel__tile:nth-child(4) .c-home-carousel__tint {
+		background: url('../images/gradient-card-4.svg') center / cover no-repeat;
+	}
+
+	.c-home-carousel__tile:nth-child(n + 5) .c-home-carousel__tint {
+		background: url('../images/gradient-card-1.svg') center / cover no-repeat;
+	}
+
+	.c-home-carousel__heading {
+		font-size: font-size(size-28);
+		line-height: font-size(size-36);
+		margin-bottom: 1.4rem;
+	}
+
+	.c-home-carousel__text {
+		font-size: font-size(size-18);
+		line-height: 2.6rem;
+		margin-bottom: 4.6rem;
+
+		p {
+			-webkit-line-clamp: 7;
+		}
+	}
+
+	.c-home-carousel__expanded {
+		height: 100%;
+	}
+
+	.c-home-carousel__actions {
+		margin-top:  auto;
+	}
+
+	.c-home-carousel__media {
+		display: none;
+	}
+}
+
+@include media(desktop-small) {
+	.c-home-carousel__expanded {
+		padding: 3.5rem 2.6rem 2.8rem;
+	}
+
+	.c-home-carousel__label {
+		padding-bottom: 2.4rem;
+	}
+}
