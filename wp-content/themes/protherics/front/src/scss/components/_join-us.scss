@@ -1,0 +1,66 @@
+$join-us-pill-padding-y: 4rem;
+$join-us-pill-padding-x: 9rem;
+$join-us-pill-padding-y-mobile: 4.8rem;
+$join-us-pill-padding-x-mobile: 4.5rem;
+$join-us-content-gap: 4rem;
+$join-us-content-gap-mobile: 3.5rem;
+
+.c-join-us__inner.l-inner {
+	@include media(0, tablet) {
+		padding-inline: 0;
+	}
+}
+
+.c-join-us__pill {
+	width: 100%;
+	padding: $join-us-pill-padding-y-mobile $join-us-pill-padding-x-mobile;
+	background-color: color(grey-2);
+
+	@include media(0, tablet) {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: $join-us-content-gap-mobile;
+		border-radius: 0;
+	}
+
+	@include media(tablet) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: $join-us-content-gap;
+		padding: $join-us-pill-padding-y $join-us-pill-padding-x;
+		border-radius: 9999px;
+	}
+}
+
+.c-join-us__text {
+	margin: 0;
+	font-family: font(main);
+	font-weight: font-weight(bold);
+	font-size: font-size(size-32);
+	line-height: 3.6rem;
+	letter-spacing: 0;
+	color: color(purple-1);
+
+	@include media(0, tablet) {
+		text-align: center;
+	}
+
+	@include media(tablet) {
+		flex: 1 1 auto;
+	}
+}
+
+.c-join-us__action {
+	@include media(tablet) {
+		flex-shrink: 0;
+	}
+
+	@include media(0, tablet) {
+		.c-btn {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+}

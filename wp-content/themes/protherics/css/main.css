@@ -47,3 +47,47 @@ p.c-hero-second__description {
         height: 430px;
     }
 }
+
+/* Statistic pill: put every item on the same 3 rows (title above / number / title below),
+   so numbers line up even when only some items have a title above. */
+@supports (grid-template-rows: subgrid) {
+    .c-statistic__item {
+        display: grid;
+        grid-row: span 3;
+        grid-template-rows: subgrid;
+        row-gap: 0;
+        justify-items: center;
+    }
+
+    .c-statistic__title--above {
+        grid-row: 1;
+        align-self: end;
+    }
+
+    .c-statistic__number {
+        grid-row: 2;
+        align-self: center;
+    }
+
+    .c-statistic__title--below {
+        grid-row: 3;
+        align-self: start;
+    }
+
+    @media (min-width: 1024px) {
+        .c-statistic__pill {
+            display: grid;
+            grid-auto-flow: column;
+            grid-template-rows: repeat(3, auto);
+            grid-auto-columns: 13rem;
+            justify-content: space-between;
+            align-content: center;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .c-statistic__pill {
+            grid-auto-columns: 18rem;
+        }
+    }
+}

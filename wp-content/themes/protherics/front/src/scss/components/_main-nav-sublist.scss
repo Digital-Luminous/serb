@@ -20,44 +20,45 @@
 
     position: relative;
 
-    display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
 
-    padding: 1.7rem 1rem 1.7rem 1.5rem;
+    width: 100%;
 
     border: 1px solid color(dark-purple-1);
+    border-radius: border-radius(button);
 
-    @include media(0, tablet) {
-        text-transform: uppercase;
-    }
+    color: color(white-1);
+    background-color: color(purple-1);
+
     @include media(tablet) {
         width: 28rem;
-        padding: 1.6rem 1rem 1.6rem 1.5rem;
-
-        background-color: color(purple-1);
     }
 
     &::after {
-        @include transition;
+        @include transition();
 
-        display: block;
+        content: '';
+        display: inline-block;
+        flex-shrink: 0;
 
+        width: 3.4rem;
         height: 1.6rem;
-        margin: .5rem;
-        padding-left: 1rem;
 
-        content: url('../images/icon-arrow-right-white.svg');
-        transform: translateX(-1rem);
+        margin-left: 1.25rem;
+
+        background: url('../images/icon-arrow-right-white.svg') no-repeat center / contain;
+
+        transition-property: transform;
     }
-}
 
-.c-main-nav-sublist__link:hover {
-    border-color: color(purple-1);
-    background-color: color(dark-purple-1);
+    &:hover,
+    &:focus {
+        border-color: color(purple-1);
+        background-color: color(dark-purple-1);
 
-    &::after {
-        transform: translateX(0);
+        &::after {
+            transform: translateX(1rem);
+        }
     }
 }
 

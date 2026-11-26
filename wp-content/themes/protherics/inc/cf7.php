@@ -102,6 +102,12 @@ function custom_locationlist_form_tag_handler( $tag ) {
 
 add_filter('wpcf7_autop_or_not', '__return_false');
 
+function normalize_product_title($title) {
+    // Remove all non-ASCII characters and trim whitespace
+    $title = preg_replace('/[^\x20-\x7E]/', '', $title);
+    return trim(strtolower($title));
+}
+
 
 function protherics_dynamic_emails( $contact_form, $abort, $submission ) {
 
@@ -131,13 +137,13 @@ function protherics_dynamic_emails( $contact_form, $abort, $submission ) {
         }
         if(count( $step_1 ) > 0) {
             if(is_main_site() ) {
-                if ( isset( $posted_data['country_select'] ) ) {
+                if ( isset( $posted_data['locationlist'] ) ) {
                     foreach ( $step_1 as $item ) {
                         if ( $item['geography'] == '' ) {
                             $step_2[] = $item;
                         } else {
                             foreach ( $item['geography'] as $geo ) {
-                                if ( $posted_data['country_select'] == $geo->name || $geo == null ) {
+                                if ( $posted_data['locationlist'] == $geo->name || $geo == null ) {
                                     $step_2[] = $item;
                                 }
                             }
@@ -164,12 +170,13 @@ function protherics_dynamic_emails( $contact_form, $abort, $submission ) {
 
         if ( isset( $posted_data['product_select'] ) && count( $step_2 ) > 0 ) {
             foreach ( $step_2 as $item ) {
-                if ( $item['product'] == '' ) {
+                if ( empty($item['product']) ) {
                     $step_3[] = $item;
                 } else {
                     foreach ( $item['product'] as $product ) {
-                        if ( $posted_data['product_select'] == $product->post_title ) {
+                        if ( normalize_product_title($posted_data['product_select']) === normalize_product_title($product->post_title) ) {
                             $step_3[] = $item;
+                            break;
                         }
                     }
                 }
@@ -191,6 +198,7 @@ function protherics_dynamic_emails( $contact_form, $abort, $submission ) {
         if ( count( $cc_emails ) > 0 ) {
             $properties = $contact_form->get_properties();
             $emails = $properties['mail']['recipient'];
+            $cc_emails = array_unique($cc_emails);
             // $mail = $contact_form->prop('mail');
             // $mail['additional_headers'] = "Cc: $cc_emails";
             // $contact_form->set_properties( array(
@@ -201,6 +209,7 @@ function protherics_dynamic_emails( $contact_form, $abort, $submission ) {
             foreach ( $cc_emails as $email ) {
                 $emails .= ', ' . $email;
             }
+
             $properties['mail']['recipient'] = $emails;
             $contact_form->set_properties( $properties );
         }

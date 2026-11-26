@@ -51,6 +51,12 @@
     }
 }
 
+.c-news__posts {
+    @include media(0, mobile) {
+        overflow: visible;
+    }
+}
+
 .c-news__actions {
     margin-top: 2.5rem;
 
@@ -59,10 +65,16 @@
     }
 }
 
+.c-news__buttons {
+    @include media(0, mobile) {
+        .c-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}
+
 .c-news__pagination {
     margin-bottom: 2.5rem;
-
-    @include media(mobile) {
-        display: none;
-    }
+    display: none;
 }

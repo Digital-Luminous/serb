@@ -86,12 +86,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    @include media(mobile) {
-        border-radius: 8px;
-    }
-    @include media(0, mobile) {
-        border-radius: 3px;
-    }
+    border-radius: border-radius(content);
 }
 
 .video-library__video {

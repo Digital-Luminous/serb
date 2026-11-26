@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import Swiper, { Pagination, Autoplay } from 'swiper';
+import Swiper, { Pagination, Autoplay, Navigation, Controller } from 'swiper';
 
 const selector = {
   pagination: '.js-slider-pagination',
@@ -7,7 +7,14 @@ const selector = {
   slider: '.js-slider',
   swiperSlide: '.swiper-slide',
   paginationBullet: '.c-slider-pagination__bullet',
+  imageTextFrame: '.c-image-text-slider__frame',
+  imageTextControls: '.c-image-text-slider__controls',
+  imageTextPrev: '.c-image-text-slider__arrow--prev',
+  imageTextNext: '.c-image-text-slider__arrow--next',
+  imageTextMediaSlider: '.js-image-text-slider-media',
 };
+
+const getImageTextFrame = ($slider) => $slider.closest(selector.imageTextFrame);
 
 const sliderDefaultPagination = {
   clickable: true,
@@ -23,7 +30,7 @@ const slidersConfig = {
     modules: [Pagination],
     pagination: true,
     breakpoints: {
-      768: {
+      0: {
         disabled: true,
       },
     },
@@ -44,7 +51,38 @@ const slidersConfig = {
     slidesPerView: 1,
     modules: [Pagination],
     pagination: true,
-  }
+  },
+  'image-text': {
+    watchOverflow: true,
+    slidesPerView: 1,
+    spaceBetween: 0,
+    speed: 600,
+    loop: false,
+    modules: [Pagination, Navigation, Autoplay, Controller],
+    pagination: true,
+    navigation: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    breakpoints: {
+      0: {
+        spaceBetween: 17,
+      },
+      1200: {
+        spaceBetween: 0,
+      },
+    },
+  },
+};
+
+const imageTextMediaConfig = {
+  slidesPerView: 1,
+  spaceBetween: 0,
+  speed: 600,
+  loop: false,
+  allowTouchMove: false,
+  modules: [Controller],
 };
 
 const Slider = {
@@ -59,12 +97,19 @@ const Slider = {
 
   initSliders() {
     Slider.sliderInstances.forEach((slider) => {
-      const { $wrapperEl } = slider;
+      const { $wrapperEl, sliderType, mediaSwiper } = slider;
       slider.destroy();
-      $($wrapperEl)
-        .closest(selector.inner)
-        .find(selector.paginationBullet)
-        .remove();
+
+      if (mediaSwiper) {
+        mediaSwiper.destroy();
+      }
+
+      const $cleanupRoot =
+        sliderType === 'image-text'
+          ? getImageTextFrame($($wrapperEl))
+          : $($wrapperEl).closest(selector.inner);
+
+      $cleanupRoot.find(selector.paginationBullet).remove();
     });
 
     Slider.sliderInstances = [];
@@ -78,24 +123,28 @@ const Slider = {
 
       const { pagination, navigation } = config;
       if (pagination) {
-        const paginationEl = $(this).find(selector.pagination)[0];
+        let paginationEl = $(this).find(selector.pagination)[0];
+
+        if (!paginationEl && sliderType === 'image-text') {
+          paginationEl = getImageTextFrame($(this)).find(selector.pagination)[0];
+        }
 
         config.pagination = {
           ...sliderDefaultPagination,
           ...pagination,
-          el: paginationEl
+          el: paginationEl,
         };
       }
 
       if (navigation) {
-        const navigationEl = $(this)
-          .closest(selector.inner)
-          .find(selector.navigation)[0];
+        const navigationEl = Slider.getNavigationRoot($(this), sliderType);
 
-        config.navigation = {
-          ...Slider.getNavigationElements(navigationEl),
-          ...navigation,
-        };
+        if (navigationEl) {
+          config.navigation = {
+            ...Slider.getNavigationElements(navigationEl, sliderType),
+            ...(typeof navigation === 'object' ? navigation : {}),
+          };
+        }
       }
 
       const disabled = Slider.getIsSliderDisabled(config);
@@ -116,6 +165,10 @@ const Slider = {
       const sliderInstance = new Swiper(this, config);
       sliderInstance.sliderType = sliderType;
 
+      if (sliderType === 'image-text') {
+        Slider.initImageTextMediaSwiper($(this), sliderInstance);
+      }
+
       Slider.sliderInstances.push(sliderInstance);
       if (sliderToggleAutplay.length > 0) {
         sliderToggleAutplay.click(() => {
@@ -131,7 +184,38 @@ const Slider = {
     });
   },
 
-  getNavigationElements(navElement) {
+  getNavigationRoot($slider, sliderType) {
+    if (sliderType === 'image-text') {
+      return getImageTextFrame($slider).find(selector.imageTextControls)[0];
+    }
+
+    return $slider.closest(selector.inner).find(selector.navigation)[0];
+  },
+
+  initImageTextMediaSwiper($contentSlider, contentSwiper) {
+    const mediaSliderEl = getImageTextFrame($contentSlider)
+      .find(selector.imageTextMediaSlider)[0];
+
+    if (!mediaSliderEl) {
+      return;
+    }
+
+    const mediaSwiper = new Swiper(mediaSliderEl, imageTextMediaConfig);
+
+    contentSwiper.controller.control = mediaSwiper;
+    mediaSwiper.controller.control = contentSwiper;
+    contentSwiper.mediaSwiper = mediaSwiper;
+  },
+
+  getNavigationElements(navElement, sliderType) {
+    if (sliderType === 'image-text') {
+      return {
+        nextEl: $(navElement).find(selector.imageTextNext)[0],
+        prevEl: $(navElement).find(selector.imageTextPrev)[0],
+        disabledClass: 'is-disabled',
+      };
+    }
+
     return {
       nextEl: $(navElement).find(selector.navNext)[0],
       prevEl: $(navElement).find(selector.navPrev)[0],

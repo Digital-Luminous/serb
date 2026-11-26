@@ -1,0 +1,225 @@
+{
+    "key": "group_c27348641bee1",
+    "title": "Block: Our Strategy",
+    "fields": [
+        {
+            "key": "field_1617236dfcfd9",
+            "label": "Heading",
+            "name": "heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_b412221d035ce",
+            "label": "Subheading",
+            "name": "subheading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_7f1710f19233a",
+            "label": "Tiles",
+            "name": "tiles",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Up to 6 tiles. Check \"Purple tile\" to switch a tile to the purple/highlight style (Title + Bold only); leave unchecked for a standard tile (Title + Body text).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_4093c0b72ae68",
+            "min": 0,
+            "max": 6,
+            "layout": "block",
+            "button_label": "Add Tile",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_4093c0b72ae68",
+                    "label": "Purple tile",
+                    "name": "is_purple",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "Check to switch this tile to the purple/highlight style.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "parent_repeater": "field_7f1710f19233a"
+                },
+                {
+                    "key": "field_365b692877eeb",
+                    "label": "Title",
+                    "name": "text",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Large text shown on purple tiles. Max 110 characters for the first tile, max 190 characters for the sixth (last) tile.",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_4093c0b72ae68",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "maxlength": "190",
+                    "rows": "",
+                    "new_lines": "",
+                    "parent_repeater": "field_7f1710f19233a"
+                },
+                {
+                    "key": "field_9623ea998f401",
+                    "label": "Bold text",
+                    "name": "bold",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_4093c0b72ae68",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": "",
+                    "parent_repeater": "field_7f1710f19233a"
+                },
+                {
+                    "key": "field_5501db8f854e1",
+                    "label": "Title",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Max 50 characters.",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_4093c0b72ae68",
+                                "operator": "!=",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": "50",
+                    "parent_repeater": "field_7f1710f19233a"
+                },
+                {
+                    "key": "field_fa44643284ef6",
+                    "label": "Body text",
+                    "name": "body",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Max 190 characters.",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_4093c0b72ae68",
+                                "operator": "!=",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "maxlength": "190",
+                    "rows": "",
+                    "new_lines": "",
+                    "parent_repeater": "field_7f1710f19233a"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/our-strategy"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1786550400
+}
