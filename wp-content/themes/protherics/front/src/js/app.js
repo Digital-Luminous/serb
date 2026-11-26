@@ -19,5 +19,6 @@ import './modules/regions-modal';
 import './modules/twitter';
 import './modules/svg-injector';
 import './modules/video-library';
+import './modules/location-map';
 import './modules/home-carousel';
 import './modules/statistic';
