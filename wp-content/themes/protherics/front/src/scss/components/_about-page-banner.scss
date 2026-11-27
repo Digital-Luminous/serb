@@ -12,7 +12,8 @@
 	}
 
 	@include media(desktop-small) {
-		min-height: 67rem;
+		// Figma: About SERB banner is 540px tall (was 670px) at desktop.
+		min-height: 54rem;
 	}
 
 	@include media(0, mobile) {
@@ -49,8 +50,9 @@
 
 	@include media(desktop-small) {
 		max-width: 577px;
-		padding-top: 139px;
-		padding-bottom: 139px;
+		// Text block is ~355px; 92px each side gives the 540px Figma height.
+		padding-top: 92px;
+		padding-bottom: 92px;
 	}
 
 	@include media(0, mobile) {

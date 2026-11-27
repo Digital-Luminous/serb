@@ -11,9 +11,8 @@
 		margin-bottom: 52px;
 	}
 
-	@include media(mobile, desktop-small) {
-		min-height: 52rem;
-	}
+	// Height is driven by the content (titles + text + padding) rather than a
+	// fixed min-height, so it follows the reduced text and lozenge sizes.
 
 	@include media(0, mobile) {
 		display: grid;
@@ -51,8 +50,9 @@
 	}
 
 	@include media(desktop-small) {
-		padding-top: 128px;
-		padding-bottom: 134px;
+		// Figma: hero is ~540px tall (was ~740px) with the reduced text sizes.
+		padding-top: 116px;
+		padding-bottom: 116px;
 	}
 
 	@include media(0, mobile) {
