@@ -30,7 +30,8 @@
 
 .c-hero-second__title {
 	@include typo-style(h1);
-	padding: 0.7rem 1.9rem;
+	letter-spacing: -1px;
+	padding: 10px 40px;
 	margin-bottom: 0.6rem;
 	background-color: color(purple-1);
 	color: color(white-1);
@@ -39,15 +40,15 @@
 	max-width: 100%;
 	border-radius: 4050px;
 	@include media(desktop-small) {
-		padding: 1rem 1.6rem;
 		margin-bottom: 1.6rem;
 	}
 }
 
 .c-hero-second__subtitle {
 	@include typo-style(h1);
+	letter-spacing: -1px;
 	margin-left: 0;
-	padding: 0.7rem 1.9rem;
+	padding: 10px 40px;
 	margin-bottom: 2.6rem;
 	background-color: color(dark-purple-1);
 	display: inline-block;
@@ -60,7 +61,6 @@
 		margin-bottom: 2.1rem;
 	}
 	@include media(desktop-small) {
-		padding: 1rem 1.6rem;
 		margin-bottom: 12.7rem;
 		margin-left: 12.2rem;
 	}

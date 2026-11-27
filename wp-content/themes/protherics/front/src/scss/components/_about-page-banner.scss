@@ -64,19 +64,19 @@
 	display: inline-block;
 	max-width: 100%;
 	margin: 0 0 2.4rem;
-	padding: 1.2rem 2.4rem;
+	padding: 10px 40px;
 	border-radius: 4050px;
 	font-family: font(main);
 	font-weight: font-weight(bold);
 	@include type-mobile(h1);
-	letter-spacing: 0;
+	letter-spacing: -1px;
 	color: #F5F2EF;
 	background-color: color(purple-1);
 	overflow-wrap: anywhere;
 
 	@include media(mobile) {
 		margin-bottom: 3.2rem;
-		padding: 1.6rem 3.2rem;
+		padding: 10px 40px;
 	}
 
 	// Tablet keeps the mobile size (type-mobile above), desktop size from 1024px
@@ -86,7 +86,7 @@
 
 	@include media(desktop-small) {
 		margin-bottom: 4.5rem;
-		padding: 2rem 4rem;
+		padding: 10px 40px;
 	}
 }
 

@@ -61,6 +61,7 @@
     // Very long words must wrap on small phones instead of overflowing.
     hyphens: auto;
     overflow-wrap: anywhere;
+    letter-spacing: -1px;
 
     @include media(tablet) {
         margin-bottom: 24px;

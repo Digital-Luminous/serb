@@ -131,13 +131,13 @@
 
 	@include media(mobile) {
 		display: block;
-		padding: 1rem 3rem;
+		padding: 10px 40px;
 		margin-bottom: 0.6rem;
 		border-radius: 4050px;
 		font-family: font(main);
 		font-weight: font-weight(bold);
 		@include type-mobile(h1);
-		letter-spacing: 0;
+		letter-spacing: -1px;
 		color: color(white-1);
 		background-color: color(purple-1);
 		white-space: nowrap;
@@ -156,7 +156,7 @@
 	}
 
 	@include media(desktop-small) {
-		padding: 2rem 5rem;
+		padding: 10px 40px;
 		margin-bottom: 2.3rem;
 
 		&--line-2 {
@@ -193,12 +193,12 @@
 
 	@include media(0, mobile) {
 		display: inline-block;
-		padding: 1rem 3.8rem;
+		padding: 10px 40px;
 		border-radius: 4050px;
 		font-family: font(main);
 		font-weight: font-weight(bold);
 		@include type-mobile(h1);
-		letter-spacing: 0;
+		letter-spacing: -1px;
 		color: color(white-1);
 		background-color: color(purple-1);
 		position: relative;
