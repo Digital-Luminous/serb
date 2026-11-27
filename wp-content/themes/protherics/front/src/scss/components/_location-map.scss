@@ -63,6 +63,10 @@
         padding: 0 !important;
         overflow: visible !important;
 
+        // Google caps this by the map size. The popup sets its own caps in JS.
+        max-width: none !important;
+        max-height: none !important;
+
         background: transparent !important;
         box-shadow: none !important;
     }
@@ -105,6 +109,9 @@
 .c-location-map__popup {
     position: relative;
 
+    display: flex;
+    flex-direction: column;
+
     width: 25rem;
     min-height: 18.7rem;
     padding: 1.6rem;
@@ -114,6 +121,19 @@
     color: color(black-1);
     background-color: color(white-1);
     box-shadow: .4rem .4rem .8rem 0 color(dark-grey-1);
+}
+
+// Scrolls when the content is taller than the max-height set on the popup in JS.
+.c-location-map__popup-body {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+
+    scrollbar-width: thin;
 }
 
 .c-location-map__popup-title {

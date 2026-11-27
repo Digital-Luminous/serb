@@ -31,6 +31,12 @@ const config = {
   continuousBase: 700,
   continuousPerZoom: 350,
   continuousMax: 2200,
+  // Room kept free inside the map for the pin, the popup pointer and some air.
+  popupReserve: 100,
+  popupMinHeight: 180,
+  // Space left on the sides of a narrow map, and the narrowest the popup gets.
+  popupSideGap: 40,
+  popupMinWidth: 200,
 };
 
 // The plain purple pin, used when a pin type has no uploaded icon.
@@ -457,9 +463,24 @@ const LocationMap = {
     });
   },
 
-  createPopup(location, onClose) {
+  // The popup never grows taller or wider than the map. Longer content scrolls inside
+  // it, while the close button stays where it is.
+  popupMaxHeight(element) {
+    return Math.max(config.popupMinHeight, element.clientHeight - config.popupReserve);
+  },
+
+  popupMaxWidth(element) {
+    return Math.max(config.popupMinWidth, element.clientWidth - config.popupSideGap);
+  },
+
+  createPopup(location, onClose, element) {
     const popup = document.createElement('div');
     popup.className = 'c-location-map__popup';
+
+    if (element) {
+      popup.style.maxHeight = `${LocationMap.popupMaxHeight(element)}px`;
+      popup.style.maxWidth = `${LocationMap.popupMaxWidth(element)}px`;
+    }
 
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
@@ -468,11 +489,15 @@ const LocationMap = {
     closeBtn.addEventListener('click', onClose);
     popup.appendChild(closeBtn);
 
+    const body = document.createElement('div');
+    body.className = 'c-location-map__popup-body';
+    popup.appendChild(body);
+
     if (location.title) {
       const title = document.createElement('h3');
       title.className = 'c-location-map__popup-title';
       title.textContent = location.title;
-      popup.appendChild(title);
+      body.appendChild(title);
     }
 
     if (location.address) {
@@ -480,7 +505,7 @@ const LocationMap = {
       const content = document.createElement('div');
       content.className = 'c-location-map__popup-content';
       content.innerHTML = location.address;
-      popup.appendChild(content);
+      body.appendChild(content);
     }
 
     if (location.cta && location.cta.url && location.cta.title) {
@@ -498,10 +523,42 @@ const LocationMap = {
         cta.rel = 'noopener noreferrer';
       }
 
-      popup.appendChild(cta);
+      body.appendChild(cta);
     }
 
     return popup;
+  },
+
+  // Desktop equivalent of a one-finger drag on touch: a trackpad two-finger swipe or
+  // mouse wheel pans the map instead of zooming it. Ctrl + wheel (which is what a
+  // trackpad pinch sends) is left to Google Maps, so it still zooms.
+  bindWheel(map, element) {
+    element.addEventListener(
+      'wheel',
+      (event) => {
+        if (event.ctrlKey) return;
+
+        // A popup with more text than fits scrolls itself. Keep Google Maps from also
+        // reacting to it, but leave the default action so the text scrolls.
+        const body = event.target.closest && event.target.closest('.c-location-map__popup-body');
+        if (body && body.scrollHeight > body.clientHeight) {
+          event.stopPropagation();
+          return;
+        }
+
+        // Capture phase, so Google Maps never sees the plain wheel and does not zoom.
+        event.preventDefault();
+        event.stopPropagation();
+        LocationMap.stopAnimation(map);
+
+        const lineHeight = 16;
+        const scale =
+          event.deltaMode === 1 ? lineHeight : event.deltaMode === 2 ? element.clientHeight : 1;
+
+        map.panBy(event.deltaX * scale, event.deltaY * scale);
+      },
+      { capture: true, passive: false }
+    );
   },
 
   initMap(element, data, icons, artwork) {
@@ -525,6 +582,7 @@ const LocationMap = {
     }
 
     const map = new google.maps.Map(element, options);
+    LocationMap.bindWheel(map, element);
 
     const infoWindow = new google.maps.InfoWindow({
       headerDisabled: true,
@@ -548,7 +606,7 @@ const LocationMap = {
 
       const openPopup = () => {
         infoWindow.setContent(
-          LocationMap.createPopup(location, () => infoWindow.close())
+          LocationMap.createPopup(location, () => infoWindow.close(), element)
         );
         infoWindow.open({ anchor: marker, map });
       };
