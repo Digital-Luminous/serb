@@ -39,12 +39,6 @@
     }
 }
 
-.video-library__description {
-    @include media(0, mobile) {
-        line-height: 1.45;
-    }
-}
-
 .video-library__content {
     display: flex;
     justify-content: space-between;

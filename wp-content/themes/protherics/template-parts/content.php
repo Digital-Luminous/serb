@@ -2,7 +2,7 @@
 	<div class="l-inner">
 		<div class="c-search-results">
 			<header class="c-search-results__header">
-				<h1 class="c-search-results__title t-size-18 t-size-20--desktop ui-font-weight--semibold">
+				<h1 class="c-search-results__title t-body ui-font-weight--semibold">
 					Results <span class="js-first-result-index">1</span> - <span class="js-last-result-index">10</span> of <span class="js-results-number">162</span> for '<span class="js-searched-phrase">Antidotes</span>'
 				</h1>
 			</header>
@@ -12,8 +12,8 @@
 					<li class="c-search-results-list__item">
 						<div class="c-search-result-box">
 							<div class="c-search-result-box__description">
-								<h2 class="c-search-result-box__title t-size-18 t-size-24--desktop ui-color--purple-1 ui-font-weight--semibold">Page title</h2>
-								<p class="c-search-result-box__text t-size-18 t-size-20--desktop">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim jhendrerit molestie Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim jhendrerit molestie</p>
+								<h2 class="c-search-result-box__title t-h5 ui-color--purple-1 ui-font-weight--semibold">Page title</h2>
+								<p class="c-search-result-box__text t-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim jhendrerit molestie Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim jhendrerit molestie</p>
 							</div>
 							<div class="c-search-result-box__actions">
 								<a class="c-search-result-box__action c-btn c-btn--primary c-btn--arrowed" href="#">
@@ -26,7 +26,7 @@
 				</ul>
 			</div>
 			<div class="c-search-results__pagination">
-				<div class="c-pagination ui-color--purple-1 t-size-14">
+				<div class="c-pagination ui-color--purple-1 t-body-small">
 					<ul class="c-pagination__list">
 						<li class="c-pagination__item c-pagination__item--prev">
 							<a class="c-pagination__link" href="#">Previous</a>

@@ -1,4 +1,6 @@
 .c-form__heading {
+    @include typo-style(h5);
+
     margin-bottom: 2.4rem;
 }
 
@@ -54,6 +56,8 @@
 }
 
 .c-form__policy-heading {
+    @include typo-style(h7);
+
     margin-bottom: .6rem;
 }
 

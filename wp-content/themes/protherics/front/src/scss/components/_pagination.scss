@@ -13,6 +13,7 @@
 
 .c-pagination__link {
     @include button-reset;
+    @include typo-style(body-small);
 
     position: relative;
 

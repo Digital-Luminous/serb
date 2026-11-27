@@ -24,13 +24,13 @@
 <div class="c-article-sidebar">
     <?php if ( $related_posts ) : ?>
 		<div class="c-article-sidebar__box c-article-sidebar__box--related ui-bg--grey-1">
-			<h4 class="c-article-sidebar__box-heading t-size-14 t-size-16--desktop ui-color--black-1 ui-font-weight--semibold">
+			<h4 class="c-article-sidebar__box-heading t-body-small ui-color--black-1 ui-font-weight--semibold">
 				<?php _e( 'Related news:', 'protherics' ); ?>
 			</h4>
 			<div class="c-article-sidebar__box-content">
 				<ul class="c-related-list">
 					<?php foreach ( $related_posts as $item ) : ?>
-						<li class="c-related-list__item t-size-16--desktop">
+						<li class="c-related-list__item t-body-small--desktop">
 							<a class="c-related-list__link"  href="<?php echo esc_url( $item['url'] ); ?>">
 								<?php echo $item['title']; ?>
 							</a>

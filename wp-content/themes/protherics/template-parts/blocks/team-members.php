@@ -14,7 +14,7 @@
 		<div class="c-team-members">
 			<?php if ( $desc ) : ?>
 				<header class="c-team-members__header">
-					<p class="c-team-members__heading t-size-20 ui-color--dark-grey-2">
+					<p class="c-team-members__heading t-body ui-color--dark-grey-2">
 						<?php echo $desc; ?>
 					</p>
 				</header>
@@ -43,11 +43,11 @@
 										<img class="c-team-member__image" src="<?php echo esc_url( $post_img ); ?>" alt="<?php echo esc_attr( $post_img_alt ); ?>">
 									</figure>
 									<div class="c-team-member__details">
-										<h4 class="c-team-member__name ui-color--purple-1 t-size-22 t-size-24--desktop">
+										<h4 class="c-team-member__name ui-color--purple-1 t-h5">
 											<?php echo $post_title; ?>
 										</h4>
 										<?php if ( $post_job ) : ?>
-											<p class="c-team-member__job t-size-18 t-size-20--desktop ui-color--black-1 ui-font-weight--semibold">
+											<p class="c-team-member__job t-body ui-color--black-1 ui-font-weight--semibold">
 												<?php echo $post_job; ?>
 											</p>
 										<?php endif; ?>

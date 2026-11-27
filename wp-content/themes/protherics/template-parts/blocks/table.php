@@ -8,7 +8,7 @@
 	<div class="l-inner">
 		<div class="c-table">
 			<?php if ( $title ) : ?>
-				<h4 class="c-table__title t-size-28 t-size-32--desktop" <?php echo $title_color ? 'style="color:' . $title_color . ';"' : ''; ?>>
+				<h4 class="c-table__title t-h4" <?php echo $title_color ? 'style="color:' . $title_color . ';"' : ''; ?>>
 					<?php echo $title; ?>
 				</h4>
 			<?php endif; ?>

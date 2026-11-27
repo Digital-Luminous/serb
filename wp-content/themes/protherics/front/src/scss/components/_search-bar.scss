@@ -78,7 +78,7 @@
 }
 
 .c-search-bar__field {
-    @include typo-size-20;
+    @include typo-style(body);
     @include transition;
 
     width: 100%;

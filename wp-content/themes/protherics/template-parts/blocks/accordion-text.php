@@ -11,7 +11,7 @@
                         <li class="c-accordion-list__item">
                             <div class="c-accordion js-accordion">
                                 <button class="c-accordion__header">
-                                    <h4 class="c-accordion__heading t-size-18 t-size-24--desktop ui-color--purple-1">
+                                    <h4 class="c-accordion__heading t-h5 ui-color--purple-1">
                                         <?php if ( isset( $item['title'] ) && $item['title'] ) : ?>
                                             <div class="">
                                                 <?php echo $item['title']; ?>

@@ -58,17 +58,18 @@
 }
 
 .subpage-hero__title {
+    // Very long words must wrap on small phones instead of overflowing.
+    hyphens: auto;
+    overflow-wrap: anywhere;
+
     @include media(tablet) {
         margin-bottom: 24px;
     }
     @include media(0, tablet) {
-        font-size: 30px;
-        line-height: 36px;
         margin-bottom: 12px;
     }
 }
 
 .subpage-hero__text {
-    line-height: 28px;
     font-weight: 600;
 }

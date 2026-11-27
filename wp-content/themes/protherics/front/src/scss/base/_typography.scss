@@ -16,9 +16,8 @@ body {
 
     font-family: font(main);
 
-    font-size: font-size(size-20);
-
-    line-height: default(lineHeight);
+    // Line height as a ratio: elements that only override font-size keep sensible leading
+    @include typo-style(body, true);
 }
 
 *,
@@ -37,6 +36,17 @@ h4,
 h5,
 h6 {
     margin: 0;
+}
+
+// Safety net for large headings: a word that is wider than its box is broken
+// instead of overflowing the page on small phones. It does nothing otherwise.
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
 }
 
 a {
@@ -74,109 +84,25 @@ svg {
     fill: currentColor;
 }
 
-// Mobile typo
-// FS/LH: 12px/16px
-.t-size-12 {
-    @include typo-size-12;
-}
-
-// FS/LH: 14px/18px
-.t-size-14 {
-    @include typo-size-14;
-}
-
-// FS/LH: 16px/20px
-.t-size-16{
-    @include typo-size-16;
-}
-
-// FS/LH: 18px/26px
-.t-size-18 {
-    @include typo-size-18;
-}
-
-// FS/LH: 20px/30px
-.t-size-20 {
-    @include typo-size-20;
-}
-
-// FS/LH: 22px/28px
-.t-size-22 {
-    @include typo-size-22;
-}
-
-// FS/LH: 24px/30px
-.t-size-24 {
-    @include typo-size-24;
-}
-
-// FS/LH: 28px/36px
-.t-size-28 {
-    @include typo-size-28;
-}
-
-// FS/LH: 36px/40px
-.t-size-36 {
-    @include typo-size-36;
-}
-
-// FS/LH: 40px/44px
-.t-size-40 {
-    @include typo-size-40;
-}
-
-// FS/LH: 44px/48px
-.t-size-44 {
-    @include typo-size-44;
-}
-
-// Desktop typo
-// FS/LH: 16px/20px
-.t-size-16--desktop {
-    @include media(mobile) {
-        @include typo-size-16;
+// Type style utilities - generated from $type-styles (Figma typography sheet)
+//   .t-h1 ... .t-caption    both breakpoints (mobile and tablet, then desktop from 1024px)
+//   .t-h1--mobile           mobile values only (below 1024px, tablet included)
+//   .t-h1--desktop          desktop values only (1024px and up)
+// Combine --mobile and --desktop classes when the two breakpoints use different styles,
+// e.g. "t-h5--mobile t-h7--desktop".
+@each $name, $config in $type-styles {
+    .t-#{$name} {
+        @include typo-style($name);
     }
-}
 
-// FS/LH: 20px/30px
-.t-size-20--desktop {
-    @include media(mobile) {
-        @include typo-size-20;
+    .t-#{$name}--mobile {
+        @include media(0, $type-desktop-breakpoint) {
+            @include type-mobile($name);
+        }
     }
-}
 
-// FS/LH: 24px/30px
-.t-size-24--desktop {
-    @include media(mobile) {
-        @include typo-size-24;
-    }
-}
-
-// FS/LH: 32px/44px
-.t-size-32--desktop {
-    @include media(mobile) {
-        @include typo-size-32;
-    }
-}
-
-// FS/LH: 44px/48px
-.t-size-44--desktop {
-    @include media(mobile) {
-        @include typo-size-44;
-    }
-}
-
-// FS/LH: 52px/60px
-.t-size-52--desktop {
-    @include media(mobile) {
-        @include typo-size-52;
-    }
-}
-
-// FS/LH: 72px/80px
-.t-size-72--desktop {
-    @include media(mobile) {
-        @include typo-size-72;
+    .t-#{$name}--desktop {
+        @include type-desktop($name);
     }
 }
 

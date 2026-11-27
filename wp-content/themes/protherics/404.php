@@ -22,10 +22,10 @@ $img = get_field( '404_image', 'option' );
 				<div class="c-columns c-columns--404">
 					<div class="c-columns__column">
 						<?php if (  $title ) : ?>
-							<h1 class="c-columns__title t-size-36 t-size-44--desktop ui-color--purple-1"><?php echo $title; ?></h1>
+							<h1 class="c-columns__title t-h1 ui-color--purple-1"><?php echo $title; ?></h1>
 						<?php endif; ?>
 						<?php if ( $text ) : ?>
-							<p class="c-columns__text t-size-18 t-size-20--desktop ui-color--black-1"><?php echo $text; ?></p>
+							<p class="c-columns__text t-body ui-color--black-1"><?php echo $text; ?></p>
 						<?php endif; ?>
 						<?php if ( $button ) : ?>
 							<a class="c-btn c-btn--primary c-btn--arrowed" href="<?php echo esc_url( $button['url'] ); ?>" target="<?php echo esc_attr( $button['target'] ); ?>">

@@ -42,7 +42,7 @@
             </div>
             <?php if ( $footer_links ) : ?>
                 <div class="c-footer__row">
-                    <ul class="c-footer-nav-list t-size-14">
+                    <ul class="c-footer-nav-list t-body-small">
                     <?php foreach ( $footer_links as $item ) : ?>
                             <li class="c-footer-nav-list__item">
                                 <?php if ( isset( $item['link'] ) && $item['link'] ) : 
@@ -65,7 +65,7 @@
             <?php endif; ?>
             <?php if ( $footer_copyrights ) : ?>
                 <div class="c-footer__row">
-                    <p class="c-copyright t-size-12">
+                    <p class="c-copyright t-caption">
                         <?php echo $footer_copyrights; ?>
                     </p>
                 </div>

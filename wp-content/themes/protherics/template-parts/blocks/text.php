@@ -10,12 +10,12 @@
 	<div class="l-inner">
 		<div class="c-text">
 			<?php if ( $title ) : ?>
-				<h2 class="c-text__title t-size-36 t-size-44--desktop ui-color--purple-1 ui-font-weight--bold">
+				<h2 class="c-text__title t-h1 ui-color--purple-1 ui-font-weight--bold">
 					<?php echo $title; ?>
 				</h2>
 			<?php endif; ?>
 			<?php if ( $description ) : ?>
-				<p class="c-text__description t-size-28 t-size-32--desktop ui-color--purple-1 ui-font-weight--semibold">
+				<p class="c-text__description t-h4 ui-color--purple-1 ui-font-weight--semibold">
 					<?php echo $description; ?>
 				</p>
 			<?php endif; ?>

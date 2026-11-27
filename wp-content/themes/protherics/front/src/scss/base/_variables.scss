@@ -58,6 +58,60 @@ $font-sizes: (
     size-72: 7.2rem,
 );
 
+// Type styles - single source of truth, taken from the Figma typography sheet.
+// Each style is (font-size, line-height) in px for mobile and desktop.
+// Figma: "Tablet should use mobile sizes." Desktop values only apply from the
+// `tablet` breakpoint (1024px) up, which is also where the layout switches to desktop.
+$type-desktop-breakpoint: tablet;
+$type-styles: (
+    h1: (
+        mobile: (36, 40),
+        desktop: (42, 44),
+    ),
+    h2: (
+        mobile: (30, 34),
+        desktop: (36, 40),
+    ),
+    h3: (
+        mobile: (28, 30),
+        desktop: (34, 36),
+    ),
+    h4: (
+        mobile: (24, 28),
+        desktop: (30, 36),
+    ),
+    h5: (
+        mobile: (20, 24),
+        desktop: (22, 28),
+    ),
+    h6: (
+        mobile: (16, 20),
+        desktop: (18, 24),
+    ),
+    h7: (
+        mobile: (14, 18),
+        desktop: (16, 20),
+    ),
+    body: (
+        mobile: (16, 20),
+        desktop: (18, 24),
+    ),
+    body-small: (
+        mobile: (14, 18),
+        desktop: (16, 20),
+    ),
+    button: (
+        mobile: (14, 18),
+        desktop: (14, 18),
+        letter-spacing: .1rem,
+    ),
+    caption: (
+        mobile: (12, 16),
+        desktop: (12, 16),
+        letter-spacing: .05rem,
+    ),
+);
+
 $font-weights: (
     normal: 400,
     semibold: 600,

@@ -22,7 +22,7 @@
 											<?php endif; ?>
 											<div class="c-feature-box__content">
 												<?php if ( isset( $subitem['title'] ) && $subitem['title'] ) : ?>
-													<h3 class="c-feature-box__title t-size-22 t-size-24--desktop ui-color--purple-1 ui-font-weight--semibold">
+													<h3 class="c-feature-box__title t-h5 ui-color--purple-1 ui-font-weight--semibold">
 														<?php echo $subitem['title']; ?>
 													</h3>
 												<?php endif; ?>
@@ -44,7 +44,7 @@
 			<?php endif; ?>
 			<?php if ( $text ) : ?>
 				<div class="c-features__description s-medium-bottom">
-					<p class="c-features__text t-size-18 t-size-20--desktop ui-color--black-2"><?php echo $text; ?></p>
+					<p class="c-features__text t-body ui-color--black-2"><?php echo $text; ?></p>
 				</div>
 			<?php endif; ?>
 			<?php if ( $btn ) : ?>

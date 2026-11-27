@@ -105,7 +105,7 @@
 }
 
 @mixin button() {
-    @include typo-size-14();
+    @include typo-style(button);
     @include button-reset();
     @include transition;
 
@@ -115,98 +115,59 @@
     padding: 2.1rem 3rem;
 
     font-weight: font-weight(semibold);
-    line-height: 1.8rem;
 
     cursor: pointer;
     transition-property: background-color;
-    letter-spacing: .1rem;
     text-transform: uppercase;
 }
 
 /*
 ==========================================================================
-    Mixins - typography - body
+    Mixins - typography (values come from $type-styles in base/variables)
 ========================================================================== */
-// FS/LH: 12px/16px
-@mixin typo-size-12 () {
-    font-size: font-size(size-12);
-    line-height: 1.33;
+// Emits the breakpoint-independent props of a style (e.g. letter-spacing)
+@mixin type-extras($name) {
+    @each $prop, $value in map-get($type-styles, $name) {
+        @if $prop != mobile and $prop != desktop {
+            #{$prop}: $value;
+        }
+    }
 }
 
-// FS/LH: 14px/18px
-@mixin typo-size-14 () {
-    font-size: font-size(size-14);
-    line-height: 1.29;
+// The values of a style for one breakpoint ($bp: mobile | desktop), with no media query.
+// Use it inside a component's own media query that doesn't line up with the desktop switch.
+// $unitless-lh outputs line-height as a ratio so it scales with inherited font sizes.
+@mixin type-values($name, $bp, $unitless-lh: false, $extras: true, $important: false) {
+    $values: map-get(map-get($type-styles, $name), $bp);
+    $imp: if($important, '!important', '');
+
+    font-size: #{nth($values, 1) * .1rem} #{$imp};
+
+    @if $unitless-lh {
+        line-height: #{nth($values, 2) / nth($values, 1)} #{$imp};
+    } @else {
+        line-height: #{nth($values, 2) * .1rem} #{$imp};
+    }
+
+    @if $extras {
+        @include type-extras($name);
+    }
 }
 
-// FS/LH: 16px/20px
-@mixin typo-size-16 () {
-    font-size: font-size(size-16);
-    line-height: 1.25;
+// Mobile values of a style, no media query.
+@mixin type-mobile($name, $unitless-lh: false) {
+    @include type-values($name, mobile, $unitless-lh);
 }
 
-// FS/LH: 18px/26px
-@mixin typo-size-18 () {
-    font-size: font-size(size-18);
-    line-height: 1.45;
+// Desktop values of a style, wrapped in the desktop media query.
+@mixin type-desktop($name, $unitless-lh: false, $extras: true) {
+    @include media($type-desktop-breakpoint) {
+        @include type-values($name, desktop, $unitless-lh, $extras);
+    }
 }
 
-// FS/LH: 20px/30px
-@mixin typo-size-20 () {
-    font-size: font-size(size-20);
-    line-height: 1.5;
-}
-
-// FS/LH: 22px/28px
-@mixin typo-size-22 () {
-    font-size: font-size(size-22);
-    line-height: 1.27;
-}
-
-// FS/LH: 24px/30px
-@mixin typo-size-24 () {
-    font-size: font-size(size-24);
-    line-height: 1.25;
-}
-
-// FS/LH: 28px/36px
-@mixin typo-size-28 () {
-    font-size: font-size(size-28);
-    line-height: 1.29;
-}
-
-// FS/LH: 32px/44px
-@mixin typo-size-32 () {
-    font-size: font-size(size-32);
-    line-height: 1.375;
-}
-
-// FS/LH: 36px/40px
-@mixin typo-size-36 () {
-    font-size: font-size(size-36);
-    line-height: 1.11;
-}
-
-// FS/LH: 40px/44px
-@mixin typo-size-40 () {
-    font-size: font-size(size-40);
-    line-height: 1.1;
-}
-
-// FS/LH: 44px/48px
-@mixin typo-size-44 () {
-    font-size: font-size(size-44);
-    line-height: 1.1;
-}
-
-// FS/LH: 52px/60px
-@mixin typo-size-52 () {
-    font-size: font-size(size-52);
-    line-height: 1.15;
-}
-
-// FS/LH: 72px/80px
-@mixin typo-size-72 () {
-    font-size: font-size(size-72);
-    line-height: 1.11;
+// Full responsive style: mobile first (tablet included), desktop from $type-desktop-breakpoint.
+@mixin typo-style($name, $unitless-lh: false) {
+    @include type-mobile($name, $unitless-lh);
+    @include type-desktop($name, $unitless-lh, false);
 }

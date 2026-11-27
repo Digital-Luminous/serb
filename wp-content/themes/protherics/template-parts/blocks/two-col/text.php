@@ -6,7 +6,7 @@
 
 <div class="c-columns__description">
 	<?php if ( $title ) : ?>
-		<h2 class="c-columns__title t-size-28 t-size-32--desktop" <?php echo $title_color ? 'style="color:' . $title_color . ';"' : ''; ?>>
+		<h2 class="c-columns__title t-h4" <?php echo $title_color ? 'style="color:' . $title_color . ';"' : ''; ?>>
 			<?php echo $title; ?>
 		</h2>
 	<?php endif; ?>

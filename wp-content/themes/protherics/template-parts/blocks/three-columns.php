@@ -21,13 +21,13 @@
 								<?php endif; ?>
 
 								<?php if ( isset( $item['title'] ) && $item['title'] ) : ?>
-									<div class="c-news-box__title t-size-22 t-size-24--desktop ui-color--purple-1 ui-font-weight--semibold">
+									<div class="c-news-box__title t-h5 ui-color--purple-1 ui-font-weight--semibold">
 										<?php echo $item['title']; ?>
 									</div>
 								<?php endif; ?>
 
 								<?php if ( isset( $item['description'] ) && $item['description'] ) : ?>
-									<div class="c-news-box__text t-size-18 t-size-20--desktop ui-color--black-2">
+									<div class="c-news-box__text t-body ui-color--black-2">
 										<?php echo $item['description']; ?>
 									</div>
 								<?php endif; ?>

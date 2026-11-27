@@ -27,9 +27,5 @@
 
 .c-search-result-box__description p {
     @include line-clamp(2);
-    @include typo-size-18;
-
-    @include media(mobile) {
-        @include typo-size-20;
-    }
+    @include typo-style(body);
 }

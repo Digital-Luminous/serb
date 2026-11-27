@@ -5,7 +5,7 @@
 
     width: 100%;
 
-    font-size: 1.6rem;
+    @include typo-style(body);
 
     @include media(mobile) {
         width: 28rem;
@@ -93,7 +93,7 @@
     padding-right: 1rem;
     padding-left: 1.5rem;
 
-    font-size: 2rem;
+    @include typo-style(body);
 
     background-color: color(light-grey-2);
 }
@@ -185,7 +185,7 @@
 
     padding: 1.5rem 2rem;
 
-    font-size: font-size(size-20);
+    @include typo-style(body);
 }
 
 

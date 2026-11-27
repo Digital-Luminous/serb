@@ -8,13 +8,13 @@
 
         <div class="subpage-hero__content">
             <?php if ( $heading ) : ?>
-                <h1 class="subpage-hero__title t-size-44--desktop">
+                <h1 class="subpage-hero__title t-h1">
                     <?php echo esc_html( $heading ); ?>
                 </h1>
             <?php endif; ?>
 
             <?php if ( $subheading ) : ?>
-                <h2 class="subpage-hero__text t-size-20 t-size-24--desktop">
+                <h2 class="subpage-hero__text t-h5">
                     <?php echo esc_html( $subheading ); ?>
                 </h2>
             <?php endif; ?>

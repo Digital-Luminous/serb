@@ -22,7 +22,7 @@
 			<section class="c-news__latest">
 				<header class="c-news__header">
 					<?php if ( $title_posts ) : ?>
-						<h2 class="c-news__title t-size-22 t-size-24--desktop ui-color--purple-1 ui-font-weight--semibold">
+						<h2 class="c-news__title t-h5 ui-color--purple-1 ui-font-weight--semibold">
 							<?php echo $title_posts; ?>
 						</h2>
 					<?php endif; ?>
@@ -41,13 +41,13 @@
 								?>
 								<li class="c-news-list__item swiper-slide">
 									<div class="c-news-box">
-										<div class="c-news-box__date t-size-14 ui-color--black-1">
+										<div class="c-news-box__date t-body-small ui-color--black-1">
 											<?php echo $post_date; ?>
 										</div>
-										<div class="c-news-box__title t-size-24 ui-color--purple-1 ui-font-weight--semibold">
+										<div class="c-news-box__title t-h5 ui-color--purple-1 ui-font-weight--semibold">
 											<?php echo $post_title; ?>
 										</div>
-										<div class="c-news-box__text t-size-20 ui-color--black-2">
+										<div class="c-news-box__text t-body ui-color--black-2">
 											<?php echo $post_excerpt; ?>
 										</div>
 										<div class="c-news-box__actions">
@@ -78,7 +78,7 @@
 				<section class="c-news__social">
 					<header class="c-news__header">
 						<?php if ( $title_socials ) : ?>
-							<h2 class="c-news__title t-size-22 t-size-24--desktop ui-color--purple-1 ui-font-weight--semibold">
+							<h2 class="c-news__title t-h5 ui-color--purple-1 ui-font-weight--semibold">
 								<?php echo $title_socials; ?>
 							</h2>
 						<?php endif; ?>

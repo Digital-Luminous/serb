@@ -224,19 +224,13 @@ $image-text-slider-frame-min-height: $image-text-slider-top-padding + $image-tex
 	}
 
 	.c-image-text-slider__title {
-		font-size: font-size(size-40);
-		line-height: 4.4rem;
+		@include typo-style(h4);
 	}
 
 	.c-image-text-slider__text {
-		margin-top: 2rem;
-		font-size: font-size(size-18);
-		line-height: 2.6rem;
+		@include typo-style(body);
 
-		@include media(mobile) {
-			font-size: font-size(size-20);
-			line-height: 3rem;
-		}
+		margin-top: 2rem;
 	}
 
 	.c-image-text-slider__controls {
@@ -342,14 +336,13 @@ $image-text-slider-frame-min-height: $image-text-slider-top-padding + $image-tex
 	}
 
 	.c-image-text-slider__title {
-		font-size: font-size(size-32);
-		line-height: 4.4rem;
+		@include type-values(h4, desktop);
 	}
 
 	.c-image-text-slider__text {
+		@include type-values(body, desktop);
+
 		margin-top: 2rem;
-		font-size: font-size(size-20);
-		line-height: 3rem;
 	}
 
 	.c-image-text-slider__controls {

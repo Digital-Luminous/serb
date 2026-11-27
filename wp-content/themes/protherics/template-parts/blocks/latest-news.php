@@ -17,7 +17,7 @@
 		<?php if ( $title ) : ?>
 			<section class="l-inner">
 				<header class="c-latest-insights__header">
-					<h2 class="c-latest-insights__title t-size-22 t-size-24--desktop ui-color--purple-1 ui-font-weight--semibold">
+					<h2 class="c-latest-insights__title t-h5 ui-color--purple-1 ui-font-weight--semibold">
 						<?php echo $title; ?>
 					</h2>
 				</header>
@@ -52,18 +52,18 @@
 								<figure class="c-latest-insight-box__figure">
 									<img class="c-latest-insight-box__image" src="<?php echo esc_url( $post_img ); ?>" alt="<?php echo esc_attr( $post_img_alt ); ?>" >
 								</figure>
-								<p class="c-latest-insight-box__author t-size-14 ui-color--black-1">
+								<p class="c-latest-insight-box__author t-body-small ui-color--black-1">
 									<?php echo $post_author; ?>
 								</p>
-								<p class="c-latest-insight-box__date t-size-14 ui-color--black-1">
+								<p class="c-latest-insight-box__date t-body-small ui-color--black-1">
 									<?php echo $post_publish_date; ?>
 								</p>
 							</div>
 							<div class="c-latest-insight-box__description">
-								<h3 class="c-latest-insight-box__title t-size-22 t-size-24--desktop ui-font-weight--semibold ui-color--purple-1">
+								<h3 class="c-latest-insight-box__title t-h5 ui-font-weight--semibold ui-color--purple-1">
 									<?php echo $post_title; ?>
 								</h3>
-								<p class="c-latest-insight-box__text t-size-18 t-size-20--desktop ui-color--black-2">
+								<p class="c-latest-insight-box__text t-body ui-color--black-2">
 									<?php echo $post_excerpt; ?>
 								</p>
 								<a class="c-btn c-btn--secondary c-btn--arrowed" href="<?php echo esc_url( $post_url ); ?>">

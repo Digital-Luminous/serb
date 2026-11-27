@@ -196,10 +196,10 @@ const Products = {
       <li class="c-products-list__item ui-bg--white-1">
         <div class="c-product-box">
           <header class="c-product-box__header">
-            <h4 class="c-product-box__title t-size-22 t-size-24--desktop ui-font-weight--semibold">${title}</h4>
+            <h4 class="c-product-box__title t-h5 ui-font-weight--semibold">${title}</h4>
             ${
               !!trademark.title || !!trademark.content
-                ? `<button class="c-product-box__btn t-size-14 t-size-16--desktop js-product-trademarks-popup">Tradenames by country</button>`
+                ? `<button class="c-product-box__btn t-button js-product-trademarks-popup">Tradenames by country</button>`
                 : ''
             }
           </header>
@@ -210,7 +210,7 @@ const Products = {
                 : ''
             }
           </figure>
-          <ul class="c-product-box__list t-size-14 t-size-16--desktop">
+          <ul class="c-product-box__list t-body-small">
             ${productComposition
               .map(
                 ({ item }) => `
@@ -227,7 +227,7 @@ const Products = {
                 ${diseadeArea ? diseadeArea
                   .map(
                     ({ name, color }) => `
-                  <li class="c-tags__item t-size-14 ui-color--black-1 ui-bg--white-1"
+                  <li class="c-tags__item t-body-small ui-color--black-1 ui-bg--white-1"
                   ${color ? `style="color: ${color};"` : ''}
                   >
                     ${name}
@@ -238,7 +238,7 @@ const Products = {
                 ${locations ? locations
                   .map(
                     ({ name }) => `
-                  <li class="c-tags__item t-size-14 ui-color--black-1 ui-bg--white-1">
+                  <li class="c-tags__item t-body-small ui-color--black-1 ui-bg--white-1">
                     ${name}
                   </li>
                 `
@@ -292,7 +292,7 @@ const Products = {
           `
       <div class="c-products-category s-medium-bottom ui-bg--light-grey-2 js-products-category">
         <header class="c-products-category__header">
-          <h3 class="c-products-category__title t-size-22 t-size-24--desktop ui-font-weight--semibold"
+          <h3 class="c-products-category__title t-h5 ui-font-weight--semibold"
           ${
             color
               ? `style="color: ${color};`
@@ -311,7 +311,7 @@ const Products = {
           </ul>
 				</div>
         <footer class="c-products-category__footer">
-					<a class="c-back-top t-size-14 ui-color--purple-1 js-scroll" href="#products">back to top</a>
+					<a class="c-back-top t-body-small ui-color--purple-1 js-scroll" href="#products">back to top</a>
 				</footer>
       </div>
       `

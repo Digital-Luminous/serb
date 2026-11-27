@@ -44,8 +44,6 @@
     @include media(0, mobile) {
         padding: 1.5rem;
 
-        font-size: 1rem;
-
         white-space: nowrap;
     }
 }
@@ -62,18 +60,6 @@
 
 .c-timeline-box .c-cms-content p:not(:last-child) {
     margin-bottom: 2rem;
-}
-
-.c-timeline-box .c-cms-content h5 {
-    @include media(0, mobile) {
-        font-size: 1.8rem;
-    }
-}
-
-.c-timeline-box .c-cms-content p {
-    @include media(0, mobile) {
-        font-size: 1.4rem;
-    }
 }
 
 .c-timeline-box .c-cms-content img {

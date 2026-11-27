@@ -1,0 +1,12 @@
+// Editor font-size presets (e.g. `has-medium-font-size`) are output with !important by WordPress.
+// Headings inside CMS content keep the Figma type scale instead, so the preset can't override them.
+@each $name in (h1, h2, h3, h4, h5, h6) {
+    .c-cms-content #{$name}[class*='-font-size'],
+    .c-cms-article #{$name}[class*='-font-size'] {
+        @include type-values($name, mobile, false, false, true);
+
+        @include media($type-desktop-breakpoint) {
+            @include type-values($name, desktop, false, false, true);
+        }
+    }
+}

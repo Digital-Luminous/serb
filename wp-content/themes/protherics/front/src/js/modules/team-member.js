@@ -16,9 +16,9 @@ export const FetchTeamMember = {
                 <img class="c-team-member__image c-team-member__image--fixed-width" src=${img}" alt="">
             </figure>
             <div class="c-team-member__details">
-                <h4 class="c-team-member__name ui-color--purple-1 t-size-22 t-size-24--desktop">${name}</h4>
-                <p class="c-team-member__job t-size-18memebers t-size-20--desktop ui-color--black-1 ui-font-weight--semibold">${job}</p>
-                <p class="c-team-member__desc t-size-18 t-size-20--desktop">
+                <h4 class="c-team-member__name ui-color--purple-1 t-h5">${name}</h4>
+                <p class="c-team-member__job t-body ui-color--black-1 ui-font-weight--semibold">${job}</p>
+                <p class="c-team-member__desc t-body">
                     ${content}
                 </p>
             </div>

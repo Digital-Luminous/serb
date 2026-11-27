@@ -231,8 +231,7 @@ $home-carousel-desktop-breakpoint: tablet;
 	color: color(white-1);
 	font-family: font(main);
 	font-weight: font-weight(bold);
-	font-size: font-size(size-32);
-	line-height: font-size(size-44);
+	@include type-values(h4, desktop);
 	letter-spacing: 0;
 	padding-right: 2rem;
 
@@ -246,8 +245,7 @@ $home-carousel-desktop-breakpoint: tablet;
 	color: color(white-1);
 	font-family: font(main);
 	font-weight: font-weight(normal);
-	font-size: font-size(size-20);
-	line-height: 3rem;
+	@include type-values(body, desktop);
 	letter-spacing: 0;
 
 	&,
@@ -283,8 +281,7 @@ $home-carousel-desktop-breakpoint: tablet;
 	color: color(white-1);
 	font-family: font(main);
 	font-weight: font-weight(bold);
-	font-size: font-size(size-32);
-	line-height: font-size(size-36);
+	@include typo-style(h4);
 	letter-spacing: 0;
 	text-align: center;
 	pointer-events: none;
@@ -362,14 +359,12 @@ $home-carousel-desktop-breakpoint: tablet;
 	}
 
 	.c-home-carousel__heading {
-		font-size: font-size(size-28);
-		line-height: font-size(size-36);
+		@include typo-style(h4);
 		margin-bottom: 1.4rem;
 	}
 
 	.c-home-carousel__text {
-		font-size: font-size(size-18);
-		line-height: 2.6rem;
+		@include typo-style(body);
 		margin-bottom: 4.6rem;
 
 		p {

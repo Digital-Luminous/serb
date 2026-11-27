@@ -70,15 +70,13 @@
 }
 
 .c-table-block__heading {
-	font-size: 2.4rem;
-	line-height: 3rem;
+	@include typo-style(h5);
 	color: color(purple-1);
 	font-weight: 600;
 }
 
 .ctable-block__text {
-	font-size: 2rem;
-	line-height: 3rem;
+	@include typo-style(body);
 	color: color(color(black-1));
 	font-weight: 400;
 	@include media(0, 992px) {
@@ -86,10 +84,6 @@
 		&:not(:last-child) {
 			margin-bottom: 2rem;
 		}
-	}
-	@include media(0, mobile) {
-		font-size: 1.6rem;
-		line-height: 2rem;
 	}
 }
 

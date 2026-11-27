@@ -134,7 +134,7 @@ const Listing = {
           <div class="c-news-box__header">
               <div class="c-news-box__tags-wrapper">
                 <div class="c-tags">
-                  <ul class="c-tags__list t-size-14 ui-color--black-1">
+                  <ul class="c-tags__list t-body-small ui-color--black-1">
                       ${terms
                         .map(
                           ({ name: termName }) => `
@@ -153,16 +153,16 @@ const Listing = {
               </figure>
             </div>
           </div>
-          <div class="news-box__meta t-size-14 ui-color--black-1">
+          <div class="news-box__meta t-body-small ui-color--black-1">
             <div class="c-news-box__author">${author}</div>
             <div class="c-news-box__date">
               ${date}
             </div>
           </div>
-          <div class="c-news-box__title t-size-22 t-size-24--desktop ui-color--purple-1 ui-font-weight--semibold">
+          <div class="c-news-box__title t-h5 ui-color--purple-1 ui-font-weight--semibold">
             ${title}
           </div>
-          <div class="c-news-box__text t-size-18 t-size-20--desktop ui-color--black-2">
+          <div class="c-news-box__text t-body ui-color--black-2">
             ${excerpt}
           </div>
           <div class="c-news-box__actions">
@@ -181,7 +181,7 @@ const Listing = {
     Listing.insightsList.innerHTML = postsHTML;
   },
   renderNotFoundInfo: () => {
-    Listing.insightsList.innerHTML = `<li class="c-insights-list__not-found t-size-18 t-size-20--desktop ui-color--black-1">Insights by term: <span class="ui-font-weight--semibold">"${Listing.searchTerm}"</span> not found. Try again.</li>`;
+    Listing.insightsList.innerHTML = `<li class="c-insights-list__not-found t-body ui-color--black-1">Insights by term: <span class="ui-font-weight--semibold">"${Listing.searchTerm}"</span> not found. Try again.</li>`;
   },
   handlePaginationClass: () => {
     const currentPage = Listing.paginationElements?.find(

@@ -42,8 +42,8 @@
 .c-location-map__legend-label {
     font-family: font(main);
     font-weight: font-weight(bold);
-    font-size: font-size(size-16);
-    line-height: 1;
+    @include typo-style(h7);
+
     letter-spacing: 0;
 
     white-space: nowrap;
@@ -122,8 +122,8 @@
 
     font-family: font(main);
     font-weight: font-weight(bold);
-    font-size: font-size(size-18);
-    line-height: 1.8rem;
+    @include typo-style(h6);
+
     letter-spacing: 0;
 }
 
@@ -132,8 +132,8 @@
 
     font-family: font(main);
     font-weight: font-weight(normal);
-    font-size: font-size(size-14);
-    line-height: 1.25;
+    @include typo-style(body-small);
+
     letter-spacing: 0;
 
     p {
@@ -155,8 +155,7 @@
     font-family: font(main);
     font-weight: font-weight(bold);
     font-style: normal;
-    font-size: 1.2rem;
-    line-height: 1.2rem;
+    @include typo-style(button);
     letter-spacing: .1rem;
     text-decoration: none;
     text-transform: uppercase;

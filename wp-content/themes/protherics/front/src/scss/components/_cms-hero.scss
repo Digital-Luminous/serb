@@ -16,7 +16,7 @@
     h6,
     p,
     span {
-        @include typo-size-40;
+        @include typo-style(h1);
 
         display: inline-block;
 
@@ -24,9 +24,11 @@
 
         color: color(white-1);
 
-        @include media(0, mobile-xs) {
-            @include typo-size-32;
+        // Only for very small phones (320px): the Figma H1 would overflow the page.
+        @include media(0, 340px) {
+            @include type-mobile(h2);
         }
+
         @include media(0, mobile) {
             margin-bottom: .5rem !important;
             padding: 1rem 3.1rem;
@@ -35,9 +37,27 @@
             background-color: color(purple-1);
         }
         @include media(mobile) {
-            @include typo-size-52;
-
             margin: 0 !important;
+        }
+    }
+}
+
+// On mobile the outer heading or paragraph is the purple pill. A span inside it
+// must not add a second pill padding, or long words push the page wider.
+.c-cms-hero {
+    h1 span,
+    h2 span,
+    h3 span,
+    h4 span,
+    h5 span,
+    h6 span,
+    p span {
+        @include media(0, mobile) {
+            margin-bottom: 0 !important;
+            padding: 0;
+
+            border-radius: 0;
+            background-color: transparent;
         }
     }
 }

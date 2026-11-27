@@ -101,8 +101,6 @@
 		padding: 0 1.7rem 0;
 		background-color: color(white-1);
 		max-width: none;
-		font-size: font-size(size-18);
-		line-height: 2.6rem;
 		position: relative;
 		z-index: 1;
 	}
@@ -110,8 +108,6 @@
 	@include media(mobile) {
 		margin-top: 2rem;
 		max-width: 44rem;
-		font-size: font-size(size-20);
-		line-height: 3rem;
 	}
 
 	@include media(desktop-small) {
@@ -121,25 +117,11 @@
 
 	&,
 	* {
+		@include typo-style(body);
+
 		font-family: font(main);
 		font-weight: font-weight(normal);
 		letter-spacing: -0.025rem;
-	}
-
-	@include media(0, mobile) {
-		&,
-		* {
-			font-size: font-size(size-18);
-			line-height: 2.6rem;
-		}
-	}
-
-	@include media(mobile) {
-		&,
-		* {
-			font-size: font-size(size-20);
-			line-height: 3rem;
-		}
 	}
 }
 
@@ -154,8 +136,7 @@
 		border-radius: 4050px;
 		font-family: font(main);
 		font-weight: font-weight(bold);
-		font-size: font-size(size-40);
-		line-height: 4.4rem;
+		@include type-mobile(h1);
 		letter-spacing: 0;
 		color: color(white-1);
 		background-color: color(purple-1);
@@ -169,10 +150,13 @@
 		}
 	}
 
+	// Tablet keeps the mobile size, desktop size from 1024px
+	@include media($type-desktop-breakpoint) {
+		@include type-values(h1, desktop);
+	}
+
 	@include media(desktop-small) {
 		padding: 2rem 5rem;
-		font-size: font-size(size-52);
-		line-height: 6rem;
 		margin-bottom: 2.3rem;
 
 		&--line-2 {
@@ -213,8 +197,7 @@
 		border-radius: 4050px;
 		font-family: font(main);
 		font-weight: font-weight(bold);
-		font-size: font-size(size-40);
-		line-height: 4.4rem;
+		@include type-mobile(h1);
 		letter-spacing: 0;
 		color: color(white-1);
 		background-color: color(purple-1);

@@ -99,39 +99,16 @@ $statistic-grid-col-gap-mobile: 1.5rem;
 	margin: 0;
 	font-family: font(main);
 	font-weight: font-weight(semibold);
-	font-size: font-size(size-20);
+	@include typo-style(body);
 	letter-spacing: 0;
 
+	// Compact layout: keep the mobile size while the columns are narrow
 	@include media(tablet, desktop-small) {
-		font-size: font-size(size-16);
-	}
-
-	@include media(desktop-small) {
-		font-size: font-size(size-20);
+		@include type-mobile(body);
 	}
 }
 
+// Title spacing only - line-height comes from the Body style above
 .c-statistic__title--above {
-	line-height: 2rem;
 	padding-bottom: 0.5rem;
-
-	@include media(tablet, desktop-small) {
-		line-height: 1.6rem;
-	}
-
-	@include media(desktop-small) {
-		line-height: 2rem;
-	}
-}
-
-.c-statistic__title--below {
-	line-height: 3rem;
-
-	@include media(tablet, desktop-small) {
-		line-height: 2rem;
-	}
-
-	@include media(desktop-small) {
-		line-height: 2.3rem;
-	}
 }

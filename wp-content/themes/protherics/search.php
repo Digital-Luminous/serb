@@ -21,7 +21,7 @@ $posts_per_page = 10;
 			<div class="l-inner">
 				<div class="c-search-results">
 					<header class="c-search-results__header">
-						<h1 class="c-search-results__title t-size-18 t-size-20--desktop ui-font-weight--semibold">
+						<h1 class="c-search-results__title t-body ui-font-weight--semibold">
 							<?php _e( 'Results', 'protherics'); ?>
 							<?php if ( $all_posts <= $posts_per_page ) : ?>
 								<span><?php echo $all_posts; ?></span>
@@ -46,7 +46,7 @@ $posts_per_page = 10;
 									<li class="c-search-results-list__item">
 										<div class="c-search-result-box">
 											<div class="c-search-result-box__description">
-												<h2 class="c-search-result-box__title t-size-18 t-size-24--desktop ui-color--purple-1 ui-font-weight--semibold">
+												<h2 class="c-search-result-box__title t-h5 ui-color--purple-1 ui-font-weight--semibold">
 													<?php the_title(); ?>
 												</h2>
 												<div class="c-search-result-box__text">
@@ -66,7 +66,7 @@ $posts_per_page = 10;
 					<?php endif; ?>
 					<?php if ( $search_pages > 1 ) : ?>
 						<div class="c-search-results__pagination">
-							<div class="c-pagination ui-color--purple-1 t-size-14">
+							<div class="c-pagination ui-color--purple-1 t-body-small">
 								<ul class="c-pagination__list">
 									<li class="c-pagination__item c-pagination__item--prev">
 										<?php if ( $current_page == 1 ) : ?>

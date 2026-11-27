@@ -25,7 +25,7 @@
 .wpcf7-radio .wpcf7-list-item-label {
     --size: 4rem;
 
-    @include typo-size-18;
+    @include typo-style(body);
 
     position: relative;
 
@@ -36,10 +36,6 @@
     padding-left: 5rem;
 
     cursor: pointer;
-
-    @include media(mobile) {
-        @include typo-size-20;
-    }
 }
 
 .wpcf7-radio .wpcf7-list-item-label::before,
@@ -103,9 +99,7 @@ input.wpcf7-form-control {
     border: .1rem solid color(dark-grey-1);
     border-radius: border-radius(input);
 
-    @include media(mobile) {
-        @include typo-size-20;
-    }
+    @include typo-style(body);
 
     &:focus {
         outline: none;
@@ -131,12 +125,12 @@ input.wpcf7-not-valid {
 
     margin-top: .15rem;
 
-    font-size: font-size(main);
+    @include typo-style(caption);
 }
 
 
 .wpcf7 form .wpcf7-response-output {
-    @include typo-size-18;
+    @include typo-style(body);
 
     margin: 0 0 2rem;
 

@@ -8,8 +8,8 @@ $table = get_field('table');
 <section class="l-section l-table-block">
 	<div class="l-inner">
 		<div class="c-table-block__wrap">
-			<h2 class="c-table-block__title t-size-22 t-size-32--desktop"><?php echo $title; ?></h2>
-			<p class="c-table-block__description t-size-16 t-size-20--desktop"><?php echo $text; ?></p>
+			<h2 class="c-table-block__title t-h4"><?php echo $title; ?></h2>
+			<p class="c-table-block__description t-body"><?php echo $text; ?></p>
 			<div class="c-table-block__container">
 			<?php if ($has_heading): ?>
 				<div class="c-table-block__row-headings <?php if (!empty($table_headings['heading_4'])): echo 'c-table-block__row-headings--large'; endif;?>">

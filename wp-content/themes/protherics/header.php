@@ -146,7 +146,7 @@ function OptanonWrapper() { }
 							<?php do_action( 'wpml_language_switcher' ); ?>
 						</div>
 						<div class="c-header__region">
-							<button class="c-header__current-region t-size-16 t-upper ui-font-weight--bold ui-color--purple-1 js-open-regions-modal js-region-name"></button>
+							<button class="c-header__current-region t-h6--mobile t-h7--desktop t-upper ui-font-weight--bold ui-color--purple-1 js-open-regions-modal js-region-name"></button>
 						</div>
 						<?php if ( is_main_site() || str_contains(get_site_url(), 'veriton') ) : ?>
 							<div class="c-header__search-bar">

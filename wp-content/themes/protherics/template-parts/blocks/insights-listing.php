@@ -18,7 +18,7 @@
 			<div class="c-insights-listing__content js-insights-list-wrapper">
 				<ul class="c-insights-list js-insights-list"></ul>
 			</div>
-			<nav class="c-pagination t-size-14 js-insights-pagination">
+			<nav class="c-pagination t-body-small js-insights-pagination">
 				<ul class="c-pagination__list js-insights-pagination-list"></ul>
 			</nav>
 		</div>

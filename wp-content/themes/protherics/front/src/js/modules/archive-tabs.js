@@ -102,10 +102,10 @@ const Tabs = {
       <li class="c-news-archives__list-item">
         <div class="c-news-archive-teaser">
           <div class="c-news-archive-teaser__meta">
-            <span class="c-news-archive-teaser__date t-size-14">${date}</span>
+            <span class="c-news-archive-teaser__date t-body-small">${date}</span>
           </div>
           <div class="c-news-archive-teaser__content">
-            <h3 class="c-news-archive-teaser__title t-size-18 t-size-20--desktop ui-font-weight--semibold">${title}</h3>
+            <h3 class="c-news-archive-teaser__title t-body ui-font-weight--semibold">${title}</h3>
             <div class="c-news-archive-teaser__action">
               <a href="${link}" class="c-btn c-btn--arrowed c-btn--tertiary">${label}</a>
             </div>

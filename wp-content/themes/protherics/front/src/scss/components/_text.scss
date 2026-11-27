@@ -1,3 +1,8 @@
+// Title inside CMS content: beat the `.c-cms-content h5` element rule so the H1 style applies
+.c-cms-content .c-text__title {
+    @include typo-style(h1);
+}
+
 .c-text__title:not(:last-child) {
     margin-bottom: 2rem;
 

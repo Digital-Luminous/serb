@@ -34,11 +34,11 @@ $theme_path = get_template_directory_uri();
 							<source srcset="<?php echo $theme_path . '/front/static/images/decor-hero-insights-bg.jpg'; ?>" media="(min-width: 768px)" />
 							<img class="c-hero-news__image" src="<?php echo $theme_path . '/front/static/images/decor-hero-insights-mobile-bg.jpg'; ?>" alt=""/>
 						</picture>
-						<h1 class="c-hero-news__heading t-size-36 t-size-44--desktop ui-color--purple-1"><?php the_title(); ?></h1>
+						<h1 class="c-hero-news__heading t-h1 ui-color--purple-1"><?php the_title(); ?></h1>
 						<?php if ( $desc ) : ?>
-							<p class="c-hero-news__desc t-size-22 t-size-24--desktop ui-font-weight--semibold"><?php echo $desc; ?></p>
+							<p class="c-hero-news__desc t-h5 ui-font-weight--semibold"><?php echo $desc; ?></p>
 						<?php endif; ?>
-						<div class="c-hero-news__meta t-size-18 t-size-20--desktop">
+						<div class="c-hero-news__meta t-body">
 						<?php if ( $author ) : ?>
 							<p class="c-hero-news__author"><?php echo $author; ?> • </p>
 						<?php endif; ?>

@@ -42,7 +42,7 @@
 						<li class="c-banners-slider__list-item swiper-slide">
 							<div class="c-banner c-banner--quote">
 								<?php if ( isset( $item['small_heading'] ) && $item['small_heading'] ) : ?>
-									<h5 class="c-banner__small-heading t-size-16">
+									<h5 class="c-banner__small-heading t-h6--mobile t-h7--desktop">
 										<?php echo $item['small_heading']; ?>
 									</h5>
 								<?php endif; ?>
@@ -54,7 +54,7 @@
 									</div>
 								<?php endif; ?>
 								<?php if ( isset( $item['author'] ) && $item['author'] ) : ?>
-									<p class="c-banner__quote-author t-size-20--desktop ui-font-weight--semibold">
+									<p class="c-banner__quote-author t-body--desktop ui-font-weight--semibold">
 										<?php echo $item['author']; ?>
 									</p>
 								<?php endif; ?>

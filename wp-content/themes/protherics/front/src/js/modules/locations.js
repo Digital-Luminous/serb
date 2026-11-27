@@ -108,15 +108,15 @@ const Locations = {
         <div class="c-location-box u-full-width js-location" data-continent="${
           continent || locationBoxDefaults.continent
         }">
-          <h6 class="c-location-box__continent t-size-24 ui-color--purple-1 ui-font-weight--semibold">${
+          <h6 class="c-location-box__continent t-h5 ui-color--purple-1 ui-font-weight--semibold">${
             continent || locationBoxDefaults.continent
           }</h6>
-          <h4 class="c-locatio-box__country t-size-24 ui-color--black-1 ui-font-weight--semibold">${
+          <h4 class="c-locatio-box__country t-h5 ui-color--black-1 ui-font-weight--semibold">${
             country || locationBoxDefaults.country
           }</h4>
           ${
             addressDetails.length || contactDetails.length ? (
-             `<div class="c-location-box__content t-size-20  ui-color--dark-grey-2">
+             `<div class="c-location-box__content t-body  ui-color--dark-grey-2">
                 <ul class="c-location-box__info-list c-location-box__info-list--address">
                   ${addressDetails &&
                     addressDetails

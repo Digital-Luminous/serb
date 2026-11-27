@@ -4,7 +4,7 @@
 
     padding: 1rem;
 
-    font-size: 1.6rem;
+    @include typo-style(body-small);
 
     cursor: pointer;
     transition-property: background-color, color;

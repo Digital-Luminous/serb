@@ -17,8 +17,7 @@ $our-values-cards-side-padding-desktop: 2.6rem;
 	margin: 0 0 $our-values-heading-margin-bottom;
 	font-family: font(main);
 	font-weight: font-weight(bold);
-	font-size: font-size(size-44);
-	line-height: 4.8rem;
+	@include typo-style(h1);
 	letter-spacing: 0;
 	color: color(purple-1);
 }
@@ -28,8 +27,7 @@ $our-values-cards-side-padding-desktop: 2.6rem;
 	max-width: $size-text-box-width-md;
 	font-family: font(main);
 	font-weight: font-weight(bold);
-	font-size: font-size(size-32);
-	line-height: 3.6rem;
+	@include typo-style(h4);
 	letter-spacing: 0;
 	color: color(purple-1);
 
@@ -43,8 +41,7 @@ $our-values-cards-side-padding-desktop: 2.6rem;
 	max-width: $size-text-box-width-md;
 	font-family: font(main);
 	font-weight: font-weight(normal);
-	font-size: font-size(size-20);
-	line-height: 3rem;
+	@include typo-style(body);
 	letter-spacing: 0;
 	color: color(black-2);
 
@@ -97,8 +94,7 @@ $our-values-cards-side-padding-desktop: 2.6rem;
 	margin: 0;
 	font-family: font(main);
 	font-weight: font-weight(semibold);
-	font-size: font-size(size-24);
-	line-height: 3rem;
+	@include typo-style(h5);
 	letter-spacing: 0;
 	color: color(purple-1);
 }
@@ -110,8 +106,7 @@ $our-values-cards-side-padding-desktop: 2.6rem;
 .c-our-values__card-text {
 	font-family: font(main);
 	font-weight: font-weight(normal);
-	font-size: font-size(size-20);
-	line-height: 3rem;
+	@include typo-style(body);
 	letter-spacing: 0;
 	color: color(black-2);
 

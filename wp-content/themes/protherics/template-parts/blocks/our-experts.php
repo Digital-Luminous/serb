@@ -6,7 +6,7 @@ $title = get_field( 'block_title' );
         <div class="c-team-members">
             <?php if ( $title ) : ?>
                 <div class="video-library__heading">
-                    <h4 class="video-library__title t-size-22 t-size-32--desktop">
+                    <h4 class="video-library__title t-h4">
                         <?php echo esc_html( $title ); ?>
                     </h4>
                 </div>
@@ -39,13 +39,13 @@ $title = get_field( 'block_title' );
 
                                     <div class="c-team-member__details">
                                         <?php if ( $expert_name ) : ?>
-                                            <h4 class="c-team-member__name ui-color--purple-1 t-size-22 t-size-24--desktop">
+                                            <h4 class="c-team-member__name ui-color--purple-1 t-h5">
                                                 <?php echo esc_html( $expert_name ); ?>
                                             </h4>
                                         <?php endif; ?>
 
                                         <?php if ( $expert_title ) : ?>
-                                            <p class="c-team-member__job t-size-18 t-size-20--desktop ui-color--black-1 ui-font-weight--semibold">
+                                            <p class="c-team-member__job t-body ui-color--black-1 ui-font-weight--semibold">
                                                 <?php echo esc_html( $expert_title ); ?>
                                             </p>
                                         <?php endif; ?>

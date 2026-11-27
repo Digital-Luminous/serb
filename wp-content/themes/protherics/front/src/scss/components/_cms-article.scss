@@ -13,53 +13,35 @@
     }
 
     h1 {
-        @include typo-size-32;
-
-        @include media(mobile) {
-            @include typo-size-36;
-        }
+        @include typo-style(h1);
     }
 
-    h1 {
-        @include typo-size-28;
-
-        @include media(mobile) {
-            @include typo-size-32;
-        }
+    h2 {
+        @include typo-style(h2);
     }
 
     h3 {
-        @include typo-size-22;
-
-        @include media(mobile) {
-            @include typo-size-24;
-        }
+        @include typo-style(h3);
     }
 
     h4 {
-        @include typo-size-18;
-
-        @include media(mobile) {
-            @include typo-size-20;
-        }
+        @include typo-style(h4);
     }
 
-    h4 {
-        @include typo-size-16;
-
-        @include media(mobile) {
-            @include typo-size-18;
-        }
+    h5 {
+        @include typo-style(h5);
     }
 
-    h5,
     h6 {
-        @include typo-size-16;
+        @include typo-style(h6);
     }
 
     p,
     li {
         color: color(black-1);
+
+        // Long URLs in article text must wrap instead of widening the page.
+        overflow-wrap: anywhere;
     }
 
     * + ul {
@@ -67,11 +49,7 @@
     }
 
     p {
-        @include typo-size-18;
-
-        @include media(mobile) {
-            @include typo-size-20;
-        }
+        @include typo-style(body);
         &:not(:last-child) {
             margin-bottom: 2rem;
         }
@@ -96,11 +74,7 @@
     }
 
     li {
-        @include typo-size-18;
-
-        @include media(mobile) {
-            @include typo-size-20;
-        }
+        @include typo-style(body);
     }
 
     strong {
@@ -109,13 +83,11 @@
 
     .wp-block-gallery .blocks-gallery-item figcaption,
     figcaption {
-        @include typo-size-14;
+        @include typo-style(body-small);
 
         margin: 1rem 0 0;
 
         @include media(mobile) {
-            @include typo-size-16;
-
             margin-top: 2rem;
         }
     }
@@ -140,13 +112,9 @@
     }
 
     .c-table__title {
-        @include typo-size-28;
+        @include typo-style(h4);
 
         margin-bottom: 2rem;
-
-        @include media(mobile) {
-            @include typo-size-32;
-        }
     }
 
     * + .wp-block-image,
@@ -171,7 +139,7 @@
     }
 
     .wp-block-quote {
-        @include typo-size-18;
+        @include typo-style(body);
 
         max-width: 68rem;
         margin: 4rem auto;
@@ -183,7 +151,7 @@
     }
 
     cite {
-        @include typo-size-16;
+        @include typo-style(body-small);
 
         font-style: normal;
     }

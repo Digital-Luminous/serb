@@ -9,12 +9,12 @@
 		<div class="c-cta-text">
 			<div class="c-cta-text__content">
 				<?php if ( $title ) : ?>
-					<h4 class="c-cta-text__heading t-size-36 t-size-44--desktop ui-font-weight--bold ui-color--purple-1">
+					<h4 class="c-cta-text__heading t-h1 ui-font-weight--bold ui-color--purple-1">
 						<?php echo $title; ?>
 					</h4>
 				<?php endif; ?>
 				<?php if ( $text ) : ?>
-					<p class="c-cta-text__desc t-size-18 t-size-20--desktop ui-font-weight--semibold ui-color--black-1">
+					<p class="c-cta-text__desc t-body ui-font-weight--semibold ui-color--black-1">
 						<?php echo $text; ?>
 					</p>
 				<?php endif; ?>

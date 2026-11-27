@@ -14,51 +14,27 @@
     }
 
     h1 {
-        @include typo-size-44;
-
-        @include media(mobile) {
-            @include typo-size-72;
-        }
+        @include typo-style(h1);
     }
 
     h2 {
-        @include typo-size-40;
-
-        @include media(mobile) {
-            @include typo-size-52;
-        }
+        @include typo-style(h2);
     }
 
     h3 {
-        @include typo-size-36;
-
-        @include media(mobile) {
-            @include typo-size-44;
-        }
+        @include typo-style(h3);
     }
 
     h4 {
-        @include typo-size-28;
-
-        @include media(mobile) {
-            @include typo-size-32;
-        }
+        @include typo-style(h4);
     }
 
     h5 {
-        @include typo-size-22;
-
-        @include media(mobile) {
-            @include typo-size-24;
-        }
+        @include typo-style(h5);
     }
 
     h6 {
-        @include typo-size-18;
-
-        @include media(mobile) {
-            @include typo-size-20;
-        }
+        @include typo-style(h6);
     }
 
     h1,
@@ -88,11 +64,7 @@
     }
 
     p {
-        @include typo-size-18;
-
-        @include media(mobile) {
-            @include typo-size-20;
-        }
+        @include typo-style(body);
     }
 
     ul {
@@ -114,11 +86,7 @@
     }
 
     li {
-        @include typo-size-18;
-
-        @include media(mobile) {
-            @include typo-size-20;
-        }
+        @include typo-style(body);
     }
 
     strong {

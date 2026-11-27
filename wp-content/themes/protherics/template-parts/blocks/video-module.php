@@ -23,13 +23,13 @@ $allowed_tags = array(
 
         <div class="video-library__heading">
             <?php if ( $heading ) : ?>
-                <h4 class="video-library__title t-size-22 t-size-32--desktop">
+                <h4 class="video-library__title t-h4">
                     <?php echo esc_html( $heading ); ?>
                 </h4>
             <?php endif; ?>
 
             <?php if ( $subheading ) : ?>
-                <h5 class="video-library__description t-size-16 t-size-24--desktop">
+                <h5 class="video-library__description t-h5">
                     <?php echo esc_html( $subheading ); ?>
                 </h5>
             <?php endif; ?>
@@ -57,7 +57,7 @@ $allowed_tags = array(
                 <?php endif; ?>
 
                 <?php if ( $video_caption ) : ?>
-                    <h5 class="video-library__video-title t-size-16 t-size-24--desktop c-cms-content js-video-title">
+                    <h5 class="video-library__video-title t-h5 c-cms-content js-video-title">
                         <span><?php echo wp_kses( $video_caption, $allowed_tags ); ?></span>
                     </h5>
                 </div>
@@ -65,7 +65,7 @@ $allowed_tags = array(
 
             <?php if ( have_rows( 'additional_videos' ) ) : ?>
                 <div class="video-library__additional">
-                    <h5 class="video-library__additional-title t-size-16 t-size-24--desktop">
+                    <h5 class="video-library__additional-title t-h5">
                         <?php echo esc_html($repeater_main_title); ?>
                     </h5>
 
@@ -94,7 +94,7 @@ $allowed_tags = array(
                                 <?php
                                 if ( $caption ) :
                                 ?>
-                                    <h6 class="video-library__additional-video-title t-size-16 t-size-20--desktop c-cms-content js-video-title">
+                                    <h6 class="video-library__additional-video-title t-body c-cms-content js-video-title">
                                         <?php echo wp_kses( $caption, $allowed_tags ); ?>
                                     </h6>
                                 <?php endif; ?>

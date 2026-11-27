@@ -1,8 +1,8 @@
 <section class="subpage-hero s-regular-bottom">
     <div class="l-inner">
         <div class="subpage-hero__content">
-            <h1 class="subpage-hero__title t-size-44--desktop">CBRN & Medical Countermeasures</h1>
-            <h2 class="subpage-hero__text t-size-20 t-size-24--desktop">Saving Lives on the Frontline</p>
+            <h1 class="subpage-hero__title t-h1">CBRN & Medical Countermeasures</h1>
+            <h2 class="subpage-hero__text t-h5">Saving Lives on the Frontline</p>
         </div>
         <div class="subpage-hero__image-holder">
             <img class="subpage-hero__image" src="/serb/wp-content/themes/protherics/front/static/images/subpage-banner-placeholder.jpg" alt="alt text here">
@@ -23,8 +23,8 @@
                     <img class="quote-carousel__slide-image" src="/serb/wp-content/themes/protherics/front/static/images/subpage-banner-placeholder.jpg" alt="alt text here">
                 </div>
                 <div class="quote-carousel__slide-content">
-                    <h4 class="quote-carousel__slide-quote t-size-24 t-size-32--desktop">“In the field of emergency medicine each second counts, so there are added challenges in consistently supplying these essential medicines and ensuring they are stocked close to where they may be needed.”</h4>
-                    <p class="quote-carousel__slide-author t-size-16 t-size-20--desktop">Christon Hill, Chief Innovation Officer, in The Pharmaceutical Executive</p>
+                    <h4 class="quote-carousel__slide-quote t-h4">“In the field of emergency medicine each second counts, so there are added challenges in consistently supplying these essential medicines and ensuring they are stocked close to where they may be needed.”</h4>
+                    <p class="quote-carousel__slide-author t-body">Christon Hill, Chief Innovation Officer, in The Pharmaceutical Executive</p>
                 </div>
             </li>
             <!-- Slide -->
@@ -33,8 +33,8 @@
                     <img class="quote-carousel__slide-image" src="/serb/wp-content/themes/protherics/front/static/images/subpage-banner-placeholder.jpg" alt="alt text here">
                 </div>
                 <div class="quote-carousel__slide-content">
-                    <h4 class="quote-carousel__slide-quote t-size-24 t-size-32--desktop">“In the field of emergency medicine each second counts, so there are added challenges in consistently supplying these essential medicines and ensuring they are stocked close to where they may be needed.”</h4>
-                    <p class="quote-carousel__slide-author t-size-16 t-size-20--desktop">Christon Hill, Chief Innovation Officer, in The Pharmaceutical Executive</p>
+                    <h4 class="quote-carousel__slide-quote t-h4">“In the field of emergency medicine each second counts, so there are added challenges in consistently supplying these essential medicines and ensuring they are stocked close to where they may be needed.”</h4>
+                    <p class="quote-carousel__slide-author t-body">Christon Hill, Chief Innovation Officer, in The Pharmaceutical Executive</p>
                 </div>
             </li>
         </ul>
@@ -50,8 +50,8 @@
 <section class="video-library l-section s-regular-bottom js-video-library">
     <div class="video-library__inner l-inner">
         <div class="video-library__heading">
-            <h4 class="video-library__title t-size-22 t-size-32--desktop">Chemical Risks</h4>
-            <h5 class="video-library__description t-size-16 t-size-24--desktop">Watch our series: Today’s CBRN Reality: Uncovering Chemical Risks</h5>
+            <h4 class="video-library__title t-h4">Chemical Risks</h4>
+            <h5 class="video-library__description t-h5">Watch our series: Today’s CBRN Reality: Uncovering Chemical Risks</h5>
         </div>
         <div class="video-library__content">
             <div class="video-library__video-holder">
@@ -63,7 +63,7 @@
                         <span class="sr-only">Play video</span>
                     </button>
                 </div>
-                <h5 class="video-library__video-title t-size-16 t-size-24--desktop">
+                <h5 class="video-library__video-title t-h5">
                     <!-- if url -->
                         <a class="video-library__video-link" href="url.src" target="_blank">url.title</a>
                     <!-- else -->
@@ -72,7 +72,7 @@
             </div>
             <!-- If no additional videos, do not display div bellow -->
             <div class="video-library__additional">
-                <h5 class="video-library__additional-title t-size-16 t-size-24--desktop">Watch the rest of the series:</h5>
+                <h5 class="video-library__additional-title t-h5">Watch the rest of the series:</h5>
                 <div class="video-library__additional-inner">
                     <div class="video-library__additional-video-holder">
                         <div class="video-library__video-wrapper">
@@ -83,7 +83,7 @@
                                 <span class="sr-only">Play video</span>
                             </button>
                         </div>
-                        <h5 class="video-library__additional-video-title t-size-16 t-size-20--desktop">
+                        <h5 class="video-library__additional-video-title t-body">
                             <!-- if url -->
                                 <!-- <a class="video-library__video-link" href="url.src" target="_blank">url.title</a> -->
                             <!-- else -->
@@ -99,7 +99,7 @@
                                 <span class="sr-only">Play video</span>
                             </button>
                         </div>
-                        <h5 class="video-library__additional-video-title t-size-16 t-size-20--desktop">
+                        <h5 class="video-library__additional-video-title t-body">
                             <!-- if url -->
                                 <!-- <a class="video-library__video-link" href="url.src" target="_blank">url.title</a> -->
                             <!-- else -->

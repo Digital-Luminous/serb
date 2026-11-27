@@ -48,7 +48,7 @@ const Twitter = {
                 @${userName}
               </a>
             </div>
-            <div class="c-news-box__date t-size-14 ui-color--white-1">
+            <div class="c-news-box__date t-body-small ui-color--white-1">
               ${creationDay} ${shortCreationMonth}
             </div>
           </div>
@@ -56,7 +56,7 @@ const Twitter = {
             <img class="c-news-box__icon" src='${window.location.origin}/wp-content/themes/protherics/front/static/images/icon-twitter.svg' alt="Twitter icon">
           </div>
         </div>
-        <div class="c-news-box__text t-size-20 ui-color--white-1">
+        <div class="c-news-box__text t-body ui-color--white-1">
           ${full_text}
         </div>
         <div class="c-news-box__actions">

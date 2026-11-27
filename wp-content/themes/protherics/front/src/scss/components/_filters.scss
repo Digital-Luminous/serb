@@ -77,9 +77,5 @@
 }
 
 .c-filters__description p {
-    @include typo-size-14;
-
-    @include media(mobile) {
-        @include typo-size-16;
-    }
+    @include typo-style(body-small);
 }

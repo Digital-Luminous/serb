@@ -27,13 +27,13 @@ if ( ! empty( $quotes ) && is_array( $quotes ) ) :
 
                         <div class="quote-carousel__slide-content">
                             <?php if ( $quote_text ) : ?>
-                                <h4 class="quote-carousel__slide-quote t-size-24 t-size-32--desktop">
+                                <h4 class="quote-carousel__slide-quote t-h4">
                                     <?php echo esc_html( $quote_text ); ?>
                                 </h4>
                             <?php endif; ?>
 
                             <?php if ( $quote_title ) : ?>
-                                <p class="quote-carousel__slide-author t-size-16 t-size-20--desktop">
+                                <p class="quote-carousel__slide-author t-body">
                                     <?php echo esc_html( $quote_title ); ?>
                                 </p>
                             <?php endif; ?>

@@ -27,7 +27,7 @@ $terms_location_order = get_field( 'location_order', 'option' );
 			<header class="c-products__header">
 				<div class="c-filters">
 					<?php if ( $title ) : ?>
-						<h2 class="c-filters__heading ui-font-weight--semibold t-size-28 t-size-32--desktop ui-color--purple-1">
+						<h2 class="c-filters__heading ui-font-weight--semibold t-h4 ui-color--purple-1">
 							<?php echo $title; ?>
 						</h2>
 					<?php endif; ?>
@@ -50,7 +50,7 @@ $terms_location_order = get_field( 'location_order', 'option' );
 							</div>
 						</div>
 						<div class="c-filters__control c-filters__control--select">
-							<span class="c-filters__control-label t-size-18 -size-20--desktop ui-font-weight--semibold"><?php _e( 'Filter by:', 'protherics' ); ?></span>
+							<span class="c-filters__control-label t-body ui-font-weight--semibold"><?php _e( 'Filter by:', 'protherics' ); ?></span>
 							<div class="c-filters__selects">
 								<?php if ( $terms_disease_order ) : ?>
 									<select class="js-select js-products-area-select">
